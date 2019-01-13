@@ -19,6 +19,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 public class RobotMap {
   static WPI_TalonSRX leftMaster, rightMaster;
   static WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
+  static String driveMode;
 
   static {
     // TODO: Put ports
@@ -37,5 +38,8 @@ public class RobotMap {
     leftSlave2.follow(leftMaster);
     rightSlave1.follow(rightMaster);
     rightSlave2.follow(rightMaster);
+
+    // Either arcade or tank
+    driveMode = "arcade";
   }
 }

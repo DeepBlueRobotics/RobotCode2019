@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     oi = new OI();
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
-        RobotMap.rightSlave1, RobotMap.rightSlave2);
+        RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy);
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto mode", chooser);
   }
