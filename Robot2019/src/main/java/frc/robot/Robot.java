@@ -24,10 +24,10 @@ import frc.robot.subsystems.Drivetrain;
  */
 public class Robot extends TimedRobot {
   private static Drivetrain dt;
-  private static OI m_oi;
+  private static OI oi;
 
-  Command m_autonomousCommand;
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  Command autonomousCommand;
+  SendableChooser<Command> chooser = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -35,12 +35,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    dt = new Drivetrain(RobotMap.left1, RobotMap.left2, RobotMap.left3, RobotMap.right1, RobotMap.right2,
-        RobotMap.right3);
-    m_oi = new OI();
-    m_chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
-    // chooser.addOption("My Auto", new MyAutoCommand());
-    SmartDashboard.putData("Auto mode", m_chooser);
+    oi = new OI();
+    dt = new Drivetrain(oi, RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster, RobotMap.rightSlave1, RobotMap.rightSlave2);
+    chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
+    SmartDashboard.putData("Auto mode", chooser);
   }
 
   /**
@@ -79,7 +77,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_chooser.getSelected();
+    autonomousCommand = chooser.getSelected();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
@@ -89,8 +87,8 @@ public class Robot extends TimedRobot {
      */
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.start();
+    if (autonomousCommand != null) {
+      autonomousCommand.start();
     }
   }
 
@@ -108,8 +106,8 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
     }
   }
 

@@ -11,23 +11,37 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.OI;
 import frc.robot.commands.TeleopDrive;
 
 public class Drivetrain extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+  public OI oi;
 
-  private WPI_TalonSRX left1, right1;
-  private WPI_VictorSPX left2, left3, right2, right3;
+  private WPI_TalonSRX leftMaster, rightMaster;
+  private WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
+  
+  // Remember to restrict speedConstants between -1 and 1.
+  private double leftK, rightK;
 
-  public Drivetrain(WPI_TalonSRX l1, WPI_VictorSPX l2, WPI_VictorSPX l3, WPI_TalonSRX r1, WPI_VictorSPX r2,
-      WPI_VictorSPX r3) {
-    left1 = l1;
-    right1 = r1;
-    left2 = l2;
-    left3 = l3;
-    right2 = r2;
-    right3 = r3;
+  public Drivetrain(OI oi, WPI_TalonSRX l1, WPI_VictorSPX l2, WPI_VictorSPX l3, WPI_TalonSRX r1, WPI_VictorSPX r2, WPI_VictorSPX r3) {
+    this.oi = oi;
+    leftMaster = l1;
+    leftSlave1 = l2;
+    leftSlave2 = l3;
+    rightMaster = r1;
+    rightSlave1 = r2;
+    rightSlave2 = r3;
+
+    leftK = 1.0;
+    rightK = 1.0;
+  }
+
+  public void TeleopDrive(double left_speed, double right_speed) {
+    // Assumed to be in arcade drive
+    leftMaster.set(Math.signum(left_speed) * leftK * left_speed * left_speed);
+    rightMaster.set(Math.signum(right_speed) * rightK * right_speed * right_speed);
   }
 
   @Override
