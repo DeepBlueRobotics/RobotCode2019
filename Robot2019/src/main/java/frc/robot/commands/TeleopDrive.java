@@ -13,15 +13,10 @@ import frc.robot.subsystems.Drivetrain;
 
 public class TeleopDrive extends Command {
   Drivetrain dt;
-  Joystick leftJoy, rightJoy;
-  double forward = 0.0;
-  double rotation = 0.0;
 
   public TeleopDrive(Drivetrain dt) {
     requires(dt);
     this.dt = dt;
-    leftJoy = dt.oi.leftJoy;
-    rightJoy = dt.oi.rightJoy;
   }
 
   @Override
@@ -30,20 +25,7 @@ public class TeleopDrive extends Command {
 
   @Override
   protected void execute() {
-    forward = leftJoy.getY();
-    rotation = rightJoy.getY();
-
-    // NOTE: The problem with this code is that it relies on the driver
-    //        to not touch the right joystick if we want the robot to go forward
-    if (rotation == 0.0) {
-      dt.TeleopDrive(forward, forward);
-    }
-    else if (rotation > 0.0) {
-      dt.TeleopDrive(forward, 0.0);
-    }
-    else if (rotation < 0.0) {
-      dt.TeleopDrive(0.0, forward);
-    }
+    dt.TeleopDrive();
   }
 
   @Override

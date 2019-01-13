@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class OI {
   public Joystick leftJoy = new Joystick(1);
   public Joystick rightJoy = new Joystick(2);
-  
+
   // Button button = new JoystickButton(stick, buttonNumber);
 
   // There are a few additional built in buttons you can use. Additionally,
