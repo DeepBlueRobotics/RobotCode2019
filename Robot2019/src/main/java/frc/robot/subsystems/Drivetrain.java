@@ -21,14 +21,13 @@ public class Drivetrain extends Subsystem {
   private WPI_TalonSRX leftMaster, rightMaster;
   private WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
 
-  // NOTE: Change this to a SmartDashboard Preference
-  private String drive_mode;
+  // TODO: Change this to a SmartDashboard Preference
+  public String drive_mode;
 
-  // NOTE: Change these names for both Arcade and Tank Drive
   private double lvalue, rvalue;
   private double leftK, rightK;
 
-  private Joystick leftJoy, rightJoy;
+  public Joystick leftJoy, rightJoy;
 
   public Drivetrain(WPI_TalonSRX l1, WPI_VictorSPX l2, WPI_VictorSPX l3, WPI_TalonSRX r1, WPI_VictorSPX r2,
       WPI_VictorSPX r3, Joystick leftJoy, Joystick rightJoy) {
@@ -49,27 +48,9 @@ public class Drivetrain extends Subsystem {
     rightK = 1.0;
   }
 
-  public void TeleopDrive() {
-    lvalue = leftJoy.getY();
-    rvalue = rightJoy.getY();
-    // NOTE: The problem with this code is that it relies on the driver
-    // to not touch the right joystick if we want the robot to go forward
-    if (drive_mode.equals("arcade")) {
-      if (rvalue == 0.0) {          // Forward / Back
-        leftMaster.set(Math.signum(lvalue) * leftK * lvalue * lvalue);
-        rightMaster.set(Math.signum(lvalue) * rightK * lvalue * lvalue);
-      } else if (rvalue > 0.0) {    // Turn Left
-        leftMaster.set(Math.signum(lvalue) * leftK * lvalue * lvalue);
-        rightMaster.set(0.0);
-      } else if (rvalue < 0.0) {    // Turn Right
-        leftMaster.set(0.0);
-        rightMaster.set(Math.signum(lvalue) * rightK * lvalue * lvalue);
-      }
-    }
-    else if (drive_mode.equals("tank")) {
-        leftMaster.set(Math.signum(lvalue) * leftK * lvalue * lvalue);
-        leftMaster.set(Math.signum(rvalue) * rightK * rvalue * rvalue);
-    }
+  public void TeleopDrive(double val1, double val2) {
+      leftMaster.set(Math.signum(val1) * leftK * val1 * val1);
+      rightMaster.set(Math.signum(val2) * rightK * val2 * val2);
   }
 
   @Override

@@ -25,7 +25,34 @@ public class TeleopDrive extends Command {
 
   @Override
   protected void execute() {
-    dt.TeleopDrive();
+    double lvalue, rvalue, val1, val2;
+    if (dt.drive_mode.equals("arcade")) {
+      lvalue = dt.leftJoy.getY();
+      rvalue = dt.rightJoy.getX();
+
+      if (lvalue >= 0.0) {    // Forward
+        if (rvalue >= 0.0) {  // Right
+          val1 = lvalue;
+          val2 = lvalue - rvalue;
+        } else {              // Left
+          val1 = lvalue + rvalue;
+          val2 = lvalue;
+        }
+      } else {                // Backward
+        if (rvalue >= 0.0) {  // Right
+          val1 = lvalue + rvalue;
+          val2 = lvalue;
+        } else {              // Left
+          val1 = lvalue;
+          val2 = lvalue - rvalue;
+        }
+      }
+      dt.TeleopDrive(val1, val2);
+    } else if (dt.drive_mode.equals("tank")) {
+      val1 = dt.leftJoy.getY();
+      val2 = dt.rightJoy.getY();
+      dt.TeleopDrive(val1, val2);   
+    }
   }
 
   @Override
