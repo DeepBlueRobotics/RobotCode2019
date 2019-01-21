@@ -4,5 +4,5 @@ script:
   - ./gradlew check
 jdk:
   - oraclejdk11
-before_install:
-  - "export TERM=dumb"
+env:
+  - TERM=dumb
