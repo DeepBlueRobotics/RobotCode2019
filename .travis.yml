@@ -1,0 +1,6 @@
+language: java
+script:
+  - cd Robot2019/
+  - gradle build
+jdk:
+  - oraclejdk11
