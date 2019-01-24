@@ -7,9 +7,12 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.commands.ArcadeDrive;
@@ -21,28 +24,28 @@ public class Drivetrain extends Subsystem {
 
   private WPI_TalonSRX leftMaster, rightMaster;
   private WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
-
-  private double lvalue, rvalue;
   private double leftK, rightK;
+  private String drive_mode;
+
+  private Encoder leftEnc, rightEnc;
 
   public Joystick leftJoy, rightJoy;
 
-  private String drive_mode;
+  public Drivetrain(ArrayList<WPI_TalonSRX> masters, ArrayList<WPI_VictorSPX> slaves, ArrayList<Joystick> joys,
+      ArrayList<Encoder> encs) {
+    leftMaster = masters.get(0);
+    rightMaster = masters.get(1);
+    leftSlave1 = slaves.get(0);
+    leftSlave2 = slaves.get(1);
+    rightSlave1 = slaves.get(2);
+    rightSlave2 = slaves.get(3);
 
-  public Drivetrain(WPI_TalonSRX l1, WPI_VictorSPX l2, WPI_VictorSPX l3, WPI_TalonSRX r1, WPI_VictorSPX r2,
-      WPI_VictorSPX r3, Joystick leftJoy, Joystick rightJoy) {
-    leftMaster = l1;
-    rightMaster = r1;
-    leftSlave1 = l2;
-    leftSlave2 = l3;
-    rightSlave1 = r2;
-    rightSlave2 = r3;
+    leftJoy = joys.get(0);
+    rightJoy = joys.get(1);
 
-    this.leftJoy = leftJoy;
-    this.rightJoy = rightJoy;
+    leftEnc = encs.get(0);
+    rightEnc = encs.get(1);
 
-    lvalue = 0.0;
-    rvalue = 0.0;
     leftK = 1.0;
     rightK = 1.0;
 
@@ -52,6 +55,24 @@ public class Drivetrain extends Subsystem {
   public void TeleopDrive(double val1, double val2) {
       leftMaster.set(Math.signum(val1) * leftK * val1 * val1);
       rightMaster.set(Math.signum(val2) * rightK * val2 * val2);
+  }
+
+  public double getEncDist(String type) {
+    if (type.equals("left")) {
+      return leftEnc.getDistance();
+    }
+    else {
+      return rightEnc.getDistance();
+    }
+  }
+
+  public double getEncRate(String type) {
+    if (type.equals("left")) {
+      return leftEnc.getRate();
+    }
+    else {
+      return rightEnc.getRate();
+    }
   }
 
   @Override
