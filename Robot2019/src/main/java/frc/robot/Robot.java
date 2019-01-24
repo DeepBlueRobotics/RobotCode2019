@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.ArcadeDrive;
 import frc.robot.subsystems.Drivetrain;
 
 /**
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
     oi = new OI();
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
         RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy);
-    chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
+    chooser.setDefaultOption("Default Auto", new ArcadeDrive(dt));
     SmartDashboard.putData("Auto mode", chooser);
   }
 

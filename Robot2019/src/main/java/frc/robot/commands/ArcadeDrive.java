@@ -7,14 +7,13 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.Drivetrain;
 
-public class TeleopDrive extends Command {
+public class ArcadeDrive extends Command {
   Drivetrain dt;
 
-  public TeleopDrive(Drivetrain dt) {
+  public ArcadeDrive(Drivetrain dt) {
     requires(dt);
     this.dt = dt;
   }
@@ -26,33 +25,27 @@ public class TeleopDrive extends Command {
   @Override
   protected void execute() {
     double lvalue, rvalue, val1, val2;
-    if (dt.drive_mode.equals("arcade")) {
-      lvalue = dt.leftJoy.getY();
-      rvalue = dt.rightJoy.getX();
+    lvalue = dt.leftJoy.getY();
+    rvalue = dt.rightJoy.getX();
 
-      if (lvalue >= 0.0) {    // Forward
+    if (lvalue >= 0.0) {    // Forward
         if (rvalue >= 0.0) {  // Right
-          val1 = lvalue;
-          val2 = lvalue - rvalue;
+            val1 = lvalue;
+            val2 = lvalue - rvalue;
         } else {              // Left
-          val1 = lvalue + rvalue;
-          val2 = lvalue;
+            val1 = lvalue + rvalue;
+            val2 = lvalue;
         }
-      } else {                // Backward
+        } else {                // Backward
         if (rvalue >= 0.0) {  // Right
-          val1 = lvalue + rvalue;
-          val2 = lvalue;
+            val1 = lvalue + rvalue;
+            val2 = lvalue;
         } else {              // Left
-          val1 = lvalue;
-          val2 = lvalue - rvalue;
+            val1 = lvalue;
+            val2 = lvalue - rvalue;
         }
-      }
-      dt.TeleopDrive(val1, val2);
-    } else if (dt.drive_mode.equals("tank")) {
-      val1 = dt.leftJoy.getY();
-      val2 = dt.rightJoy.getY();
-      dt.TeleopDrive(val1, val2);   
     }
+    dt.TeleopDrive(val1, val2);
   }
 
   @Override

@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class OI {
   // TODO: Joystick Ports
   public Joystick leftJoy = new Joystick(-1);
-  public Joystick rightJoy = new Joystick(-2);
+  public Joystick rightJoy = new Joystick(-1);
 
   // Button button = new JoystickButton(stick, buttonNumber);
 

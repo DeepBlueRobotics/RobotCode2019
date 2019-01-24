@@ -12,7 +12,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.TankDrive;
 
 public class Drivetrain extends Subsystem {
   // Put methods for controlling this subsystem
@@ -21,13 +22,12 @@ public class Drivetrain extends Subsystem {
   private WPI_TalonSRX leftMaster, rightMaster;
   private WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
 
-  // TODO: Change this to a SmartDashboard Preference
-  public String drive_mode;
-
   private double lvalue, rvalue;
   private double leftK, rightK;
 
   public Joystick leftJoy, rightJoy;
+
+  private String drive_mode;
 
   public Drivetrain(WPI_TalonSRX l1, WPI_VictorSPX l2, WPI_VictorSPX l3, WPI_TalonSRX r1, WPI_VictorSPX r2,
       WPI_VictorSPX r3, Joystick leftJoy, Joystick rightJoy) {
@@ -41,11 +41,12 @@ public class Drivetrain extends Subsystem {
     this.leftJoy = leftJoy;
     this.rightJoy = rightJoy;
 
-    drive_mode = "arcade";
     lvalue = 0.0;
     rvalue = 0.0;
     leftK = 1.0;
     rightK = 1.0;
+
+    drive_mode = "Arcade";
   }
 
   public void TeleopDrive(double val1, double val2) {
@@ -55,11 +56,18 @@ public class Drivetrain extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new TeleopDrive(this));
+    if (drive_mode.equals("Arcade")) {
+      setDefaultCommand(new ArcadeDrive(this));
+    } else {
+      setDefaultCommand(new TankDrive(this));
+    }
   }
 
-  public void setDriveMode(String drivemode) {
-    drive_mode = drivemode;
+  public void changeDriveMode() {
+    if (drive_mode.equals("Arcade")) {
+      drive_mode = "Tank";
+    } else {
+      drive_mode = "Arcade";
+    }
   }
-
 }
