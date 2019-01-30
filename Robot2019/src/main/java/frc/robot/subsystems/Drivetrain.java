@@ -75,20 +75,20 @@ public class Drivetrain extends Subsystem {
     }
   }
 
+  public void changeDriveMode() {
+    if (drive_mode.equals("Arcade")) {
+      drive_mode = "Tank";
+    } else {
+      drive_mode = "Arcade";
+    }
+  }
+
   @Override
   public void initDefaultCommand() {
     if (drive_mode.equals("Arcade")) {
       setDefaultCommand(new ArcadeDrive(this));
     } else {
       setDefaultCommand(new TankDrive(this));
-    }
-  }
-
-  public void changeDriveMode() {
-    if (drive_mode.equals("Arcade")) {
-      drive_mode = "Tank";
-    } else {
-      drive_mode = "Arcade";
     }
   }
 }

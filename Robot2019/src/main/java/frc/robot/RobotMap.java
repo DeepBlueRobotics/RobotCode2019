@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be apccompanied by the FIRST BSD license file in the root directory of */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
@@ -9,6 +9,8 @@ package frc.robot;
 
 import java.util.ArrayList;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -46,6 +48,14 @@ public class RobotMap {
     rightSlave1 = new WPI_VictorSPX(getPort("RightSlave1"));
     rightSlave2 = new WPI_VictorSPX(getPort("RightSlave2"));
 
+    // Configuration for the motors.
+    configureTalon(leftMaster);
+    configureTalon(rightMaster);
+    configureVictors(leftSlave1);
+    configureVictors(leftSlave2);
+    configureVictors(rightSlave1);
+    configureVictors(rightSlave2);
+
     // Slave the Victors to the Talons.
     leftSlave1.follow(leftMaster);
     leftSlave2.follow(leftMaster);
@@ -76,5 +86,31 @@ public class RobotMap {
     } else {
       return port;
     }
+  }
+
+  private static void configureTalon(WPI_TalonSRX tsrx) {
+    // Put all configurations for the talon motor controllers in here.
+    // All values are from last year's code.
+		tsrx.configNominalOutputForward(0, 10);
+		tsrx.configNominalOutputReverse(0, 10);
+		tsrx.configPeakOutputForward(1, 10);
+		tsrx.configPeakOutputReverse(-1, 10);
+		tsrx.configPeakCurrentLimit(0, 0);
+		tsrx.configPeakCurrentDuration(0, 0);
+		// 40 Amps is the amp limit of a CIM. lThe PDP has 40 amp circuit breakers,
+		tsrx.configContinuousCurrentLimit(40, 0);
+		tsrx.enableCurrentLimit(true);
+		tsrx.configNeutralDeadband(0.001, 10);
+		tsrx.setNeutralMode(NeutralMode.Brake);
+  }
+
+  private static void configureVictors(VictorSPX vspx) {
+    // Put all configurations for the victor motor controllers in here.
+      vspx.configNominalOutputForward(0, 10);
+      vspx.configNominalOutputReverse(0, 10);
+      vspx.configPeakOutputForward(1, 10);
+      vspx.configPeakOutputReverse(-1, 10); 
+      vspx.configNeutralDeadband(0.001, 10);
+      vspx.setNeutralMode(NeutralMode.Brake);
   }
 }
