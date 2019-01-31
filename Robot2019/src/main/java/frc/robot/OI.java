@@ -9,7 +9,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.commands.SlowDrive;
 
 /**
@@ -31,17 +30,5 @@ public class OI {
     leftSlowButton.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
     rightSlowButton = new JoystickButton(rightJoy, 1);
     rightSlowButton.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
-  }
-
-  JoystickButton newWhenPressed(Joystick joystick, int port, Command command) {
-    JoystickButton button = new JoystickButton(joystick, port);
-    button.whenPressed(command);
-    return button;
-  }
-
-  JoystickButton newWhileHeld(Joystick joystick, int port, Command command) {
-    JoystickButton button = new JoystickButton(joystick, port);
-    button.whileHeld(command);
-    return button;
   }
 }
