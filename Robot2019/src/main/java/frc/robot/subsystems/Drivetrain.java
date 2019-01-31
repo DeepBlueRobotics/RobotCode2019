@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.TankDrive;
@@ -28,11 +30,12 @@ public class Drivetrain extends Subsystem {
   private String drive_mode;
 
   private Encoder leftEnc, rightEnc;
+  private AHRS gyro;
 
   public Joystick leftJoy, rightJoy;
 
   public Drivetrain(ArrayList<WPI_TalonSRX> masters, ArrayList<WPI_VictorSPX> slaves, ArrayList<Joystick> joys,
-      ArrayList<Encoder> encs) {
+      ArrayList<Encoder> encs, AHRS fancygyro) {
     leftMaster = masters.get(0);
     rightMaster = masters.get(1);
     leftSlave1 = slaves.get(0);
@@ -45,6 +48,7 @@ public class Drivetrain extends Subsystem {
 
     leftEnc = encs.get(0);
     rightEnc = encs.get(1);
+    gyro = fancygyro;
 
     leftK = 1.0;
     rightK = 1.0;
@@ -82,6 +86,18 @@ public class Drivetrain extends Subsystem {
       drive_mode = "Arcade";
     }
   }
+
+  public void resetGyro() {
+    gyro.reset();
+  }
+
+  public double getGyroRate() {
+		return gyro.getRate();
+  }
+  
+  public double getGyroAngle() {
+		return gyro.getYaw();
+	}
 
   @Override
   public void initDefaultCommand() {

@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Port/RightEncoder2", -1);
 
     oi = new OI();
-    dt = new Drivetrain(RobotMap.masters, RobotMap.slaves, oi.joysticks, RobotMap.encoders);
+    dt = new Drivetrain(RobotMap.masters, RobotMap.slaves, oi.joysticks, RobotMap.encoders, RobotMap.gyro);
     chooser.setDefaultOption("Default Auto", new ArcadeDrive(dt));
     SmartDashboard.putData("Auto mode", chooser);
 

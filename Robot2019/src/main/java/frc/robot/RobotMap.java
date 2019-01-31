@@ -13,9 +13,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -26,10 +28,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class RobotMap {
   static WPI_TalonSRX leftMaster, rightMaster;
-
   static WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
 
   static Encoder leftEnc, rightEnc;
+  static AHRS gyro;
 
   static String driveMode;
 
@@ -71,7 +73,8 @@ public class RobotMap {
 
     leftEnc = new Encoder(new DigitalInput(getPort("LeftEncoder1")), new DigitalInput(getPort("LeftEncoder2")));
     rightEnc = new Encoder(new DigitalInput(getPort("rightEncoder1")), new DigitalInput(getPort("rightEncoder2")));
-  
+    gyro = new AHRS(SPI.Port.kMXP);
+
     encoders.add(leftEnc);
     encoders.add(rightEnc);
   }
