@@ -11,12 +11,15 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain;
 
-/**
- * Handles all the teleoperated driving functionality
- */
 public class TeleopDrive extends Command {
   Drivetrain dt;
 
+  /**
+   * Handles all the teleoperated driving functionality
+   * 
+   * @param dt the Drivetrain object to use, passing it in is useful for testing
+   *           purposes
+   */
   public TeleopDrive(Drivetrain dt) {
     requires(dt);
     this.dt = dt;
@@ -34,6 +37,12 @@ public class TeleopDrive extends Command {
   private void arcadeDrive() {
     double speed = dt.leftJoy.getY();
     double rot = dt.rightJoy.getX();
+
+    if (SmartDashboard.getBoolean("Square Joysticks", true)) {
+      speed = Math.copySign(speed * speed, speed);
+      rot = Math.copySign(rot * rot, rot);
+    }
+
     if (SmartDashboard.getBoolean("Slow Left", false)) {
       speed *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
     }
@@ -76,6 +85,12 @@ public class TeleopDrive extends Command {
   private void tankDrive() {
     double left = dt.leftJoy.getY();
     double right = dt.rightJoy.getY();
+
+    if (SmartDashboard.getBoolean("Square Joysticks", true)) {
+      left = Math.copySign(left * left, left);
+      right = Math.copySign(right * right, right);
+    }
+
     if (SmartDashboard.getBoolean("Slow Left", false)) {
       left *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
     }
@@ -83,28 +98,19 @@ public class TeleopDrive extends Command {
       right *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
     }
 
-    if (SmartDashboard.getBoolean("Square Joysticks", true)) {
-      left = Math.signum(left * left);
-      right = Math.signum(right * right);
-    }
-
     dt.drive(left, right);
   }
 
-  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
     return false;
   }
 
-  // Called once after isFinished returns true
   @Override
   protected void end() {
     dt.stop();
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
   @Override
   protected void interrupted() {
     end();

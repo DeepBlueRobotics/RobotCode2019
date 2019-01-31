@@ -11,9 +11,17 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SlowDrive extends Command {
-  public enum Side { LEFT, RIGHT }
+  public enum Side {
+    LEFT, RIGHT
+  }
 
   String sdValue;
+
+  /**
+   * Reduces the joystick input values while this command is running
+   * 
+   * @param side the joystick to reduce
+   */
   public SlowDrive(Side side) {
     sdValue = (side == Side.LEFT ? "Slow Left" : "Slow Right");
   }
