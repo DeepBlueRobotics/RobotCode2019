@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -8,26 +8,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class TankDrive extends Command {
-  Drivetrain dt;
+public class SlowDrive extends Command {
+  public enum Side { LEFT, RIGHT }
 
-  public TankDrive(Drivetrain dt) {
-    requires(dt);
-    this.dt = dt;
+  String sdValue;
+  public SlowDrive(Side side) {
+    sdValue = (side == Side.LEFT ? "Slow Left" : "Slow Right");
   }
 
   @Override
   protected void initialize() {
-  }
-
-  @Override
-  protected void execute() {
-    double val1, val2;
-    val1 = dt.leftJoy.getY();
-    val2 = dt.rightJoy.getY();
-    dt.TeleopDrive(val1, val2);
+    SmartDashboard.putBoolean(sdValue, true);
   }
 
   @Override
@@ -37,6 +30,7 @@ public class TankDrive extends Command {
 
   @Override
   protected void end() {
+    SmartDashboard.putBoolean(sdValue, false);
   }
 
   @Override
