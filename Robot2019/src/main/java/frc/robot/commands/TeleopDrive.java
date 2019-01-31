@@ -65,6 +65,11 @@ public class TeleopDrive extends Command {
       }
     }
 
+    if (SmartDashboard.getBoolean("Square Joysticks", true)) {
+      left = Math.signum(left * left);
+      right = Math.signum(right * right);
+    }
+
     dt.drive(left, right);
   }
 
@@ -76,6 +81,11 @@ public class TeleopDrive extends Command {
     }
     if (SmartDashboard.getBoolean("Slow Right", false)) {
       right *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
+    }
+
+    if (SmartDashboard.getBoolean("Square Joysticks", true)) {
+      left = Math.signum(left * left);
+      right = Math.signum(right * right);
     }
 
     dt.drive(left, right);
