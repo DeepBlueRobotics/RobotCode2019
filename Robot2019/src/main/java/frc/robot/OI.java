@@ -7,30 +7,41 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.commands.SlowDrive;
 
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-  public Joystick leftJoy = new Joystick(getPort("LeftJoystick"));
-  public Joystick rightJoy = new Joystick(getPort("RightJoystick"));
-  public ArrayList<Joystick> joysticks = new ArrayList<Joystick>() {{ add(leftJoy); add(rightJoy); }};
+  Joystick leftJoy;
+  Joystick rightJoy;
 
-  private int getPort(String name) {
-    int port;
-    port = (int)(SmartDashboard.getNumber("Port/" + name, -1));
-    
-    if (port == -1) {
-      System.out.println("Port name" + name + "is not defined in SmartDashboard.");
-      return -1;
-    } else {
-      return port;
-    }
+  JoystickButton leftSlowButton;
+  JoystickButton rightSlowButton;
+
+  OI() {
+    leftJoy = new Joystick(0); // TODO: set ports to correct values
+    rightJoy = new Joystick(1); // TODO: set ports to correct values
+
+    leftSlowButton = new JoystickButton(leftJoy, 1);
+    leftSlowButton.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
+    rightSlowButton = new JoystickButton(rightJoy, 1);
+    rightSlowButton.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
+  }
+
+  JoystickButton newWhenPressed(Joystick joystick, int port, Command command) {
+    JoystickButton button = new JoystickButton(joystick, port);
+    button.whenPressed(command);
+    return button;
+  }
+
+  JoystickButton newWhileHeld(Joystick joystick, int port, Command command) {
+    JoystickButton button = new JoystickButton(joystick, port);
+    button.whileHeld(command);
+    return button;
   }
 }

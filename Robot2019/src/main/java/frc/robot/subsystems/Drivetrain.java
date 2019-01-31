@@ -7,61 +7,64 @@
 
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.TankDrive;
+
+import frc.robot.commands.TeleopDrive;
 
 public class Drivetrain extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
-
-  private WPI_TalonSRX leftMaster, rightMaster;
-  private WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
-  private double leftK, rightK;
-  private String drive_mode;
-
+  private SpeedController leftMotor, rightMotor;
   private Encoder leftEnc, rightEnc;
-
   public Joystick leftJoy, rightJoy;
+  private AHRS gyro;
 
-  public Drivetrain(ArrayList<WPI_TalonSRX> masters, ArrayList<WPI_VictorSPX> slaves, ArrayList<Joystick> joys,
-      ArrayList<Encoder> encs) {
-    leftMaster = masters.get(0);
-    rightMaster = masters.get(1);
-    leftSlave1 = slaves.get(0);
-    leftSlave2 = slaves.get(1);
-    rightSlave1 = slaves.get(2);
-    rightSlave2 = slaves.get(3);
+  public Drivetrain(WPI_TalonSRX leftMaster, WPI_VictorSPX leftSlave1, WPI_VictorSPX leftSlave2,
+      WPI_TalonSRX rightMaster, WPI_VictorSPX rightSlave1, WPI_VictorSPX rightSlave2, Joystick leftJoy,
+      Joystick rightJoy, Encoder leftEnc, Encoder rightEnc, AHRS gyro) {
 
-    leftJoy = joys.get(0);
-    rightJoy = joys.get(1);
+    leftSlave1.follow(leftMaster);
+    leftSlave2.follow(leftMaster);
+    this.leftMotor = leftMaster;
 
-    leftEnc = encs.get(0);
-    rightEnc = encs.get(1);
+    rightSlave1.follow(rightMaster);
+    rightSlave2.follow(rightMaster);
+    this.rightMotor = rightMaster;
 
-    leftK = 1.0;
-    rightK = 1.0;
+    this.leftJoy = leftJoy;
+    this.rightJoy = rightJoy;
 
-    drive_mode = "Arcade";
+    this.leftEnc = leftEnc;
+    this.rightEnc = rightEnc;
+
+    this.gyro = gyro;
   }
 
-  public void TeleopDrive(double val1, double val2) {
-      leftMaster.set(Math.signum(val1) * leftK * val1 * val1);
-      rightMaster.set(Math.signum(val2) * rightK * val2 * val2);
+  @Override
+  public void initDefaultCommand() {
+    setDefaultCommand(new TeleopDrive(this));
+  }
+
+  public void drive(double left, double right) {
+    leftMotor.set(left);
+    rightMotor.set(right);
+  }
+
+  public void stop() {
+    leftMotor.stopMotor();
+    rightMotor.stopMotor();
   }
 
   public double getEncDist(String type) {
     if (type.equals("left")) {
       return leftEnc.getDistance();
-    }
-    else {
+    } else {
       return rightEnc.getDistance();
     }
   }
@@ -69,26 +72,20 @@ public class Drivetrain extends Subsystem {
   public double getEncRate(String type) {
     if (type.equals("left")) {
       return leftEnc.getRate();
-    }
-    else {
+    } else {
       return rightEnc.getRate();
     }
   }
 
-  @Override
-  public void initDefaultCommand() {
-    if (drive_mode.equals("Arcade")) {
-      setDefaultCommand(new ArcadeDrive(this));
-    } else {
-      setDefaultCommand(new TankDrive(this));
-    }
+  public void resetGyro() {
+    gyro.reset();
   }
 
-  public void changeDriveMode() {
-    if (drive_mode.equals("Arcade")) {
-      drive_mode = "Tank";
-    } else {
-      drive_mode = "Arcade";
-    }
+  public double getGyroRate() {
+    return gyro.getRate();
+  }
+
+  public double getGyroAngle() {
+    return gyro.getYaw();
   }
 }
