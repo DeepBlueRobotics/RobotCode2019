@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-  public Joystick leftJoy = new Joystick(getPort("LeftJoystick"));
-  public Joystick rightJoy = new Joystick(getPort("RightJoystick"));
+  private Joystick leftJoy = new Joystick(getPort("LeftJoystick"));
+  private Joystick rightJoy = new Joystick(getPort("RightJoystick"));
   public ArrayList<Joystick> joysticks = new ArrayList<Joystick>() {{ add(leftJoy); add(rightJoy); }};
 
   private int getPort(String name) {

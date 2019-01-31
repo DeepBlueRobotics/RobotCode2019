@@ -27,21 +27,22 @@ public class ArcadeDrive extends Command {
     double lvalue, rvalue, val1, val2;
     lvalue = dt.leftJoy.getY();
     rvalue = dt.rightJoy.getX();
+    double maxInput = Math.copySign(Math.max(Math.abs(lvalue), Math.abs(rvalue)), lvalue);
 
     if (lvalue >= 0.0) {    // Forward
         if (rvalue >= 0.0) {  // Right
-            val1 = lvalue;
+            val1 = maxInput;
             val2 = lvalue - rvalue;
         } else {              // Left
             val1 = lvalue + rvalue;
-            val2 = lvalue;
+            val2 = maxInput;
         }
         } else {                // Backward
         if (rvalue >= 0.0) {  // Right
             val1 = lvalue + rvalue;
-            val2 = lvalue;
+            val2 = maxInput;
         } else {              // Left
-            val1 = lvalue;
+            val1 = maxInput;
             val2 = lvalue - rvalue;
         }
     }

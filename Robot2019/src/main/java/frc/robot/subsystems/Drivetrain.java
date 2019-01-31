@@ -85,6 +85,7 @@ public class Drivetrain extends Subsystem {
     } else {
       drive_mode = "Arcade";
     }
+    initDefaultCommand();
   }
 
   public void resetGyro() {
