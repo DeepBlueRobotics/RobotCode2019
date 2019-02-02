@@ -40,8 +40,8 @@ public class RobotMap {
     rightSlave1 = createConfiguredVictor(6);
     rightSlave2 = createConfiguredVictor(7);
 
-    leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
-    rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
+    leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1)); // TODO: set ports to correct values
+    rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3)); // TODO: set ports to correct values
 
     gyro = new AHRS(SPI.Port.kMXP);
   }
