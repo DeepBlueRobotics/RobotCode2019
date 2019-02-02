@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -30,6 +31,9 @@ public class Robot extends TimedRobot {
         RobotMap.gyro);
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto Mode", chooser);
+
+    CameraServer.getInstance().startAutomaticCapture(0).setFPS(24);
+    CameraServer.getInstance().startAutomaticCapture(1).setFPS(24);
   }
 
   /**
