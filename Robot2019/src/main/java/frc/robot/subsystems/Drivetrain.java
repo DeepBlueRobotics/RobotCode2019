@@ -37,6 +37,10 @@ public class Drivetrain extends Subsystem {
     rightSlave2.follow(rightMaster);
     this.rightMotor = rightMaster;
 
+    rightMaster.setInverted(true);
+    rightSlave1.setInverted(true);
+    rightSlave2.setInverted(true);
+
     this.leftJoy = leftJoy;
     this.rightJoy = rightJoy;
 
