@@ -13,21 +13,24 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TeleopDrive;
+import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Drivetrain;
 
 public class Robot extends TimedRobot {
   private static Drivetrain dt;
   private static OI oi;
+  private static Cargo cargo;
 
   Command autonomousCommand;
   SendableChooser<Command> chooser = new SendableChooser<>();
 
   @Override
   public void robotInit() {
-    oi = new OI();
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
         RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
         RobotMap.gyro);
+    cargo = new Cargo(RobotMap.cargo, RobotMap.pdp);
+    oi = new OI(cargo);
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto Mode", chooser);
   }
