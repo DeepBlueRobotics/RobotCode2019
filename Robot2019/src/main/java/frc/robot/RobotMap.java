@@ -7,8 +7,14 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -17,30 +23,60 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
  * floating around.
  */
 public class RobotMap {
-  // For example to map the left and right motors, you could define the
-  // following variables to use with your drivetrain subsystem.
-  // public static int leftMotor = 1;
-  // public static int rightMotor = 2;
-
-  // If you are using multiple modules, make sure to define both the port
-  // number and the module. For example you with a rangefinder:
-  // public static int rangefinderPort = 1;
-  // public static int rangefinderModule = 1;
-  static WPI_TalonSRX left1, right1;
-  static WPI_VictorSPX left2, left3, right2, right3;
+  static WPI_TalonSRX leftMaster, rightMaster;
+  static WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
+  static Encoder leftEnc, rightEnc;
+  static String driveMode;
+  static AHRS gyro;
 
   static {
-    // TODO: Put ports
-    left1 = new WPI_TalonSRX(-1);
-    left2 = new WPI_VictorSPX(-1);
-    left2.follow(left1);
-    left3 = new WPI_VictorSPX(-1);
-    left3.follow(left1);
-    right1 = new WPI_TalonSRX(-1);
-    right2 = new WPI_VictorSPX(-1);
-    right2.follow(right1);
-    right3 = new WPI_VictorSPX(-1);
-    right3.follow(right1);
+    // Initialize motors on the left side of the drivetrain.
+    leftMaster = createConfiguredTalon(0); // TODO: set ports to correct values
+    leftSlave1 = createConfiguredVictor(1); // TODO: set ports to correct values
+    leftSlave2 = createConfiguredVictor(2); // TODO: set ports to correct values
+
+    // Initialize motors on the right side of the drivetrain.
+    rightMaster = createConfiguredTalon(3); // TODO: set ports to correct values
+    rightSlave1 = createConfiguredVictor(4); // TODO: set ports to correct values
+    rightSlave2 = createConfiguredVictor(5); // TODO: set ports to correct values
+
+    leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1)); // TODO: set ports to correct values
+    rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3)); // TODO: set ports to correct values
+
+    gyro = new AHRS(SPI.Port.kMXP);
   }
 
+  private static WPI_TalonSRX createConfiguredTalon(int port) {
+    WPI_TalonSRX tsrx = new WPI_TalonSRX(port);
+
+    // Put all configurations for the talon motor controllers in here.
+    // All values are from last year's code.
+    tsrx.configNominalOutputForward(0, 10);
+    tsrx.configNominalOutputReverse(0, 10);
+    tsrx.configPeakOutputForward(1, 10);
+    tsrx.configPeakOutputReverse(-1, 10);
+    tsrx.configPeakCurrentLimit(0, 0);
+    tsrx.configPeakCurrentDuration(0, 0);
+    // 40 Amps is the amp limit of a CIM. lThe PDP has 40 amp circuit breakers,
+    tsrx.configContinuousCurrentLimit(40, 0);
+    tsrx.enableCurrentLimit(true);
+    tsrx.configNeutralDeadband(0.001, 10);
+    tsrx.setNeutralMode(NeutralMode.Brake);
+
+    return tsrx;
+  }
+
+  private static WPI_VictorSPX createConfiguredVictor(int port) {
+    WPI_VictorSPX vspx = new WPI_VictorSPX(port);
+
+    // Put all configurations for the victor motor controllers in here.
+    vspx.configNominalOutputForward(0, 10);
+    vspx.configNominalOutputReverse(0, 10);
+    vspx.configPeakOutputForward(1, 10);
+    vspx.configPeakOutputReverse(-1, 10);
+    vspx.configNeutralDeadband(0.001, 10);
+    vspx.setNeutralMode(NeutralMode.Brake);
+
+    return vspx;
+  }
 }

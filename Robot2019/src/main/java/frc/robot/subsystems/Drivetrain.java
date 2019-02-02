@@ -10,24 +10,40 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
+
 import frc.robot.commands.TeleopDrive;
 
 public class Drivetrain extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
+  private SpeedController leftMotor, rightMotor;
+  private Encoder leftEnc, rightEnc;
+  public Joystick leftJoy, rightJoy;
+  private AHRS gyro;
 
-  private WPI_TalonSRX left1, right1;
-  private WPI_VictorSPX left2, left3, right2, right3;
+  public Drivetrain(WPI_TalonSRX leftMaster, WPI_VictorSPX leftSlave1, WPI_VictorSPX leftSlave2,
+      WPI_TalonSRX rightMaster, WPI_VictorSPX rightSlave1, WPI_VictorSPX rightSlave2, Joystick leftJoy,
+      Joystick rightJoy, Encoder leftEnc, Encoder rightEnc, AHRS gyro) {
 
-  public Drivetrain(WPI_TalonSRX l1, WPI_VictorSPX l2, WPI_VictorSPX l3, WPI_TalonSRX r1, WPI_VictorSPX r2,
-      WPI_VictorSPX r3) {
-    left1 = l1;
-    right1 = r1;
-    left2 = l2;
-    left3 = l3;
-    right2 = r2;
-    right3 = r3;
+    leftSlave1.follow(leftMaster);
+    leftSlave2.follow(leftMaster);
+    this.leftMotor = leftMaster;
+
+    rightSlave1.follow(rightMaster);
+    rightSlave2.follow(rightMaster);
+    this.rightMotor = rightMaster;
+
+    this.leftJoy = leftJoy;
+    this.rightJoy = rightJoy;
+
+    this.leftEnc = leftEnc;
+    this.rightEnc = rightEnc;
+
+    this.gyro = gyro;
   }
 
   @Override
@@ -35,4 +51,41 @@ public class Drivetrain extends Subsystem {
     setDefaultCommand(new TeleopDrive(this));
   }
 
+  public void drive(double left, double right) {
+    leftMotor.set(left);
+    rightMotor.set(right);
+  }
+
+  public void stop() {
+    leftMotor.stopMotor();
+    rightMotor.stopMotor();
+  }
+
+  public double getEncDist(String type) {
+    if (type.equals("left")) {
+      return leftEnc.getDistance();
+    } else {
+      return rightEnc.getDistance();
+    }
+  }
+
+  public double getEncRate(String type) {
+    if (type.equals("left")) {
+      return leftEnc.getRate();
+    } else {
+      return rightEnc.getRate();
+    }
+  }
+
+  public void resetGyro() {
+    gyro.reset();
+  }
+
+  public double getGyroRate() {
+    return gyro.getRate();
+  }
+
+  public double getGyroAngle() {
+    return gyro.getYaw();
+  }
 }
