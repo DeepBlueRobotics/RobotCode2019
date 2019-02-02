@@ -25,11 +25,12 @@ public class OI {
 
   JoystickButton leftSlowButton;
   JoystickButton rightSlowButton;
-  
+
   JoystickButton cargoIn;
   JoystickButton cargoOut;
 
   Cargo cargo;
+
   OI(Cargo cargo) {
     this.cargo = cargo;
 

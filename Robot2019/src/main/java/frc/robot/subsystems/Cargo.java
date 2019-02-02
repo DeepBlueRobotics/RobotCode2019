@@ -19,8 +19,8 @@ public class Cargo extends Subsystem {
   private final PowerDistributionPanel pdp;
 
   public Cargo(VictorSP roller, PowerDistributionPanel pdp) {
-      this.roller = roller;
-      this.pdp = pdp;
+    this.roller = roller;
+    this.pdp = pdp;
   }
 
   public void stopIntake() {
@@ -37,8 +37,8 @@ public class Cargo extends Subsystem {
 
   public boolean hasCargo() {
     return pdp.getCurrent(4) > 15;
-    //TODO: set ports to actual cargo motor port
-}
+    // TODO: set ports to actual cargo motor port
+  }
 
   @Override
   public void initDefaultCommand() {

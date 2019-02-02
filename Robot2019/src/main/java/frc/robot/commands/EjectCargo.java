@@ -29,7 +29,7 @@ public class EjectCargo extends Command {
   @Override
   protected void execute() {
     cargo.runIntake(-1);
-    //TODO: Make sure this is correct direction
+    // TODO: Make sure this is correct direction
   }
 
   @Override

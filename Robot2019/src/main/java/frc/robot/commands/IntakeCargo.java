@@ -31,14 +31,14 @@ public class IntakeCargo extends Command {
   protected void execute() {
     cargo.runIntake(1.0);
     if (cargo.hasCargo()) {
-        if (!overdraw) {
-            overdraw = true;
-            tim.start();
-        }
+      if (!overdraw) {
+        overdraw = true;
+        tim.start();
+      }
     } else {
-        overdraw = false;
-        tim.stop();
-        tim.reset();
+      overdraw = false;
+      tim.stop();
+      tim.reset();
     }
   }
 
