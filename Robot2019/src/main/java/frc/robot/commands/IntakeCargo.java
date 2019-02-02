@@ -9,14 +9,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.CargoIntakeEject;
+import frc.robot.subsystems.Cargo;
 
 public class IntakeCargo extends Command {
   Timer tim;
-  CargoIntakeEject cargo;
+  Cargo cargo;
   boolean overdraw;
 
-  public IntakeCargo(CargoIntakeEject cargo) {
+  public IntakeCargo(Cargo cargo) {
     requires(cargo);
     this.cargo = cargo;
     overdraw = false;
@@ -24,6 +24,7 @@ public class IntakeCargo extends Command {
 
   @Override
   protected void initialize() {
+    tim.reset();
   }
 
   @Override

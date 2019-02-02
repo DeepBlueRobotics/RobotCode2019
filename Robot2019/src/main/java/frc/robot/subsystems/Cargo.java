@@ -7,41 +7,37 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class CargoIntakeEject extends Subsystem {
+public class Cargo extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private WPI_VictorSPX leftMotor, rightMotor;
+  private VictorSP roller;
   private final PowerDistributionPanel pdp;
 
-  public CargoIntakeEject(WPI_VictorSPX leftMotor, WPI_VictorSPX rightMotor, PowerDistributionPanel pdp) {
-      this.leftMotor = leftMotor;
-      this.rightMotor = rightMotor;
+  public Cargo(VictorSP roller, PowerDistributionPanel pdp) {
+      this.roller = roller;
       this.pdp = pdp;
   }
 
   public void stopIntake() {
-    leftMotor.stopMotor();
-    rightMotor.stopMotor();
+    roller.stopMotor();
   }
 
   public void runIntake(double speed) {
-    leftMotor.set(speed);
-    rightMotor.set(-speed);
+    roller.set(speed);
   }
 
   public void runOutake(double speed) {
-    leftMotor.set(-speed);
-    rightMotor.set(speed);
+    roller.set(-speed);
   }
 
   public boolean hasCargo() {
-    return pdp.getCurrent(4) > 15 || pdp.getCurrent(11) > 39;
+    return pdp.getCurrent(4) > 15;
+    //TODO: set ports to actual cargo motor port
 }
 
   @Override

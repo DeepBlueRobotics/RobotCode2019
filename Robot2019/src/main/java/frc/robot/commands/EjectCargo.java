@@ -9,30 +9,27 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.CargoIntakeEject;
+import frc.robot.subsystems.Cargo;
 
 public class EjectCargo extends Command {
   Timer tim;
-  CargoIntakeEject cargo;
+  Cargo cargo;
 
-  public EjectCargo(CargoIntakeEject cargo) {
+  public EjectCargo(Cargo cargo) {
     requires(cargo);
     this.cargo = cargo;
   }
 
   @Override
   protected void initialize() {
+    tim.reset();
+    tim.start();
   }
 
   @Override
   protected void execute() {
-    cargo.runIntake(-1.0);
-    if (!cargo.hasCargo()) {
-        tim.start();
-    } else {
-        tim.stop();
-        tim.reset();
-    }
+    cargo.runIntake(-1);
+    //TODO: Make sure this is correct direction
   }
 
   @Override
