@@ -31,17 +31,17 @@ public class RobotMap {
 
   static {
     // Initialize motors on the left side of the drivetrain.
-    leftMaster = createConfiguredTalon(0); // TODO: set ports to correct values
-    leftSlave1 = createConfiguredVictor(1); // TODO: set ports to correct values
-    leftSlave2 = createConfiguredVictor(2); // TODO: set ports to correct values
+    leftMaster = createConfiguredTalon(8);
+    leftSlave1 = createConfiguredVictor(9);
+    leftSlave2 = createConfiguredVictor(10);
 
     // Initialize motors on the right side of the drivetrain.
-    rightMaster = createConfiguredTalon(3); // TODO: set ports to correct values
-    rightSlave1 = createConfiguredVictor(4); // TODO: set ports to correct values
-    rightSlave2 = createConfiguredVictor(5); // TODO: set ports to correct values
+    rightMaster = createConfiguredTalon(5);
+    rightSlave1 = createConfiguredVictor(6);
+    rightSlave2 = createConfiguredVictor(7);
 
-    leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1)); // TODO: set ports to correct values
-    rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3)); // TODO: set ports to correct values
+    leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
+    rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
 
     gyro = new AHRS(SPI.Port.kMXP);
   }
