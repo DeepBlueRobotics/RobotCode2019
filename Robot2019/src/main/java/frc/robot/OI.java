@@ -7,11 +7,15 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+
 import frc.robot.commands.EjectCargo;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.SlowDrive;
+import frc.robot.commands.ToggleCamera;
 import frc.robot.subsystems.Cargo;
 
 /**
@@ -29,9 +33,11 @@ public class OI {
   JoystickButton cargoIn;
   JoystickButton cargoOut;
 
+  JoystickButton toggleCameraBtn;
+
   Cargo cargo;
 
-  OI(Cargo cargo) {
+  OI(Cargo cargo, UsbCamera driveCamera, UsbCamera hatchCamera, VideoSink cameraServer) {
     this.cargo = cargo;
 
     leftJoy = new Joystick(0); // TODO: set ports to correct values
@@ -46,5 +52,8 @@ public class OI {
     cargoIn.whenPressed(new IntakeCargo(cargo));
     cargoOut = new JoystickButton(manipulator, 1);
     cargoOut.whenPressed(new EjectCargo(cargo));
+
+    toggleCameraBtn = new JoystickButton(leftJoy, 2);
+    toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
   }
 }
