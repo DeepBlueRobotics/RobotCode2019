@@ -9,9 +9,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.commands.EjectCargo;
+import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.SlowDrive;
 import frc.robot.commands.ToggleHatch;
 import frc.robot.subsystems.HatchPanel;
+import frc.robot.subsystems.Cargo;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -22,8 +25,9 @@ public class OI {
 
   JoystickButton leftSlowButton, rightSlowButton;
   JoystickButton toggleHatchButton;
+  JoystickButton cargoIn, cargoOut;
 
-  OI(HatchPanel hp) {
+  OI(Cargo cargo, HatchPanel hp) {
     leftJoy = new Joystick(0);
     rightJoy = new Joystick(1);
     manipulator = new Joystick(2);
@@ -35,5 +39,10 @@ public class OI {
 
     toggleHatchButton = new JoystickButton(manipulator, 0); // TODO: set ports to correct values
     toggleHatchButton.whenPressed(new ToggleHatch(hp));
+
+    cargoIn = new JoystickButton(manipulator, 1); // TODO: set ports to correct values
+    cargoIn.whenPressed(new IntakeCargo(cargo));
+    cargoOut = new JoystickButton(manipulator, 2); // TODO: set ports to correct values
+    cargoOut.whenPressed(new EjectCargo(cargo));
   }
 }

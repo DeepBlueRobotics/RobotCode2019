@@ -15,7 +15,9 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.VictorSP;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -27,9 +29,11 @@ public class RobotMap {
   static WPI_TalonSRX leftMaster, rightMaster;
   static WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
   static DoubleSolenoid hatchPistons;
+  static VictorSP cargo;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
   static AHRS gyro;
+  static PowerDistributionPanel pdp;
 
   static {
     // Initialize motors on the left side of the drivetrain.
@@ -43,11 +47,13 @@ public class RobotMap {
     rightSlave2 = createConfiguredVictor(7);
 
     hatchPistons = new DoubleSolenoid(0, 1); // TODO: set ports to correct values
+    cargo = new VictorSP(4); // TODO: Set this to the actual correct values
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
 
     gyro = new AHRS(SPI.Port.kMXP);
+    pdp = new PowerDistributionPanel();
   }
 
   private static WPI_TalonSRX createConfiguredTalon(int port) {
