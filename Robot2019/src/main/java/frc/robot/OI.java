@@ -23,11 +23,11 @@ public class OI {
   Joystick rightJoy;
   Joystick manipulator;
 
-  JoystickButton leftSlowButton;
-  JoystickButton rightSlowButton;
+  JoystickButton leftSlowBtn;
+  JoystickButton rightSlowBtn;
 
-  JoystickButton cargoIn;
-  JoystickButton cargoOut;
+  JoystickButton cargoIntakeBtn;
+  JoystickButton cargoEjectBtn;
 
   Cargo cargo;
 
@@ -37,14 +37,14 @@ public class OI {
     leftJoy = new Joystick(0); // TODO: set ports to correct values
     rightJoy = new Joystick(1); // TODO: set ports to correct values
 
-    leftSlowButton = new JoystickButton(leftJoy, 1);
-    leftSlowButton.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
-    rightSlowButton = new JoystickButton(rightJoy, 1);
-    rightSlowButton.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
+    leftSlowBtn = new JoystickButton(leftJoy, 1);
+    leftSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
+    rightSlowBtn = new JoystickButton(rightJoy, 1);
+    rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
 
-    cargoIn = new JoystickButton(manipulator, 0);
-    cargoIn.whenPressed(new IntakeCargo(cargo));
-    cargoOut = new JoystickButton(manipulator, 1);
-    cargoOut.whenPressed(new EjectCargo(cargo));
+    cargoIntakeBtn = new JoystickButton(manipulator, 0);
+    cargoIntakeBtn.whenPressed(new IntakeCargo(cargo));
+    cargoEjectBtn = new JoystickButton(manipulator, 1);
+    cargoEjectBtn.whenPressed(new EjectCargo(cargo));
   }
 }
