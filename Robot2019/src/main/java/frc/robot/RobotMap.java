@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj.SPI;
 public class RobotMap {
   static WPI_TalonSRX leftMaster, rightMaster;
   static WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
+  static DoubleSolenoid hatchPistons;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
   static AHRS gyro;
@@ -39,6 +41,8 @@ public class RobotMap {
     rightMaster = createConfiguredTalon(5);
     rightSlave1 = createConfiguredVictor(6);
     rightSlave2 = createConfiguredVictor(7);
+
+    hatchPistons = new DoubleSolenoid(0, 1); // TODO: set ports to correct values
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));

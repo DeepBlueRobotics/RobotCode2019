@@ -14,9 +14,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.HatchPanel;
 
 public class Robot extends TimedRobot {
   private static Drivetrain dt;
+  private static HatchPanel hp;
   private static OI oi;
 
   Command autonomousCommand;
@@ -24,10 +26,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    oi = new OI();
+    hp = new HatchPanel(RobotMap.hatchPistons);
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
         RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
         RobotMap.gyro);
+
+    oi = new OI(hp);
+    
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto Mode", chooser);
   }
