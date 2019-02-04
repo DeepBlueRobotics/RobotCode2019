@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 public class RobotMap {
   static WPI_TalonSRX leftMaster, rightMaster;
   static WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
-  static VictorSP cargo;
+  static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
   static AHRS gyro;
@@ -51,7 +51,7 @@ public class RobotMap {
     rightSlave2 = createConfiguredVictor(7);
 
     // Initialize motors on the cargo mech
-    cargo = new VictorSP(4); // TODO: Set this to the actual correct values
+    cargoRoller = new VictorSP(0);
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));

@@ -12,7 +12,10 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.Cargo;
 
 public class EjectCargo extends Command {
-  Timer tim;
+
+  final double ejectDuration = 0.5; // seconds
+
+  Timer timer;
   Cargo cargo;
 
   public EjectCargo(Cargo cargo) {
@@ -22,19 +25,18 @@ public class EjectCargo extends Command {
 
   @Override
   protected void initialize() {
-    tim.reset();
-    tim.start();
+    timer.reset();
+    timer.start();
   }
 
   @Override
   protected void execute() {
-    cargo.runIntake(-1);
-    // TODO: Make sure this is correct direction
+    cargo.runEject();
   }
 
   @Override
   protected boolean isFinished() {
-    return (tim.get() > 0.5);
+    return (timer.get() > ejectDuration);
   }
 
   @Override

@@ -16,7 +16,7 @@ public class Cargo extends Subsystem {
   // here. Call these from Commands.
 
   private VictorSP roller;
-  private final PowerDistributionPanel pdp;
+  private PowerDistributionPanel pdp;
 
   public Cargo(VictorSP roller, PowerDistributionPanel pdp) {
     this.roller = roller;
@@ -27,16 +27,16 @@ public class Cargo extends Subsystem {
     roller.stopMotor();
   }
 
-  public void runIntake(double speed) {
-    roller.set(speed);
+  public void runIntake() {
+    roller.set(-1);
   }
 
-  public void runOutake(double speed) {
-    roller.set(-speed);
+  public void runEject() {
+    roller.set(1);
   }
 
   public boolean hasCargo() {
-    return pdp.getCurrent(4) > 15;
+    return pdp.getCurrent(roller.getChannel()) > 15;
     // TODO: set ports to actual cargo motor port
   }
 

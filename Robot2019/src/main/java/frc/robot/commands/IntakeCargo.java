@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.Cargo;
 
 public class IntakeCargo extends Command {
-  Timer tim;
+  Timer timer;
   Cargo cargo;
   boolean overdraw;
 
@@ -24,27 +24,27 @@ public class IntakeCargo extends Command {
 
   @Override
   protected void initialize() {
-    tim.reset();
+    timer.reset();
   }
 
   @Override
   protected void execute() {
-    cargo.runIntake(1.0);
+    cargo.runIntake();
     if (cargo.hasCargo()) {
       if (!overdraw) {
         overdraw = true;
-        tim.start();
+        timer.start();
       }
     } else {
       overdraw = false;
-      tim.stop();
-      tim.reset();
+      timer.stop();
+      timer.reset();
     }
   }
 
   @Override
   protected boolean isFinished() {
-    return (tim.get() > 0.5);
+    return (timer.get() > 0.5);
   }
 
   @Override
