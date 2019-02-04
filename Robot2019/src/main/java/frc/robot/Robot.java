@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
     hp = new HatchPanel(RobotMap.hatchPistons);
     cargo = new Cargo(RobotMap.cargo, RobotMap.pdp);
     
-    oi = new OI(cargo, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
+    oi = new OI(cargo, hp, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto Mode", chooser);

@@ -33,7 +33,7 @@ public class OI {
 
   JoystickButton toggleCameraBtn;
 
-  OI(Cargo cargo, UsbCamera driveCamera, UsbCamera hatchCamera, VideoSink cameraServer) {
+  OI(Cargo cargo, HatchPanel hp, UsbCamera driveCamera, UsbCamera hatchCamera, VideoSink cameraServer) {
     leftJoy = new Joystick(0);
     rightJoy = new Joystick(1);
     manipulator = new Joystick(2);
