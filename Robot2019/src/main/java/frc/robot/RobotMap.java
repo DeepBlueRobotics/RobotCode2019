@@ -33,7 +33,7 @@ public class RobotMap {
   static WPI_TalonSRX leftMaster, rightMaster;
   static WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
   static DoubleSolenoid hatchPistons;
-  static VictorSP cargo;
+  static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
   static AHRS gyro;
@@ -52,8 +52,11 @@ public class RobotMap {
     rightSlave1 = createConfiguredVictor(6);
     rightSlave2 = createConfiguredVictor(7);
 
-    hatchPistons = new DoubleSolenoid(0, 1); // TODO: set ports to correct values
-    cargo = new VictorSP(4); // TODO: Set this to the actual correct values
+    // Initialize motors on the cargo mech
+    cargoRoller = new VictorSP(0);
+
+    // Initialize solenoid on hatch panel mech
+    hatchPistons = new DoubleSolenoid(0, 1);
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));

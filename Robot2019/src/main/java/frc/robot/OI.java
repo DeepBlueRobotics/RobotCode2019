@@ -27,9 +27,9 @@ import frc.robot.subsystems.Cargo;
 public class OI {
   Joystick leftJoy, rightJoy, manipulator;
 
-  JoystickButton leftSlowButton, rightSlowButton;
-  JoystickButton toggleHatchButton;
-  JoystickButton cargoIn, cargoOut;
+  JoystickButton leftSlowBtn, rightSlowBtn;
+  JoystickButton toggleHatchBtn;
+  JoystickButton cargoIntakeBtn, cargoEjectBtn;
 
   JoystickButton toggleCameraBtn;
 
@@ -38,18 +38,18 @@ public class OI {
     rightJoy = new Joystick(1);
     manipulator = new Joystick(2);
 
-    leftSlowButton = new JoystickButton(leftJoy, 1);
-    leftSlowButton.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
-    rightSlowButton = new JoystickButton(rightJoy, 1);
-    rightSlowButton.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
+    leftSlowBtn = new JoystickButton(leftJoy, 1);
+    leftSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
+    rightSlowBtn = new JoystickButton(rightJoy, 1);
+    rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
 
-    toggleHatchButton = new JoystickButton(manipulator, 0); // TODO: set ports to correct values
-    toggleHatchButton.whenPressed(new ToggleHatch(hp));
+    toggleHatchBtn = new JoystickButton(manipulator, 0); // TODO: set ports to correct values
+    toggleHatchBtn.whenPressed(new ToggleHatch(hp));
 
-    cargoIn = new JoystickButton(manipulator, 1); // TODO: set ports to correct values
-    cargoIn.whenPressed(new IntakeCargo(cargo));
-    cargoOut = new JoystickButton(manipulator, 2); // TODO: set ports to correct values
-    cargoOut.whenPressed(new EjectCargo(cargo));
+    cargoIntakeBtn = new JoystickButton(manipulator, 1); // TODO: set ports to correct values
+    cargoIntakeBtn.whenPressed(new IntakeCargo(cargo));
+    cargoEjectBtn = new JoystickButton(manipulator, 2); // TODO: set ports to correct values
+    cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));

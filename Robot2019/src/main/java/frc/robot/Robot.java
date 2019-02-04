@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
         RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
         RobotMap.gyro);
     hp = new HatchPanel(RobotMap.hatchPistons);
-    cargo = new Cargo(RobotMap.cargo, RobotMap.pdp);
+    cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp);
     
     oi = new OI(cargo, hp, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
