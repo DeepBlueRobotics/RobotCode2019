@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
         RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
         RobotMap.gyro);
-    cargo = new Cargo(RobotMap.cargo, RobotMap.pdp);
+    cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp);
     oi = new OI(cargo, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
