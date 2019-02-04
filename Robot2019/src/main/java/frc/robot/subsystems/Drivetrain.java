@@ -44,6 +44,11 @@ public class Drivetrain extends Subsystem {
 
     this.leftEnc = leftEnc;
     this.rightEnc = rightEnc;
+    
+    double pulseFraction = 1.0/256;
+    double wheelDiameter = 5;
+    leftEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
+    rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
 
     this.gyro = gyro;
   }

@@ -12,6 +12,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
+import edu.wpi.cscore.VideoSource;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
@@ -34,6 +38,8 @@ public class RobotMap {
   static String driveMode;
   static AHRS gyro;
   static PowerDistributionPanel pdp;
+  static UsbCamera driveCamera, hatchCamera;
+  static VideoSink cameraServer;
 
   static {
     // Initialize motors on the left side of the drivetrain.
@@ -54,6 +60,12 @@ public class RobotMap {
 
     gyro = new AHRS(SPI.Port.kMXP);
     pdp = new PowerDistributionPanel();
+
+    // Initialize cameras
+    driveCamera = configureCamera(0);
+    hatchCamera = configureCamera(1);
+    cameraServer = CameraServer.getInstance().getServer();
+    cameraServer.setSource(driveCamera);
   }
 
   private static WPI_TalonSRX createConfiguredTalon(int port) {
@@ -88,5 +100,11 @@ public class RobotMap {
     vspx.setNeutralMode(NeutralMode.Brake);
 
     return vspx;
+  }
+
+  private static UsbCamera configureCamera(int port) {
+    UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(port);
+    camera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+    return camera;
   }
 }

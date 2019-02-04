@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Drivetrain;
@@ -33,9 +34,9 @@ public class Robot extends TimedRobot {
         RobotMap.gyro);
     hp = new HatchPanel(RobotMap.hatchPistons);
     cargo = new Cargo(RobotMap.cargo, RobotMap.pdp);
-
-    oi = new OI(cargo, hp);
     
+    oi = new OI(cargo, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
+
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto Mode", chooser);
   }
