@@ -53,8 +53,8 @@ public class RobotMap {
     // Initialize motors on the cargo mech
     cargo = new VictorSP(4); // TODO: Set this to the actual correct values
 
-    leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1)); // TODO: set ports to correct values
-    rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3)); // TODO: set ports to correct values
+    leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
+    rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
 
     gyro = new AHRS(SPI.Port.kMXP);
     pdp = new PowerDistributionPanel();
