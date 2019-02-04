@@ -17,6 +17,7 @@ import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 public class RobotMap {
   static WPI_TalonSRX leftMaster, rightMaster;
   static WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
+  static DoubleSolenoid hatchPistons;
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
@@ -52,6 +54,9 @@ public class RobotMap {
 
     // Initialize motors on the cargo mech
     cargoRoller = new VictorSP(0);
+
+    // Initialize solenoid on hatch panel mech
+    hatchPistons = new DoubleSolenoid(0, 1);
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));

@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.EjectCargo;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.SlowDrive;
+import frc.robot.commands.ToggleHatch;
+import frc.robot.subsystems.HatchPanel;
 import frc.robot.commands.ToggleCamera;
 import frc.robot.subsystems.Cargo;
 
@@ -23,34 +25,30 @@ import frc.robot.subsystems.Cargo;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-  Joystick leftJoy;
-  Joystick rightJoy;
-  Joystick manipulator;
+  Joystick leftJoy, rightJoy, manipulator;
 
-  JoystickButton leftSlowBtn;
-  JoystickButton rightSlowBtn;
-
-  JoystickButton cargoIntakeBtn;
-  JoystickButton cargoEjectBtn;
+  JoystickButton leftSlowBtn, rightSlowBtn;
+  JoystickButton toggleHatchBtn;
+  JoystickButton cargoIntakeBtn, cargoEjectBtn;
 
   JoystickButton toggleCameraBtn;
 
-  Cargo cargo;
-
-  OI(Cargo cargo, UsbCamera driveCamera, UsbCamera hatchCamera, VideoSink cameraServer) {
-    this.cargo = cargo;
-
-    leftJoy = new Joystick(0); // TODO: set ports to correct values
-    rightJoy = new Joystick(1); // TODO: set ports to correct values
+  OI(Cargo cargo, HatchPanel hp, UsbCamera driveCamera, UsbCamera hatchCamera, VideoSink cameraServer) {
+    leftJoy = new Joystick(0);
+    rightJoy = new Joystick(1);
+    manipulator = new Joystick(2);
 
     leftSlowBtn = new JoystickButton(leftJoy, 1);
     leftSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
     rightSlowBtn = new JoystickButton(rightJoy, 1);
     rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
 
-    cargoIntakeBtn = new JoystickButton(manipulator, 0);
+    toggleHatchBtn = new JoystickButton(manipulator, 0); // TODO: set ports to correct values
+    toggleHatchBtn.whenPressed(new ToggleHatch(hp));
+
+    cargoIntakeBtn = new JoystickButton(manipulator, 1); // TODO: set ports to correct values
     cargoIntakeBtn.whenPressed(new IntakeCargo(cargo));
-    cargoEjectBtn = new JoystickButton(manipulator, 1);
+    cargoEjectBtn = new JoystickButton(manipulator, 2); // TODO: set ports to correct values
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
