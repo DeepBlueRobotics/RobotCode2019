@@ -8,15 +8,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
+import frc.robot.subsystems.ClimberSubsystem;
 
 /**
  * An example command.  You can replace me with your own command.
  */
-public class ExampleCommand extends Command {
-  public ExampleCommand() {
+public class LowerClimber extends Command {
+  private ClimberSubsystem climber;
+  public LowerClimber(ClimberSubsystem climber) {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.m_subsystem);
+    requires(climber);
+    this.climber = climber;
   }
 
   // Called just before this Command runs the first time
@@ -27,22 +29,25 @@ public class ExampleCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    climber.lowerClimber(0.5);      // We want to lower the climber slowly.
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return (climber.isStalled());
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    climber.stopClimber();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }
