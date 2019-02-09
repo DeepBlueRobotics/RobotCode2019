@@ -52,15 +52,11 @@ public class TeleopDrive extends Command {
       rot *= SmartDashboard.getNumber("Rotation Slow Ratio", 0.5);
     }
 
-    SmartDashboard.putNumber("Speed", speed);
-    SmartDashboard.putNumber("Rotation", rot);
-
     double left, right;
 
     //double maxInput = Math.copySign(Math.max(Math.abs(speed), Math.abs(rot)), speed);
     double maxInput = Math.max(Math.abs(speed), Math.abs(rot));
-    SmartDashboard.putNumber("maxInput", maxInput);
-
+    
     if (speed >= 0.0) {
       // First quadrant, else second quadrant
       if (rot >= 0.0) {
@@ -81,9 +77,8 @@ public class TeleopDrive extends Command {
         right = speed - rot;
       }
     }
+    
 
-    SmartDashboard.putNumber("Left", left);
-    SmartDashboard.putNumber("Right", right);
     dt.drive(left, right);
   }
 
