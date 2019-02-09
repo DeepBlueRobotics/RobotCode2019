@@ -15,9 +15,14 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TeleopDrive;
 
 public class Drivetrain extends Subsystem {
+  public enum Side {
+    LEFT, RIGHT
+  }
+
   private SpeedController leftMotor, rightMotor;
   private Encoder leftEnc, rightEnc;
   public Joystick leftJoy, rightJoy;
@@ -51,6 +56,7 @@ public class Drivetrain extends Subsystem {
     rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
 
     this.gyro = gyro;
+
   }
 
   @Override
@@ -61,6 +67,8 @@ public class Drivetrain extends Subsystem {
   public void drive(double left, double right) {
     leftMotor.set(left);
     rightMotor.set(right);
+    SmartDashboard.putNumber("Encoder Distance Left:", leftEnc.getDistance());
+    SmartDashboard.putNumber("Encoder Distance Right:", rightEnc.getDistance());
   }
 
   public void stop() {
@@ -68,16 +76,16 @@ public class Drivetrain extends Subsystem {
     rightMotor.stopMotor();
   }
 
-  public double getEncDist(String type) {
-    if (type.equals("left")) {
+  public double getEncDist(Side type) {
+    if (type == Side.LEFT) {
       return leftEnc.getDistance();
     } else {
       return rightEnc.getDistance();
     }
   }
 
-  public double getEncRate(String type) {
-    if (type.equals("left")) {
+  public double getEncRate(Side type) {
+    if (type == Side.LEFT) {
       return leftEnc.getRate();
     } else {
       return rightEnc.getRate();

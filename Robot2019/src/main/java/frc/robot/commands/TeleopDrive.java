@@ -35,8 +35,10 @@ public class TeleopDrive extends Command {
   }
 
   private void arcadeDrive() {
-    double speed = dt.leftJoy.getY();
+    double speed = -dt.leftJoy.getY();
     double rot = dt.rightJoy.getX();
+
+    //System.out.println("Speed: " + speed + ", Rotation: " + rot);
 
     if (SmartDashboard.getBoolean("Square Joysticks", true)) {
       speed = Math.copySign(speed * speed, speed);
@@ -74,17 +76,12 @@ public class TeleopDrive extends Command {
       }
     }
 
-    if (SmartDashboard.getBoolean("Square Joysticks", true)) {
-      left = Math.signum(left * left);
-      right = Math.signum(right * right);
-    }
-
     dt.drive(left, right);
   }
 
   private void tankDrive() {
-    double left = dt.leftJoy.getY();
-    double right = dt.rightJoy.getY();
+    double left = -dt.leftJoy.getY();
+    double right = -dt.rightJoy.getY();
 
     if (SmartDashboard.getBoolean("Square Joysticks", true)) {
       left = Math.copySign(left * left, left);
