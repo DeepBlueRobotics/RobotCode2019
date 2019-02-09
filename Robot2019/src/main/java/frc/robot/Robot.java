@@ -40,6 +40,8 @@ public class Robot extends TimedRobot {
 
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto Mode", chooser);
+
+    
   }
 
   /**
