@@ -40,6 +40,11 @@ public class Robot extends TimedRobot {
 
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto Mode", chooser);
+
+    double one = 1;
+    double zero = 0;
+    double testCopySign = Math.copySign(one, zero);
+    System.out.println("testCopySign output = " + testCopySign);
   }
 
   /**
