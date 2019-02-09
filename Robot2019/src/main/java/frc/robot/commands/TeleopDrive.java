@@ -35,7 +35,7 @@ public class TeleopDrive extends Command {
   }
 
   private void arcadeDrive() {
-    double speed = dt.leftJoy.getY();
+    double speed = -dt.leftJoy.getY();
     double rot = dt.rightJoy.getX();
 
     if (SmartDashboard.getBoolean("Square Joysticks", true)) {
@@ -72,11 +72,6 @@ public class TeleopDrive extends Command {
         left = maxInput;
         right = speed - rot;
       }
-    }
-
-    if (SmartDashboard.getBoolean("Square Joysticks", true)) {
-      left = Math.signum(left * left);
-      right = Math.signum(right * right);
     }
 
     dt.drive(left, right);
