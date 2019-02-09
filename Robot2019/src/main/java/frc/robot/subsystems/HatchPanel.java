@@ -23,6 +23,9 @@ public class HatchPanel extends Subsystem {
    */
   public HatchPanel(DoubleSolenoid pistons) {
     this.pistons = pistons;
+    pistonState = "both channels disabled";
+    pistons.set(DoubleSolenoid.Value.kOff);
+    SmartDashboard.putString("DoubleSolenoid State", pistonState);
   }
 
   /**
