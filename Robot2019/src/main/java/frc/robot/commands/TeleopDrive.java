@@ -38,7 +38,7 @@ public class TeleopDrive extends Command {
     double speed = -dt.leftJoy.getY();
     double rot = dt.rightJoy.getX();
 
-    //System.out.println("Speed: " + speed + ", Rotation: " + rot);
+    // System.out.println("Speed: " + speed + ", Rotation: " + rot);
 
     if (SmartDashboard.getBoolean("Square Joysticks", true)) {
       speed = Math.copySign(speed * speed, speed);
@@ -54,7 +54,10 @@ public class TeleopDrive extends Command {
 
     double left, right;
 
-    double maxInput = Math.copySign(Math.max(Math.abs(speed), Math.abs(rot)), speed);
+    // double maxInput = Math.copySign(Math.max(Math.abs(speed), Math.abs(rot)),
+    // speed);
+    // copySign is returning incorrect signs in operation but not tests
+    double maxInput = Math.max(Math.abs(speed), Math.abs(rot));
 
     if (speed >= 0.0) {
       // First quadrant, else second quadrant
@@ -67,6 +70,7 @@ public class TeleopDrive extends Command {
       }
     } else {
       // Third quadrant, else fourth quadrant
+      maxInput *= -1;
       if (rot >= 0.0) {
         left = speed + rot;
         right = maxInput;

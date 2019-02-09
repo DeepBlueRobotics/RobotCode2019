@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     hp = new HatchPanel(RobotMap.hatchPistons);
-    cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp);
+    cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
     
     oi = new OI(cargo, hp, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
@@ -40,6 +40,8 @@ public class Robot extends TimedRobot {
 
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto Mode", chooser);
+
+    
   }
 
   /**
