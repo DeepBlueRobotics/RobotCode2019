@@ -37,14 +37,14 @@ public class HatchPanel extends Subsystem {
     if (pistons.get() == DoubleSolenoid.Value.kForward) {
       pistons.set(DoubleSolenoid.Value.kReverse);
       pistonState = "reverse channel enabled";
+      SmartDashboard.putString("DoubleSolenoid State", pistonState);
       return false;
     } else {
       pistons.set(DoubleSolenoid.Value.kForward);
       pistonState = "forward channel enabled";
+      SmartDashboard.putString("DoubleSolenoid State", pistonState);
       return true;
     }
-
-    SmartDashboard.putString("DoubleSolenoid State", pistonState);
   }
 
   @Override
