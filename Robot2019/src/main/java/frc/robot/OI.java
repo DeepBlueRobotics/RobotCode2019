@@ -43,12 +43,12 @@ public class OI {
     rightSlowBtn = new JoystickButton(rightJoy, 1);
     rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
 
-    toggleHatchBtn = new JoystickButton(manipulator, 0); // TODO: set ports to correct values
+    toggleHatchBtn = new JoystickButton(manipulator, 1); // TODO: set ports to correct values
     toggleHatchBtn.whenPressed(new ToggleHatch(hp));
 
-    cargoIntakeBtn = new JoystickButton(manipulator, 1); // TODO: set ports to correct values
+    cargoIntakeBtn = new JoystickButton(manipulator, 2); // TODO: set ports to correct values
     cargoIntakeBtn.whenPressed(new IntakeCargo(cargo));
-    cargoEjectBtn = new JoystickButton(manipulator, 2); // TODO: set ports to correct values
+    cargoEjectBtn = new JoystickButton(manipulator, 3); // TODO: set ports to correct values
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
