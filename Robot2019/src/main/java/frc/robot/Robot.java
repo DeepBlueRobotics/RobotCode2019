@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     hp = new HatchPanel(RobotMap.hatchPistons);
-    cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, -1 /* Update this with actual PDP channel */);
+    cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
     
     oi = new OI(cargo, hp, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 

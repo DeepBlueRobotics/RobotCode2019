@@ -40,6 +40,7 @@ public class RobotMap {
   static PowerDistributionPanel pdp;
   static UsbCamera driveCamera, hatchCamera;
   static VideoSink cameraServer;
+  static int cargoPDPPort;
 
   static {
     // Initialize motors on the left side of the drivetrain.
@@ -69,6 +70,8 @@ public class RobotMap {
     hatchCamera = configureCamera(1);
     cameraServer = CameraServer.getInstance().getServer();
     cameraServer.setSource(driveCamera);
+    
+    cargoPDPPort = -1; // Update this with actual PDP channel 
   }
 
   private static WPI_TalonSRX createConfiguredTalon(int port) {
