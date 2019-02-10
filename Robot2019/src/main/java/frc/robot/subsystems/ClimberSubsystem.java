@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import frc.robot.commands.Climb;
@@ -19,6 +20,7 @@ public class ClimberSubsystem extends Subsystem {
   private PowerDistributionPanel pdp;
   private Encoder enc;
   private Accelerometer accel;
+  private DoubleSolenoid pistons;
   private int PDPClimberPort;
   private double miniCIMStallCurrent, minimumTilit, maximumTilt;
 
@@ -32,6 +34,10 @@ public class ClimberSubsystem extends Subsystem {
     miniCIMStallCurrent = 89.0;   // To determine whether or not the climber motor has overdrawn 
   }
 
+  public void actuateRails() {
+    pistons.set(DoubleSolenoid.Value.kForward);
+  }
+  
   public void raiseClimber(double speed) {
     motor.set(speed);
   }
