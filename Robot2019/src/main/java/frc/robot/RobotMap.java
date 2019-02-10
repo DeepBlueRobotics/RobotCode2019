@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -73,6 +74,7 @@ public class RobotMap {
 
   private static WPI_TalonSRX createConfiguredTalon(int port) {
     WPI_TalonSRX tsrx = new WPI_TalonSRX(port);
+    ErrorCode ecDeadband, ecVoltSat;
 
     // Put all configurations for the talon motor controllers in here.
     // All values are from last year's code.
@@ -85,22 +87,41 @@ public class RobotMap {
     // 40 Amps is the amp limit of a CIM. lThe PDP has 40 amp circuit breakers,
     tsrx.configContinuousCurrentLimit(40, 0);
     tsrx.enableCurrentLimit(true);
-    tsrx.configNeutralDeadband(0.001, 10);
     tsrx.setNeutralMode(NeutralMode.Brake);
+
+    ecDeadband = tsrx.configNeutralDeadband(0.001, 10);
+		if (!ecDeadband.equals(ErrorCode.OK)) {
+			throw new RuntimeException("Deadband Configuration could not be set");
+		}
+    ecVoltSat = tsrx.configVoltageCompSaturation(9.0, 10);
+
+		if (!ecVoltSat.equals(ErrorCode.OK)) {
+			throw new RuntimeException("Voltage Saturation Configuration could not be set");
+		}
 
     return tsrx;
   }
 
   private static WPI_VictorSPX createConfiguredVictor(int port) {
     WPI_VictorSPX vspx = new WPI_VictorSPX(port);
+    ErrorCode ecDeadband, ecVoltSat;
 
     // Put all configurations for the victor motor controllers in here.
     vspx.configNominalOutputForward(0, 10);
     vspx.configNominalOutputReverse(0, 10);
     vspx.configPeakOutputForward(1, 10);
     vspx.configPeakOutputReverse(-1, 10);
-    vspx.configNeutralDeadband(0.001, 10);
     vspx.setNeutralMode(NeutralMode.Brake);
+    
+    ecDeadband = vspx.configNeutralDeadband(0.001, 10);
+		if (!ecDeadband.equals(ErrorCode.OK)) {
+			throw new RuntimeException("Deadband Configuration could not be set");
+		}
+    ecVoltSat = vspx.configVoltageCompSaturation(9.0, 10);
+
+		if (!ecVoltSat.equals(ErrorCode.OK)) {
+			throw new RuntimeException("Voltage Saturation Configuration could not be set");
+		}
 
     return vspx;
   }

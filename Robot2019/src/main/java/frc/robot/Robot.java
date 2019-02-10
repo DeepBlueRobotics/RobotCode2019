@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.robot.commands.IncreaseVoltageLinear;
+import frc.robot.commands.IncreaseVoltageStepwise;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Drivetrain;
@@ -40,6 +41,10 @@ public class Robot extends TimedRobot {
 
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto Mode", chooser);
+
+    String fname = "/home/lvuser/drive_char.csv";
+    SmartDashboard.putData(new IncreaseVoltageLinear(dt, 0.25 / 50, fname));
+		SmartDashboard.putData(new IncreaseVoltageStepwise(dt, 6.0, fname));
   }
 
   /**

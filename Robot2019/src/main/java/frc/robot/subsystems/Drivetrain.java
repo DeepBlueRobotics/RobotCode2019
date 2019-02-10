@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
@@ -19,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TeleopDrive;
 
 public class Drivetrain extends Subsystem {
-  public enum Side {
+  private enum Side {
     LEFT, RIGHT
   }
 
@@ -27,6 +30,7 @@ public class Drivetrain extends Subsystem {
   private Encoder leftEnc, rightEnc;
   public Joystick leftJoy, rightJoy;
   private AHRS gyro;
+  public double suppliedVoltage, maxVoltage, voltage_runtime;
 
   public Drivetrain(WPI_TalonSRX leftMaster, WPI_VictorSPX leftSlave1, WPI_VictorSPX leftSlave2,
       WPI_TalonSRX rightMaster, WPI_VictorSPX rightSlave1, WPI_VictorSPX rightSlave2, Joystick leftJoy,
@@ -57,6 +61,9 @@ public class Drivetrain extends Subsystem {
 
     this.gyro = gyro;
 
+    suppliedVoltage = 0.0;
+    maxVoltage = 9.0;   // For drivetrain characterization.
+    voltage_runtime = 0.0;
   }
 
   @Override
@@ -102,5 +109,41 @@ public class Drivetrain extends Subsystem {
 
   public double getGyroAngle() {
     return gyro.getYaw();
+  }
+
+  public double getMaxSpeed() {   // Return must be adjusted in the future;
+    return 204.0;
+  }
+
+  public void writeMeasuredVelocity(FileWriter fw) {
+		double leftMotorVelocity, rightMotorVelocity;
+		StringBuilder sb = new StringBuilder();
+				
+		leftMotorVelocity = getEncRate(Side.LEFT);
+		rightMotorVelocity = getEncRate(Side.RIGHT);
+
+		voltage_runtime += 0.02;	// IncreaseVoltage occurs every 1/50 of a second
+		sb.append(String.valueOf(voltage_runtime) + ",");
+		sb.append(String.valueOf(suppliedVoltage) + ",");
+		sb.append(String.valueOf(leftMotorVelocity) + ",");
+		sb.append(String.valueOf(rightMotorVelocity) + "\r\n");
+
+		try {
+			fw.write(sb.toString());
+		} catch (IOException e) {
+			System.out.println("FileWriter object cannot write StringBuilder object: " + e);
+		}
+  }
+  
+  public Side getSideValue(String type) {
+    if (type.equals("LEFT")) {
+      return Side.LEFT;
+    }
+    else if (type.equals("RIGHT")) {
+      return Side.RIGHT;
+    } else {
+      System.out.println("Type value provided to Drivetrain.getSideValue does not match either LEFT or RIGHT. Value of type: " + type);
+      return Side.LEFT;
+    }
   }
 }
