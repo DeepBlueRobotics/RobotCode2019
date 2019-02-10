@@ -74,7 +74,7 @@ public class RobotMap {
     cameraServer = CameraServer.getInstance().getServer();
     cameraServer.setSource(driveCamera);
 
-    cargoPDPPort = -1;  // TODO: set ports to actual cargo motor port in pdp
+    cargoPDPPort = -1; // TODO: set ports to actual cargo motor port in pdp
   }
 
   private static BaseMotorController createConfiguredMotorController(int port) {
@@ -94,7 +94,7 @@ public class RobotMap {
 
   private static WPI_TalonSRX createConfiguredTalon(int port) {
     WPI_TalonSRX tsrx = new WPI_TalonSRX(port);
-    ErrorCode ecDeadband, ecVoltSat;
+    ErrorCode ecDeadband;
 
     // Put all configurations for the talon motor controllers in here.
     // All values are from last year's code.
@@ -110,16 +110,16 @@ public class RobotMap {
     tsrx.setNeutralMode(NeutralMode.Brake);
 
     ecDeadband = tsrx.configNeutralDeadband(0.001, 10);
-		if (!ecDeadband.equals(ErrorCode.OK)) {
-			throw new RuntimeException("Deadband Configuration could not be set");
-		}
+    if (!ecDeadband.equals(ErrorCode.OK)) {
+      throw new RuntimeException("Deadband Configuration could not be set");
+    }
 
     return tsrx;
   }
 
   private static WPI_VictorSPX createConfiguredVictor(int port) {
     WPI_VictorSPX vspx = new WPI_VictorSPX(port);
-    ErrorCode ecDeadband, ecVoltSat;
+    ErrorCode ecDeadband;
 
     // Put all configurations for the victor motor controllers in here.
     vspx.configNominalOutputForward(0, 10);
@@ -127,11 +127,11 @@ public class RobotMap {
     vspx.configPeakOutputForward(1, 10);
     vspx.configPeakOutputReverse(-1, 10);
     vspx.setNeutralMode(NeutralMode.Brake);
-    
+
     ecDeadband = vspx.configNeutralDeadband(0.001, 10);
-		if (!ecDeadband.equals(ErrorCode.OK)) {
-			throw new RuntimeException("Deadband Configuration could not be set");
-		}
+    if (!ecDeadband.equals(ErrorCode.OK)) {
+      throw new RuntimeException("Deadband Configuration could not be set");
+    }
 
     return vspx;
   }

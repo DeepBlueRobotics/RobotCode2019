@@ -21,7 +21,7 @@ public class IncreaseVoltageStepwise extends Command {
     }
 
     @Override
-	protected void initialize() {
+    protected void initialize() {
         File f = new File(filename);
         try {
             f.createNewFile();
@@ -38,7 +38,7 @@ public class IncreaseVoltageStepwise extends Command {
     }
 
     @Override
-	protected void execute() {
+    protected void execute() {
         double throttle = dt.suppliedVoltage / dt.maxVoltage;
         dt.drive(throttle, throttle);
         dt.writeMeasuredVelocity(fw);
@@ -47,8 +47,9 @@ public class IncreaseVoltageStepwise extends Command {
 
     @Override
     // Make this return true when this Command no longer needs to run execute()
-	protected boolean isFinished() {
-        if (dt.getEncRate(dt.getSideValue("LEFT")) >= 0.75 * dt.getMaxSpeed() || dt.getEncRate(dt.getSideValue("RIGHT")) >= 0.75 * dt.getMaxSpeed()) {
+    protected boolean isFinished() {
+        if (dt.getEncRate(dt.getSideValue("LEFT")) >= 0.75 * dt.getMaxSpeed()
+                || dt.getEncRate(dt.getSideValue("RIGHT")) >= 0.75 * dt.getMaxSpeed()) {
             return true;
         } else {
             return false;
@@ -56,16 +57,18 @@ public class IncreaseVoltageStepwise extends Command {
     }
 
     @Override
-	protected void end() {
+    protected void end() {
         try {
             fw.close();
         } catch (IOException e) {
             System.out.println("Cannot close FileWriter");
         }
+
+        dt.disableVoltageCompensation();
     }
 
     @Override
-	protected void interrupted() {
+    protected void interrupted() {
         end();
     }
 }

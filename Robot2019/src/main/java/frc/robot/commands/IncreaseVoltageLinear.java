@@ -13,20 +13,20 @@ public class IncreaseVoltageLinear extends Command {
     private Drivetrain dt;
     private FileWriter fw;
     private String filename;
-    
+
     public double suppliedVoltage;
     public double volt_step;
 
-	public IncreaseVoltageLinear(Drivetrain dt, double volt_step, String filename) {
+    public IncreaseVoltageLinear(Drivetrain dt, double volt_step, String filename) {
         requires(dt);
         this.dt = dt;
         this.volt_step = volt_step;
         this.filename = filename;
     }
 
-	// Called just before this Command runs the first time
-	@Override
-	protected void initialize() {
+    // Called just before this Command runs the first time
+    @Override
+    protected void initialize() {
         File f = new File(filename);
         try {
             f.createNewFile();
@@ -40,11 +40,11 @@ public class IncreaseVoltageLinear extends Command {
         }
 
         dt.setVoltageCompensation(9.0);
-	}
+    }
 
-	// Called repeatedly when this Command is scheduled to run
-	@Override
-	protected void execute() {
+    // Called repeatedly when this Command is scheduled to run
+    @Override
+    protected void execute() {
         if (dt.suppliedVoltage + volt_step <= dt.maxVoltage) {
             dt.suppliedVoltage += volt_step;
             double throttle = dt.suppliedVoltage / dt.maxVoltage;
@@ -52,33 +52,34 @@ public class IncreaseVoltageLinear extends Command {
             dt.writeMeasuredVelocity(fw);
             dt.suppliedVoltage += volt_step;
         }
-	}
+    }
 
-	// Make this return true when this Command no longer needs to run execute()
-	@Override
-	protected boolean isFinished() {
-		if (dt.suppliedVoltage >= dt.maxVoltage) {
+    // Make this return true when this Command no longer needs to run execute()
+    @Override
+    protected boolean isFinished() {
+        if (dt.suppliedVoltage >= dt.maxVoltage) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
-	}
+    }
 
-	// Called once after isFinished returns true
-	@Override
-	protected void end() {
+    // Called once after isFinished returns true
+    @Override
+    protected void end() {
         try {
             fw.close();
         } catch (IOException e) {
             System.out.println("Cannot close FileWriter");
         }
-	}
 
-	// Called when another command which requires one or more of the same
-	// subsystems is scheduled to run
-	@Override
-	protected void interrupted() {
-		end();
-	}
+        dt.disableVoltageCompensation();
+    }
+
+    // Called when another command which requires one or more of the same
+    // subsystems is scheduled to run
+    @Override
+    protected void interrupted() {
+        end();
+    }
 }

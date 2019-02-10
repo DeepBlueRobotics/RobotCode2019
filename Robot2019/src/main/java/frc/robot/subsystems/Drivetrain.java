@@ -54,8 +54,8 @@ public class Drivetrain extends Subsystem {
 
     this.leftEnc = leftEnc;
     this.rightEnc = rightEnc;
-    
-    double pulseFraction = 1.0/256;
+
+    double pulseFraction = 1.0 / 256;
     double wheelDiameter = 5;
     leftEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
     rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
@@ -63,7 +63,7 @@ public class Drivetrain extends Subsystem {
     this.gyro = gyro;
 
     suppliedVoltage = 0.0;
-    maxVoltage = 12.0;   // For drivetrain characterization.
+    maxVoltage = 12.0; // For drivetrain characterization.
     voltage_runtime = 0.0;
   }
 
@@ -112,48 +112,51 @@ public class Drivetrain extends Subsystem {
     return gyro.getYaw();
   }
 
-  public double getMaxSpeed() {   // Return must be adjusted in the future;
+  public double getMaxSpeed() { // Return must be adjusted in the future;
     return 204.0;
   }
 
   public void writeMeasuredVelocity(FileWriter fw) {
-		double leftMotorVelocity, rightMotorVelocity;
-		StringBuilder sb = new StringBuilder();
-				
-		leftMotorVelocity = getEncRate(Side.LEFT);
-		rightMotorVelocity = getEncRate(Side.RIGHT);
+    double leftMotorVelocity, rightMotorVelocity;
+    StringBuilder sb = new StringBuilder();
 
-		voltage_runtime += 0.02;	// IncreaseVoltage occurs every 1/50 of a second
-		sb.append(String.valueOf(voltage_runtime) + ",");
-		sb.append(String.valueOf(suppliedVoltage) + ",");
-		sb.append(String.valueOf(leftMotorVelocity) + ",");
-		sb.append(String.valueOf(rightMotorVelocity) + "\r\n");
+    leftMotorVelocity = getEncRate(Side.LEFT);
+    rightMotorVelocity = getEncRate(Side.RIGHT);
 
-		try {
-			fw.write(sb.toString());
-		} catch (IOException e) {
-			System.out.println("FileWriter object cannot write StringBuilder object: " + e);
-		}
+    voltage_runtime += 0.02; // IncreaseVoltage occurs every 1/50 of a second
+    sb.append(String.valueOf(voltage_runtime) + ",");
+    sb.append(String.valueOf(suppliedVoltage) + ",");
+    sb.append(String.valueOf(leftMotorVelocity) + ",");
+    sb.append(String.valueOf(rightMotorVelocity) + "\r\n");
+
+    try {
+      fw.write(sb.toString());
+    } catch (IOException e) {
+      System.out.println("FileWriter object cannot write StringBuilder object: " + e);
+    }
   }
-  
+
   public Side getSideValue(String type) {
     if (type.equals("LEFT")) {
       return Side.LEFT;
-    }
-    else if (type.equals("RIGHT")) {
+    } else if (type.equals("RIGHT")) {
       return Side.RIGHT;
     } else {
-      System.out.println("Type value provided to Drivetrain.getSideValue does not match either LEFT or RIGHT. Value of type: " + type);
+      System.out.println(
+          "Type value provided to Drivetrain.getSideValue does not match either LEFT or RIGHT. Value of type: " + type);
       return Side.LEFT;
     }
   }
 
   public void setVoltageCompensation(double volts) {
+    ((BaseMotorController) leftMotor).enableVoltageCompensation(true);
     ErrorCode ecVoltSat = ((BaseMotorController) leftMotor).configVoltageCompSaturation(volts, 10);
 
     if (!ecVoltSat.equals(ErrorCode.OK)) {
       throw new RuntimeException("Voltage Saturation Configuration could not be set");
     }
+
+    ((BaseMotorController) rightMotor).enableVoltageCompensation(true);
     ecVoltSat = ((BaseMotorController) rightMotor).configVoltageCompSaturation(volts, 10);
 
     if (!ecVoltSat.equals(ErrorCode.OK)) {
@@ -161,5 +164,10 @@ public class Drivetrain extends Subsystem {
     }
 
     maxVoltage = volts;
+  }
+
+  public void disableVoltageCompensation() {
+    ((BaseMotorController) leftMotor).enableVoltageCompensation(false);
+    ((BaseMotorController) rightMotor).enableVoltageCompensation(false);
   }
 }

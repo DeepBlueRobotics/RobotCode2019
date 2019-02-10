@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     hp = new HatchPanel(RobotMap.hatchPistons);
     cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
-    
+
     oi = new OI(cargo, hp, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
 
     fname = "/home/lvuser/drive_char.csv";
     SmartDashboard.putData(new IncreaseVoltageLinear(dt, 0.25 / 50, fname));
-		SmartDashboard.putData(new IncreaseVoltageStepwise(dt, 6.0, fname));
+    SmartDashboard.putData(new IncreaseVoltageStepwise(dt, 6.0, fname));
   }
 
   /**
