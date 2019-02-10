@@ -38,6 +38,8 @@ public class IncreaseVoltageLinear extends Command {
         } catch (IOException e) {
             System.out.println("Error caught creating FileWriter object: " + e);
         }
+
+        dt.setVoltageCompensation(9.0);
 	}
 
 	// Called repeatedly when this Command is scheduled to run

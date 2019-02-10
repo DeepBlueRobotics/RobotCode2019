@@ -9,10 +9,12 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class HatchPanel extends Subsystem {
   private DoubleSolenoid pistons;
+  private String pistonState;
 
   /**
    * Subsystem for controlling the hatch panel mechanism
@@ -21,6 +23,9 @@ public class HatchPanel extends Subsystem {
    */
   public HatchPanel(DoubleSolenoid pistons) {
     this.pistons = pistons;
+    pistonState = "IN";
+    pistons.set(DoubleSolenoid.Value.kReverse);
+    SmartDashboard.putString("Hatch Piston State", pistonState);
   }
 
   /**
@@ -31,9 +36,13 @@ public class HatchPanel extends Subsystem {
   public boolean toggle() {
     if (pistons.get() == DoubleSolenoid.Value.kForward) {
       pistons.set(DoubleSolenoid.Value.kReverse);
+      pistonState = "IN";
+      SmartDashboard.putString("Hatch Piston State", pistonState);
       return false;
     } else {
       pistons.set(DoubleSolenoid.Value.kForward);
+      pistonState = "OUT";
+      SmartDashboard.putString("Hatch Piston State", pistonState);
       return true;
     }
   }

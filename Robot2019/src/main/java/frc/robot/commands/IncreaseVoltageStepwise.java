@@ -33,6 +33,8 @@ public class IncreaseVoltageStepwise extends Command {
         } catch (IOException e) {
             System.out.println("Error caught creating FileWriter object: " + e);
         }
+
+        dt.setVoltageCompensation(9.0);
     }
 
     @Override

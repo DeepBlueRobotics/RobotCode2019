@@ -24,6 +24,7 @@ public class Robot extends TimedRobot {
   private static HatchPanel hp;
   private static OI oi;
   private static Cargo cargo;
+  private static String fname;
 
   Command autonomousCommand;
   SendableChooser<Command> chooser = new SendableChooser<>();
@@ -31,7 +32,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     hp = new HatchPanel(RobotMap.hatchPistons);
-    cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp);
+    cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
     
     oi = new OI(cargo, hp, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
@@ -42,7 +43,7 @@ public class Robot extends TimedRobot {
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto Mode", chooser);
 
-    String fname = "/home/lvuser/drive_char.csv";
+    fname = "/home/lvuser/drive_char.csv";
     SmartDashboard.putData(new IncreaseVoltageLinear(dt, 0.25 / 50, fname));
 		SmartDashboard.putData(new IncreaseVoltageStepwise(dt, 6.0, fname));
   }

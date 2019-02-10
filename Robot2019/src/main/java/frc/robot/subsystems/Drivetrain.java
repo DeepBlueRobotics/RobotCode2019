@@ -10,8 +10,9 @@ package frc.robot.subsystems;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -32,8 +33,8 @@ public class Drivetrain extends Subsystem {
   private AHRS gyro;
   public double suppliedVoltage, maxVoltage, voltage_runtime;
 
-  public Drivetrain(WPI_TalonSRX leftMaster, WPI_VictorSPX leftSlave1, WPI_VictorSPX leftSlave2,
-      WPI_TalonSRX rightMaster, WPI_VictorSPX rightSlave1, WPI_VictorSPX rightSlave2, Joystick leftJoy,
+  public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
+      WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Joystick leftJoy,
       Joystick rightJoy, Encoder leftEnc, Encoder rightEnc, AHRS gyro) {
 
     leftSlave1.follow(leftMaster);
@@ -62,7 +63,7 @@ public class Drivetrain extends Subsystem {
     this.gyro = gyro;
 
     suppliedVoltage = 0.0;
-    maxVoltage = 9.0;   // For drivetrain characterization.
+    maxVoltage = 12.0;   // For drivetrain characterization.
     voltage_runtime = 0.0;
   }
 
@@ -145,5 +146,20 @@ public class Drivetrain extends Subsystem {
       System.out.println("Type value provided to Drivetrain.getSideValue does not match either LEFT or RIGHT. Value of type: " + type);
       return Side.LEFT;
     }
+  }
+
+  public void setVoltageCompensation(double volts) {
+    ErrorCode ecVoltSat = ((BaseMotorController) leftMotor).configVoltageCompSaturation(volts, 10);
+
+    if (!ecVoltSat.equals(ErrorCode.OK)) {
+      throw new RuntimeException("Voltage Saturation Configuration could not be set");
+    }
+    ecVoltSat = ((BaseMotorController) rightMotor).configVoltageCompSaturation(volts, 10);
+
+    if (!ecVoltSat.equals(ErrorCode.OK)) {
+      throw new RuntimeException("Voltage Saturation Configuration could not be set");
+    }
+
+    maxVoltage = volts;
   }
 }

@@ -9,6 +9,7 @@ package frc.robot;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
@@ -32,7 +33,7 @@ import edu.wpi.first.wpilibj.VictorSP;
  */
 public class RobotMap {
   static WPI_TalonSRX leftMaster, rightMaster;
-  static WPI_VictorSPX leftSlave1, leftSlave2, rightSlave1, rightSlave2;
+  static BaseMotorController leftSlave1, leftSlave2, rightSlave1, rightSlave2;
   static DoubleSolenoid hatchPistons;
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
@@ -42,16 +43,18 @@ public class RobotMap {
   static UsbCamera driveCamera, hatchCamera;
   static VideoSink cameraServer;
 
+  final static int cargoPDPPort;
+
   static {
     // Initialize motors on the left side of the drivetrain.
     leftMaster = createConfiguredTalon(8);
-    leftSlave1 = createConfiguredVictor(9);
-    leftSlave2 = createConfiguredVictor(10);
+    leftSlave1 = createConfiguredMotorController(9);
+    leftSlave2 = createConfiguredMotorController(10);
 
     // Initialize motors on the right side of the drivetrain.
     rightMaster = createConfiguredTalon(5);
-    rightSlave1 = createConfiguredVictor(6);
-    rightSlave2 = createConfiguredVictor(7);
+    rightSlave1 = createConfiguredMotorController(6);
+    rightSlave2 = createConfiguredMotorController(7);
 
     // Initialize motors on the cargo mech
     cargoRoller = new VictorSP(0);
@@ -70,6 +73,23 @@ public class RobotMap {
     hatchCamera = configureCamera(1);
     cameraServer = CameraServer.getInstance().getServer();
     cameraServer.setSource(driveCamera);
+
+    cargoPDPPort = -1;  // TODO: set ports to actual cargo motor port in pdp
+  }
+
+  private static BaseMotorController createConfiguredMotorController(int port) {
+    BaseMotorController mc = new WPI_VictorSPX(port);
+
+    // Put all configurations for the talon motor controllers in here.
+    // All values are from last year's code.
+    ErrorCode e = mc.configNominalOutputForward(0, 10);
+    if (e == ErrorCode.OK) {
+      mc = createConfiguredVictor(port);
+    } else {
+      mc = createConfiguredTalon(port);
+    }
+
+    return mc;
   }
 
   private static WPI_TalonSRX createConfiguredTalon(int port) {
@@ -93,11 +113,6 @@ public class RobotMap {
 		if (!ecDeadband.equals(ErrorCode.OK)) {
 			throw new RuntimeException("Deadband Configuration could not be set");
 		}
-    ecVoltSat = tsrx.configVoltageCompSaturation(9.0, 10);
-
-		if (!ecVoltSat.equals(ErrorCode.OK)) {
-			throw new RuntimeException("Voltage Saturation Configuration could not be set");
-		}
 
     return tsrx;
   }
@@ -116,11 +131,6 @@ public class RobotMap {
     ecDeadband = vspx.configNeutralDeadband(0.001, 10);
 		if (!ecDeadband.equals(ErrorCode.OK)) {
 			throw new RuntimeException("Deadband Configuration could not be set");
-		}
-    ecVoltSat = vspx.configVoltageCompSaturation(9.0, 10);
-
-		if (!ecVoltSat.equals(ErrorCode.OK)) {
-			throw new RuntimeException("Voltage Saturation Configuration could not be set");
 		}
 
     return vspx;
