@@ -7,36 +7,51 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+
+import frc.robot.commands.EjectCargo;
+import frc.robot.commands.IntakeCargo;
+import frc.robot.commands.SlowDrive;
+import frc.robot.commands.ToggleHatch;
+import frc.robot.subsystems.HatchPanel;
+import frc.robot.commands.ToggleCamera;
+import frc.robot.subsystems.Cargo;
+
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-  //// CREATING BUTTONS
-  // One type of button is a joystick button which is any button on a
-  //// joystick.
-  // You create one by telling it which joystick it's on and which button
-  // number it is.
-  // Joystick stick = new Joystick(port);
-  // Button button = new JoystickButton(stick, buttonNumber);
+  Joystick leftJoy, rightJoy, manipulator;
 
-  // There are a few additional built in buttons you can use. Additionally,
-  // by subclassing Button you can create custom triggers and bind those to
-  // commands the same as any other Button.
+  JoystickButton leftSlowBtn, rightSlowBtn;
+  JoystickButton toggleHatchBtn;
+  JoystickButton cargoIntakeBtn, cargoEjectBtn;
 
-  //// TRIGGERING COMMANDS WITH BUTTONS
-  // Once you have a button, it's trivial to bind it to a button in one of
-  // three ways:
+  JoystickButton toggleCameraBtn;
 
-  // Start the command when the button is pressed and let it run the command
-  // until it is finished as determined by it's isFinished method.
-  // button.whenPressed(new ExampleCommand());
+  OI(Cargo cargo, HatchPanel hp, UsbCamera driveCamera, UsbCamera hatchCamera, VideoSink cameraServer) {
+    leftJoy = new Joystick(0);
+    rightJoy = new Joystick(1);
+    manipulator = new Joystick(2);
 
-  // Run the command while the button is being held down and interrupt it once
-  // the button is released.
-  // button.whileHeld(new ExampleCommand());
+    leftSlowBtn = new JoystickButton(leftJoy, 1);
+    leftSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
+    rightSlowBtn = new JoystickButton(rightJoy, 1);
+    rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
 
-  // Start the command when the button is released and let it run the command
-  // until it is finished as determined by it's isFinished method.
-  // button.whenReleased(new ExampleCommand());
+    toggleHatchBtn = new JoystickButton(manipulator, 1); // TODO: set ports to correct values
+    toggleHatchBtn.whenPressed(new ToggleHatch(hp));
+
+    cargoIntakeBtn = new JoystickButton(manipulator, 2); // TODO: set ports to correct values
+    cargoIntakeBtn.whenPressed(new IntakeCargo(cargo));
+    cargoEjectBtn = new JoystickButton(manipulator, 3); // TODO: set ports to correct values
+    cargoEjectBtn.whenPressed(new EjectCargo(cargo));
+
+    toggleCameraBtn = new JoystickButton(leftJoy, 2);
+    toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
+  }
 }
