@@ -60,7 +60,7 @@ public class RobotMap {
     cargoRoller = new VictorSP(0);
 
     // Initialize solenoid on hatch panel mech
-    hatchPistons = new DoubleSolenoid(0, 1);
+    hatchPistons = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse 
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
