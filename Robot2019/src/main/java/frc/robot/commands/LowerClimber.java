@@ -29,7 +29,7 @@ public class LowerClimber extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    climber.lowerClimber(0.5);      // We want to lower the climber slowly.
+    climber.runClimber(-0.5);      // We want to lower the climber slowly.
   }
 
   // Make this return true when this Command no longer needs to run execute()

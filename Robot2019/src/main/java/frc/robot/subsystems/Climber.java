@@ -8,29 +8,27 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.VictorSP;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import frc.robot.commands.Climb;
 
 public class Climber extends Subsystem {
   private VictorSP motor; // Mini-CIM
   private Encoder enc;
-  private AHRS accel;
+  private AHRS gyro;
   private DoubleSolenoid pistons;
 
   final private double minTilt = 91; // TODO: Update with actual number
   final private double maxTilt = 130; // TODO: Update with actual number
 
-  public Climber(VictorSP motor, Encoder enc, AHRS accel, DoubleSolenoid pistons) {
+  public Climber(VictorSP motor, Encoder enc, AHRS gyro, DoubleSolenoid pistons) {
     this.motor = motor;
     this.enc = enc;
-    this.accel = accel;
+    this.gyro = gyro;
     this.pistons = pistons;
   }
 
@@ -38,12 +36,8 @@ public class Climber extends Subsystem {
     pistons.set(DoubleSolenoid.Value.kForward);
   }
   
-  public void raiseClimber(double speed) {
+  public void runClimber(double speed) {
     motor.set(speed);
-  }
-
-  public void lowerClimber(double speed) {
-    motor.set(-speed);
   }
 
   public void stopClimber() {
@@ -51,24 +45,11 @@ public class Climber extends Subsystem {
   }
 
   public boolean isTilted() {
-    double zTilt = getTilt()[2];
-    if (zTilt > minTilt && zTilt < maxTilt) {
-      return true;
-    } else {
-      return false;
-    }
+    return gyro.getRoll() > minTilt && gyro.getRoll() < maxTilt; // TODO: set to the actual correct method
   }
 
   public double getEncDistance() {
     return enc.getDistance();
-  }
-
-  public double[] getTilt() {
-    double x = accel.getRoll();
-    double y = accel.getPitch();
-    double z = accel.getYaw();
-    double[] tilts = {x, y, z};
-    return tilts;
   }
 
   @Override
