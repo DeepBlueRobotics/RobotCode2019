@@ -23,9 +23,9 @@ public class HatchPanel extends Subsystem {
    */
   public HatchPanel(DoubleSolenoid pistons) {
     this.pistons = pistons;
-    pistonState = "both channels disabled";
-    pistons.set(DoubleSolenoid.Value.kOff);
-    SmartDashboard.putString("DoubleSolenoid State", pistonState);
+    pistonState = "IN";
+    pistons.set(DoubleSolenoid.Value.kReverse);
+    SmartDashboard.putString("Hatch Piston State", pistonState);
   }
 
   /**
@@ -36,13 +36,13 @@ public class HatchPanel extends Subsystem {
   public boolean toggle() {
     if (pistons.get() == DoubleSolenoid.Value.kForward) {
       pistons.set(DoubleSolenoid.Value.kReverse);
-      pistonState = "reverse channel enabled";
-      SmartDashboard.putString("DoubleSolenoid State", pistonState);
+      pistonState = "IN";
+      SmartDashboard.putString("Hatch Piston State", pistonState);
       return false;
     } else {
       pistons.set(DoubleSolenoid.Value.kForward);
-      pistonState = "forward channel enabled";
-      SmartDashboard.putString("DoubleSolenoid State", pistonState);
+      pistonState = "OUT";
+      SmartDashboard.putString("Hatch Piston State", pistonState);
       return true;
     }
   }
