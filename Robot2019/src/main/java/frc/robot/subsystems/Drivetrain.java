@@ -7,8 +7,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -28,8 +28,8 @@ public class Drivetrain extends Subsystem {
   public Joystick leftJoy, rightJoy;
   private AHRS gyro;
 
-  public Drivetrain(WPI_TalonSRX leftMaster, WPI_VictorSPX leftSlave1, WPI_VictorSPX leftSlave2,
-      WPI_TalonSRX rightMaster, WPI_VictorSPX rightSlave1, WPI_VictorSPX rightSlave2, Joystick leftJoy,
+  public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
+      WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Joystick leftJoy,
       Joystick rightJoy, Encoder leftEnc, Encoder rightEnc, AHRS gyro) {
 
     leftSlave1.follow(leftMaster);
