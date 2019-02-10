@@ -84,7 +84,7 @@ public class RobotMap {
     cameraServer = CameraServer.getInstance().getServer();
     cameraServer.setSource(driveCamera);
 
-    cargoPDPPort = -1;  // TODO: set ports to actual cargo motor port in pdp
+    cargoPDPPort = 5;  // TODO: set ports to actual cargo motor port in pdp
   }
 
   private static BaseMotorController createConfiguredMotorController(int port) {
