@@ -17,7 +17,6 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TeleopDrive;
@@ -27,7 +26,7 @@ public class Drivetrain extends Subsystem {
     LEFT, RIGHT
   }
 
-  private SpeedController leftMotor, rightMotor;
+  private WPI_TalonSRX leftMotor, rightMotor;
   private Encoder leftEnc, rightEnc;
   public Joystick leftJoy, rightJoy;
   private AHRS gyro;
@@ -149,20 +148,20 @@ public class Drivetrain extends Subsystem {
   }
 
   public void setVoltageCompensation(double volts) {
+    ErrorCode ecVoltSat = leftMotor.configVoltageCompSaturation(volts, 10);
+
+    if (!ecVoltSat.equals(ErrorCode.OK)) {
+      throw new RuntimeException("Voltage Saturation Configuration could not be set");
+    }
+
+    ecVoltSat = rightMotor.configVoltageCompSaturation(volts, 10);
+
+    if (!ecVoltSat.equals(ErrorCode.OK)) {
+      throw new RuntimeException("Voltage Saturation Configuration could not be set");
+    }
+
     ((BaseMotorController) leftMotor).enableVoltageCompensation(true);
-    ErrorCode ecVoltSat = ((BaseMotorController) leftMotor).configVoltageCompSaturation(volts, 10);
-
-    if (!ecVoltSat.equals(ErrorCode.OK)) {
-      throw new RuntimeException("Voltage Saturation Configuration could not be set");
-    }
-
     ((BaseMotorController) rightMotor).enableVoltageCompensation(true);
-    ecVoltSat = ((BaseMotorController) rightMotor).configVoltageCompSaturation(volts, 10);
-
-    if (!ecVoltSat.equals(ErrorCode.OK)) {
-      throw new RuntimeException("Voltage Saturation Configuration could not be set");
-    }
-
     maxVoltage = volts;
   }
 
