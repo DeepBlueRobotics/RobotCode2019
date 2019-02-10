@@ -10,28 +10,28 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.VictorSP;
+
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import frc.robot.commands.Climb;
 
-public class ClimberSubsystem extends Subsystem {
+public class Climber extends Subsystem {
   private VictorSP motor; // Mini-CIM
-  private PowerDistributionPanel pdp;
   private Encoder enc;
-  private Accelerometer accel;
+  private AHRS accel;
   private DoubleSolenoid pistons;
-  private int PDPClimberPort;
-  private double miniCIMStallCurrent, minimumTilit, maximumTilt;
 
-  public ClimberSubsystem(VictorSP motor, PowerDistributionPanel pdp, Encoder enc, Accelerometer accel) {
+  final private double minTilt = 91; // TODO: Update with actual number
+  final private double maxTilt = 130; // TODO: Update with actual number
+
+  public Climber(VictorSP motor, Encoder enc, AHRS accel, DoubleSolenoid pistons) {
     this.motor = motor;
-    this.pdp = pdp;
     this.enc = enc;
     this.accel = accel;
-
-    PDPClimberPort = -1; // Update this with actual port number
-    miniCIMStallCurrent = 89.0;   // To determine whether or not the climber motor has overdrawn 
+    this.pistons = pistons;
   }
 
   public void actuateRails() {
@@ -50,17 +50,9 @@ public class ClimberSubsystem extends Subsystem {
     motor.stopMotor();
   }
 
-  public boolean isStalled() {
-    if (pdp.getCurrent(PDPClimberPort) > miniCIMStallCurrent) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   public boolean isTilted() {
     double zTilt = getTilt()[2];
-    if (zTilt > minimumTilit && zTilt < maximumTilt) {
+    if (zTilt > minTilt && zTilt < maxTilt) {
       return true;
     } else {
       return false;
@@ -72,9 +64,9 @@ public class ClimberSubsystem extends Subsystem {
   }
 
   public double[] getTilt() {
-    double x = accel.getX();
-    double y = accel.getY();
-    double z = accel.getZ();
+    double x = accel.getRoll();
+    double y = accel.getPitch();
+    double z = accel.getYaw();
     double[] tilts = {x, y, z};
     return tilts;
   }

@@ -34,11 +34,11 @@ import edu.wpi.first.wpilibj.interfaces.Accelerometer;
  * floating around.
  */
 public class RobotMap {
-  public static VictorSP climberMotor;
-  public static Encoder climberEncoder;
-  public static Accelerometer accel; 
   static WPI_TalonSRX leftMaster, rightMaster;
   static BaseMotorController leftSlave1, leftSlave2, rightSlave1, rightSlave2;
+  static VictorSP climberMotor;
+  static Encoder climberEncoder;
+  static DoubleSolenoid climberPistons;
   static DoubleSolenoid hatchPistons;
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
@@ -60,6 +60,11 @@ public class RobotMap {
     rightMaster = createConfiguredTalon(5);
     rightSlave1 = createConfiguredMotorController(6);
     rightSlave2 = createConfiguredMotorController(7);
+    
+    //Initialize motors on the climbing mech
+    climberMotor = new VictorSP(1);
+    climberEncoder = new Encoder(new DigitalInput(4), new DigitalInput(5));
+    climberPistons = new DoubleSolenoid(6, 1);
 
     // Initialize motors on the cargo mech
     cargoRoller = new VictorSP(0);
@@ -80,11 +85,6 @@ public class RobotMap {
     cameraServer.setSource(driveCamera);
 
     cargoPDPPort = -1;  // TODO: set ports to actual cargo motor port in pdp
-
-    climberMotor = new VictorSP(-1);
-    pdp = new PowerDistributionPanel();
-    climberEncoder = new Encoder(-1, -1);
-    accel = new BuiltInAccelerometer(Accelerometer.Range.k4G);
   }
 
   private static BaseMotorController createConfiguredMotorController(int port) {

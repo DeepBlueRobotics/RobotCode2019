@@ -8,14 +8,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.Climber;
 
 /**
  * An example command.  You can replace me with your own command.
  */
 public class LowerClimber extends Command {
-  private ClimberSubsystem climber;
-  public LowerClimber(ClimberSubsystem climber) {
+  private Climber climber;
+  public LowerClimber(Climber climber) {
     // Use requires() here to declare subsystem dependencies
     requires(climber);
     this.climber = climber;
@@ -35,7 +35,7 @@ public class LowerClimber extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return (climber.isStalled());
+    return (climber.isTilted());
   }
 
   // Called once after isFinished returns true

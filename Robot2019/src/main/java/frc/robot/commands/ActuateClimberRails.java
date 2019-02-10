@@ -1,15 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.Climber;
 
 public class ActuateClimberRails extends InstantCommand {
-  private ClimberSubsystem climber;
+  private Climber climber;
 
-  public ActuateClimberRails(ClimberSubsystem cl) {
+  public ActuateClimberRails(Climber cl) {
     super();
     requires(cl);
-
     climber = cl;
   }
 

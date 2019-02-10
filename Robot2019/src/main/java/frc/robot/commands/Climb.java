@@ -8,12 +8,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.Climber;
 import frc.robot.commands.RaiseClimber;
 import frc.robot.commands.LowerClimber;
 
 public class Climb extends CommandGroup {
-  public Climb(ClimberSubsystem climber) {
+  public Climb(Climber climber) {
     requires(climber);
     // First Phase
     addSequential(new RaiseClimber(climber));

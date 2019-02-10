@@ -9,11 +9,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Cargo;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchPanel;
 
@@ -22,6 +19,7 @@ public class Robot extends TimedRobot {
   private static HatchPanel hp;
   private static OI oi;
   private static Cargo cargo;
+  private static Climber climb;
 
   @Override
   public void robotInit() {
@@ -34,6 +32,7 @@ public class Robot extends TimedRobot {
         RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
         RobotMap.gyro);
 
+    climb = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.gyro, RobotMap.climberPistons);
     
   }
 
