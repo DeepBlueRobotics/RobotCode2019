@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.subsystems.Cargo;
@@ -32,7 +33,7 @@ public class Robot extends TimedRobot {
         RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
         RobotMap.gyro);
 
-    climb = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.gyro, RobotMap.climberPistons);
+    climb = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.gyro, RobotMap.climberPistons, RobotMap.bia);
     
   }
 

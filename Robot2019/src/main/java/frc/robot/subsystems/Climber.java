@@ -7,12 +7,12 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.VictorSP;
-
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.commands.Climb;
 
@@ -21,15 +21,17 @@ public class Climber extends Subsystem {
   private Encoder enc;
   private AHRS gyro;
   private DoubleSolenoid pistons;
+  private BuiltInAccelerometer bia;
 
-  final private double minTilt = 91; // TODO: Update with actual number
-  final private double maxTilt = 130; // TODO: Update with actual number
+  final private double minTilt = 0; //In degrees
+  final private double maxTilt = 30; //In degrees // TODO: Update with actual number
 
-  public Climber(VictorSP motor, Encoder enc, AHRS gyro, DoubleSolenoid pistons) {
+  public Climber(VictorSP motor, Encoder enc, AHRS gyro, DoubleSolenoid pistons, BuiltInAccelerometer bia) {
     this.motor = motor;
     this.enc = enc;
     this.gyro = gyro;
     this.pistons = pistons;
+    this.bia = bia;
   }
 
   public void actuateRails() {
@@ -44,8 +46,13 @@ public class Climber extends Subsystem {
     motor.stopMotor();
   }
 
-  public boolean isTilted() {
-    return gyro.getRoll() > minTilt && gyro.getRoll() < maxTilt; // TODO: set to the actual correct method
+  public boolean needToClimb() {
+    double angle = Math.atan2(bia.getZ(), bia.getX());
+    return angle > minTilt;
+  }
+  public boolean canDrop() {
+    double angle = Math.atan2(bia.getZ(), bia.getX());
+    return angle < maxTilt;
   }
 
   public double getEncDistance() {
