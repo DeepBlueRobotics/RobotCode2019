@@ -18,9 +18,11 @@ import frc.robot.commands.SlowDrive;
 import frc.robot.commands.ToggleHatch;
 import frc.robot.commands.ToggleCamera;
 import frc.robot.commands.ActuateClimberRails;
+import frc.robot.commands.Climb;
 import frc.robot.subsystems.HatchPanel;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -33,10 +35,10 @@ public class OI {
   JoystickButton toggleHatchBtn;
   JoystickButton cargoIntakeBtn, cargoEjectBtn;
   JoystickButton climberRailBtn;
-
+  JoystickButton climbBtn;
   JoystickButton toggleCameraBtn;
 
-  OI(Cargo cargo, HatchPanel hp, Climber climber, UsbCamera driveCamera, UsbCamera hatchCamera, VideoSink cameraServer) {
+  OI(Drivetrain dt, HatchPanel hp, Cargo cargo, Climber climber, UsbCamera driveCamera, UsbCamera hatchCamera, VideoSink cameraServer) {
     leftJoy = new Joystick(0);
     rightJoy = new Joystick(1);
     manipulator = new Joystick(2);
@@ -56,6 +58,9 @@ public class OI {
 
     climberRailBtn = new JoystickButton(manipulator, 5); // TODO: confirm button number
     climberRailBtn.whenPressed(new ActuateClimberRails(climber));
+
+    climbBtn = new JoystickButton(manipulator, 4); // TODO: confirm button number
+    climbBtn.whenPressed(new Climb(climber, dt));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
