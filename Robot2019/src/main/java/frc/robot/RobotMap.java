@@ -38,7 +38,6 @@ public class RobotMap {
   static VictorSP climberMotor;
   static Encoder climberEncoder;
   static DoubleSolenoid climberPistons;
-  static BuiltInAccelerometer bia;
   static DoubleSolenoid hatchPistons;
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
@@ -65,7 +64,6 @@ public class RobotMap {
     climberMotor = new VictorSP(1);
     climberEncoder = new Encoder(new DigitalInput(4), new DigitalInput(5));
     climberPistons = new DoubleSolenoid(6, 1);
-    bia = new BuiltInAccelerometer();
 
     // Initialize motors on the cargo mech
     cargoRoller = new VictorSP(0);

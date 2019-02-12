@@ -20,17 +20,15 @@ public class Climber extends Subsystem {
   private Encoder enc;
   private AHRS gyro;
   private DoubleSolenoid pistons;
-  private BuiltInAccelerometer bia;
 
   final private double minTilt = 0; //In degrees
   final private double maxTilt = 30; //In degrees // TODO: Update with actual number
 
-  public Climber(VictorSP motor, Encoder enc, AHRS gyro, DoubleSolenoid pistons, BuiltInAccelerometer bia) {
+  public Climber(VictorSP motor, Encoder enc, AHRS gyro, DoubleSolenoid pistons) {
     this.motor = motor;
     this.enc = enc;
     this.gyro = gyro;
     this.pistons = pistons;
-    this.bia = bia;
   }
 
   public void actuateRails() {
@@ -46,11 +44,11 @@ public class Climber extends Subsystem {
   }
 
   public boolean needToClimb() {
-    double angle = Math.atan2(bia.getZ(), bia.getX());
+    double angle = Math.atan2(gyro.getRawAccelZ(), gyro.getRawAccelX());
     return angle < maxTilt;
   }
   public boolean canDrop() {
-    double angle = Math.atan2(bia.getZ(), bia.getX());
+    double angle = Math.atan2(gyro.getRawAccelZ(), gyro.getRawAccelX());
     return angle > minTilt;
   }
 

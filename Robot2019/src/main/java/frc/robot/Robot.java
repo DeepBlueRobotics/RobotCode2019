@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
         RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
         RobotMap.gyro);
 
-    climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.gyro, RobotMap.climberPistons, RobotMap.bia);
+    climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.gyro, RobotMap.climberPistons);
   }
 
   /**
