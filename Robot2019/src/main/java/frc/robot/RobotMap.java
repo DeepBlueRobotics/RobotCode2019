@@ -60,7 +60,7 @@ public class RobotMap {
     cargoRoller = new VictorSP(0);
 
     // Initialize solenoid on hatch panel mech
-    hatchPistons = new DoubleSolenoid(0, 1);
+    hatchPistons = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse 
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
@@ -74,7 +74,7 @@ public class RobotMap {
     cameraServer = CameraServer.getInstance().getServer();
     cameraServer.setSource(driveCamera);
 
-    cargoPDPPort = -1; // TODO: set ports to actual cargo motor port in pdp
+    cargoPDPPort = 5;  // TODO: set ports to actual cargo motor port in pdp
   }
 
   private static BaseMotorController createConfiguredMotorController(int port) {

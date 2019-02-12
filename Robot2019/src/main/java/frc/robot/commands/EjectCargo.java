@@ -21,6 +21,7 @@ public class EjectCargo extends Command {
   public EjectCargo(Cargo cargo) {
     requires(cargo);
     this.cargo = cargo;
+    timer = new Timer();
   }
 
   @Override
