@@ -7,8 +7,10 @@
 
 package frc.robot.subsystems;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
@@ -30,6 +32,7 @@ public class Drivetrain extends Subsystem {
   private Encoder leftEnc, rightEnc;
   public Joystick leftJoy, rightJoy;
   private AHRS gyro;
+  private double kV, kA, vIntercept;
 
   public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
       WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Joystick leftJoy,
@@ -59,6 +62,13 @@ public class Drivetrain extends Subsystem {
     rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
 
     this.gyro = gyro;
+
+    Scanner filereader = new Scanner(new File("/home/lvuser/drive_char_params.csv"));
+    filereader.nextLine();
+    String line = filereader.next();
+    kV = Double.valueOf(line.split(",")[0]);
+    kA = Double.valueOf(line.split(",")[1]);
+    vIntercept = Double.valueOf(line.split(",")[2]);
   }
 
   @Override

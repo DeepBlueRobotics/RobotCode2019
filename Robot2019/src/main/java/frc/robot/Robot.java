@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
   private static HatchPanel hp;
   private static OI oi;
   private static Cargo cargo;
-  private static String fname;
+  private static String fname1, fname2;
 
   Command autonomousCommand;
   SendableChooser<Command> chooser = new SendableChooser<>();
@@ -42,9 +42,10 @@ public class Robot extends TimedRobot {
     chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
     SmartDashboard.putData("Auto Mode", chooser);
 
-    fname = "/home/lvuser/drive_char.csv";
-    DrivetrainCharacterization ivl = new DrivetrainCharacterization(DrivetrainCharacterization.Mode.LINEAR, dt, 0.25/50, 6.0, fname);
-    DrivetrainCharacterization ivs = new DrivetrainCharacterization(DrivetrainCharacterization.Mode.STEP, dt, 0.25/50, 6.0, fname);
+    fname1 = "/home/lvuser/drive_char_linear.csv";
+    fname2 = "/home/lvuser/drive_char_stepwise.csv";
+    DrivetrainCharacterization ivl = new DrivetrainCharacterization(DrivetrainCharacterization.Mode.LINEAR, dt, 0.25/50, 6.0, fname1);
+    DrivetrainCharacterization ivs = new DrivetrainCharacterization(DrivetrainCharacterization.Mode.STEP, dt, 0.25/50, 6.0, fname2);
     SmartDashboard.putData("Increase Voltage Linearly", ivl);
     SmartDashboard.putData("Increase Voltage Stepwise", ivs);
   }
