@@ -48,11 +48,11 @@ public class Climber extends Subsystem {
 
   public boolean needToClimb() {
     double angle = Math.atan2(bia.getZ(), bia.getX());
-    return angle > minTilt;
+    return angle < maxTilt;
   }
   public boolean canDrop() {
     double angle = Math.atan2(bia.getZ(), bia.getX());
-    return angle < maxTilt;
+    return angle > minTilt;
   }
 
   public double getEncDistance() {
