@@ -7,26 +7,57 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.Climber;
-import frc.robot.commands.RaiseClimber;
-import frc.robot.commands.LowerClimber;
 
-public class Climb extends CommandGroup {
-  public Climb(Climber climber) {
+public class Climb extends Command {
+  private Climber climber;
+  private Drivetrain dt;
+  private boolean up;
+  public Climb(Climber climber, Drivetrain dt) {
+    // Use requires() here to declare subsystem dependencies
+    this.climber = climber;
+    this.dt = dt;
     requires(climber);
-    // First Phase
-    addSequential(new RaiseClimber(climber));
-    addSequential(new LowerClimber(climber));
-    // Second Phase
-    addSequential(new RaiseClimber(climber));
-    addSequential(new LowerClimber(climber));
-    // Third Phase
-    addSequential(new RaiseClimber(climber));
-    addSequential(new LowerClimber(climber));
-    // Final (Fourth) Phase
-    addSequential(new RaiseClimber(climber));
-    addSequential(new LowerClimber(climber));
-    // After the fourth phase, the driver should be able to drive across the platform.
+    requires(dt);
+    onStage = false;
+    up = true;
+  }
+
+  // Called just before this Command runs the first time
+  @Override
+  protected void initialize() {
+  }
+
+  // Called repeatedly when this Command is scheduled to run
+  @Override
+  protected void execute() {
+    dt.drive(-0.5, -0.5);
+    if(up) {
+        climber.runClimber(0.5);
+	if(!climber.needToClimb()) up = false;
+    } else {
+	climber.runClimber(-0.5);
+	if(!climber.canDrop()) up = true;
+    }
+  }
+
+  // Make this return true when this Command no longer needs to run execute()
+  @Override
+  protected boolean isFinished() {
+    return !dt.largeCurrent();
+  }
+
+  // Called once after isFinished returns true
+  @Override
+  protected void end() {
+    climber.stopClimber();
+  }
+
+  // Called when another command which requires one or more of the same
+  // subsystems is scheduled to run
+  @Override
+  protected void interrupted() {
+    end();
   }
 }
