@@ -29,7 +29,7 @@ public class DrivetrainCharacterization extends Command {
         this.filename = filename;
         suppliedVoltage = 0.0;
         voltageRuntime = 0.0;
-        maxVoltage = 12.0;
+        maxVoltage = 9.0;
     }
 
     // Called just before this Command runs the first time

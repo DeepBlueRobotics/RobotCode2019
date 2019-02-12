@@ -125,7 +125,6 @@ public class Drivetrain extends Subsystem {
 
     leftMotor.enableVoltageCompensation(true);
     rightMotor.enableVoltageCompensation(true);
-    maxVoltage = volts;
   }
 
   public void disableVoltageCompensation() {
