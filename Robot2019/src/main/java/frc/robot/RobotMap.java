@@ -41,7 +41,7 @@ public class RobotMap {
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
-  static AHRS gyro;
+  static AHRS ahrs;
   static PowerDistributionPanel pdp;
   static UsbCamera driveCamera, hatchCamera;
   static VideoSink cameraServer;
@@ -73,7 +73,7 @@ public class RobotMap {
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
 
-    gyro = new AHRS(SPI.Port.kMXP);
+    ahrs = new AHRS(SPI.Port.kMXP);
     pdp = new PowerDistributionPanel();
 
     // Initialize cameras

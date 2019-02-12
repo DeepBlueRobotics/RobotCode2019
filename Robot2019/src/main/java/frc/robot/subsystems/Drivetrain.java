@@ -25,11 +25,11 @@ public class Drivetrain extends Subsystem {
   private WPI_TalonSRX leftMaster, rightMaster;
   private Encoder leftEnc, rightEnc;
   public Joystick leftJoy, rightJoy;
-  private AHRS gyro;
+  private AHRS ahrs;
 
   public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
       WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Joystick leftJoy,
-      Joystick rightJoy, Encoder leftEnc, Encoder rightEnc, AHRS gyro) {
+      Joystick rightJoy, Encoder leftEnc, Encoder rightEnc, AHRS ahrs) {
 
     leftSlave1.follow(leftMaster);
     leftSlave2.follow(leftMaster);
@@ -54,7 +54,7 @@ public class Drivetrain extends Subsystem {
     leftEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
     rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
 
-    this.gyro = gyro;
+    this.ahrs = ahrs;
 
   }
 
@@ -75,7 +75,7 @@ public class Drivetrain extends Subsystem {
     rightMaster.stopMotor();
   }
 
-  public boolean largeCurrent() {
+  public boolean isStalled() {
     return leftMaster.getOutputCurrent() >= 30 || rightMaster.getOutputCurrent() >= 30; // TODO: Find value that actually works (test)
   }
 
@@ -96,14 +96,14 @@ public class Drivetrain extends Subsystem {
   }
 
   public void resetGyro() {
-    gyro.reset();
+    ahrs.reset();
   }
 
   public double getGyroRate() {
-    return gyro.getRate();
+    return ahrs.getRate();
   }
 
   public double getGyroAngle() {
-    return gyro.getYaw();
+    return ahrs.getYaw();
   }
 }

@@ -48,7 +48,7 @@ public class Climb extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return !dt.largeCurrent();
+    return !dt.isStalled();
   }
 
   // Called once after isFinished returns true

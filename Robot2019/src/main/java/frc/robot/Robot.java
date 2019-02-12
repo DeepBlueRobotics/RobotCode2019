@@ -25,14 +25,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     hp = new HatchPanel(RobotMap.hatchPistons);
     cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
+    climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
     
-    oi = new OI(cargo, hp, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
+    oi = new OI(cargo, hp, climber, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
         RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
-        RobotMap.gyro);
-
-    climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.gyro, RobotMap.climberPistons);
+        RobotMap.ahrs);
   }
 
   /**

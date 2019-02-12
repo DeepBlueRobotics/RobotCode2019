@@ -17,17 +17,21 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Climber extends Subsystem {
   private VictorSP motor; // Mini-CIM
   private Encoder enc;
-  private AHRS gyro;
+  private AHRS ahrs;
   private DoubleSolenoid pistons;
 
   final private double minTilt = 0; // In degrees
   final private double maxTilt = 30; // In degrees // TODO: Update with actual number
 
-  public Climber(VictorSP motor, Encoder enc, AHRS gyro, DoubleSolenoid pistons) {
+  public Climber(VictorSP motor, Encoder enc, AHRS ahrs, DoubleSolenoid pistons) {
     this.motor = motor;
     this.enc = enc;
-    this.gyro = gyro;
+    this.ahrs = ahrs;
     this.pistons = pistons;
+
+    double pulseFraction = 1.0/256;
+    double pitchDiameter = 1.790; // https://www.vexrobotics.com/35-sprockets.html#Drawing
+    enc.setDistancePerPulse(pulseFraction * Math.PI * pitchDiameter);
   }
 
   public void actuateRails() {
@@ -43,12 +47,12 @@ public class Climber extends Subsystem {
   }
 
   public boolean needToClimb() {
-    double angle = Math.atan2(gyro.getRawAccelZ(), gyro.getRawAccelX());
+    double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
     return angle < maxTilt;
   }
 
   public boolean canDrop() {
-    double angle = Math.atan2(gyro.getRawAccelZ(), gyro.getRawAccelX());
+    double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
     return angle > minTilt;
   }
 
