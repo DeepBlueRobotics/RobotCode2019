@@ -13,7 +13,6 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TeleopDrive;
@@ -23,7 +22,7 @@ public class Drivetrain extends Subsystem {
     LEFT, RIGHT
   }
 
-  private SpeedController leftMotor, rightMotor;
+  private WPI_TalonSRX leftMaster, rightMaster;
   private Encoder leftEnc, rightEnc;
   public Joystick leftJoy, rightJoy;
   private AHRS gyro;
@@ -34,11 +33,11 @@ public class Drivetrain extends Subsystem {
 
     leftSlave1.follow(leftMaster);
     leftSlave2.follow(leftMaster);
-    this.leftMotor = leftMaster;
+    this.leftMaster = leftMaster;
 
     rightSlave1.follow(rightMaster);
     rightSlave2.follow(rightMaster);
-    this.rightMotor = rightMaster;
+    this.rightMaster = rightMaster;
 
     rightMaster.setInverted(true);
     rightSlave1.setInverted(true);
@@ -65,19 +64,19 @@ public class Drivetrain extends Subsystem {
   }
 
   public void drive(double left, double right) {
-    leftMotor.set(left);
-    rightMotor.set(right);
+    leftMaster.set(left);
+    rightMaster.set(right);
     SmartDashboard.putNumber("Encoder Distance Left:", leftEnc.getDistance());
     SmartDashboard.putNumber("Encoder Distance Right:", rightEnc.getDistance());
   }
 
   public void stop() {
-    leftMotor.stopMotor();
-    rightMotor.stopMotor();
+    leftMaster.stopMotor();
+    rightMaster.stopMotor();
   }
 
   public boolean largeCurrent() {
-    return leftMotor.getOutputCurrent() >= 30 || rightMotor.getOutputCurrent() >= 30; // TODO: Find value that actually works (test)
+    return leftMaster.getOutputCurrent() >= 30 || rightMaster.getOutputCurrent() >= 30; // TODO: Find value that actually works (test)
   }
 
   public double getEncDist(Side type) {
