@@ -71,6 +71,7 @@ public class Drivetrain extends Subsystem {
       kV = Double.valueOf(line.split(",")[0]);
       kA = Double.valueOf(line.split(",")[1]);
       vIntercept = Double.valueOf(line.split(",")[2]);
+    }
     catch (FileNotFoundException e) {
       e.printStackTrace();
     }
