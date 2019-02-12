@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -63,12 +64,16 @@ public class Drivetrain extends Subsystem {
 
     this.gyro = gyro;
 
-    Scanner filereader = new Scanner(new File("/home/lvuser/drive_char_params.csv"));
-    filereader.nextLine();
-    String line = filereader.next();
-    kV = Double.valueOf(line.split(",")[0]);
-    kA = Double.valueOf(line.split(",")[1]);
-    vIntercept = Double.valueOf(line.split(",")[2]);
+    try {
+      Scanner filereader = new Scanner(new File("/home/lvuser/drive_char_params.csv"));
+      filereader.nextLine();
+      String line = filereader.next();
+      kV = Double.valueOf(line.split(",")[0]);
+      kA = Double.valueOf(line.split(",")[1]);
+      vIntercept = Double.valueOf(line.split(",")[2]);
+    catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
