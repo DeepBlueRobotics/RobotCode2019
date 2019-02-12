@@ -77,7 +77,7 @@ public class Drivetrain extends Subsystem {
   }
 
   public boolean largeCurrent() {
-    return leftMaster.getOutputCurrent() >= 30 || rightMaster.getOutputCurrent() >= 30; // TODO: Find value that actually works (test)
+    return leftMotor.getOutputCurrent() >= 30 || rightMotor.getOutputCurrent() >= 30; // TODO: Find value that actually works (test)
   }
 
   public double getEncDist(Side type) {
