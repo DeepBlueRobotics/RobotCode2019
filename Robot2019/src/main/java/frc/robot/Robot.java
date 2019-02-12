@@ -8,13 +8,15 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DrivetrainCharacterization;
+import frc.robot.commands.IncreaseVoltageLinear;
+import frc.robot.commands.IncreaseVoltageStepwise;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Cargo;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchPanel;
 
@@ -23,15 +25,14 @@ public class Robot extends TimedRobot {
   private static HatchPanel hp;
   private static OI oi;
   private static Cargo cargo;
+  private static Climber climber;
   private static String fname1, fname2;
-
-  Command autonomousCommand;
-  SendableChooser<Command> chooser = new SendableChooser<>();
 
   @Override
   public void robotInit() {
     hp = new HatchPanel(RobotMap.hatchPistons);
     cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
+    climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
 
     oi = new OI(cargo, hp, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
@@ -39,13 +40,10 @@ public class Robot extends TimedRobot {
         RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
         RobotMap.gyro);
 
-    chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
-    SmartDashboard.putData("Auto Mode", chooser);
-
     fname1 = "/home/lvuser/drive_char_linear.csv";
     fname2 = "/home/lvuser/drive_char_stepwise.csv";
-    DrivetrainCharacterization ivl = new DrivetrainCharacterization(DrivetrainCharacterization.Mode.LINEAR, dt, 0.25/50, 6.0, fname1);
-    DrivetrainCharacterization ivs = new DrivetrainCharacterization(DrivetrainCharacterization.Mode.STEP, dt, 0.25/50, 6.0, fname2);
+    IncreaseVoltageLinear ivl = new IncreaseVoltageLinear(dt, 0.25/50, 6.0, fname1);
+    IncreaseVoltageStepwise ivs = new IncreaseVoltageStepwise(dt, 0.25/50, 6.0, fname2);
     SmartDashboard.putData("Increase Voltage Linearly", ivl);
     SmartDashboard.putData("Increase Voltage Stepwise", ivs);
   }
@@ -74,11 +72,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    autonomousCommand = chooser.getSelected();
-
-    if (autonomousCommand != null) {
-      autonomousCommand.start();
-    }
   }
 
   @Override
@@ -92,9 +85,6 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (autonomousCommand != null) {
-      autonomousCommand.cancel();
-    }
   }
 
   @Override

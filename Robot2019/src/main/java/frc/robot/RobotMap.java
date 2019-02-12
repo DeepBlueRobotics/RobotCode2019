@@ -34,11 +34,14 @@ import edu.wpi.first.wpilibj.VictorSP;
 public class RobotMap {
   static WPI_TalonSRX leftMaster, rightMaster;
   static BaseMotorController leftSlave1, leftSlave2, rightSlave1, rightSlave2;
+  static VictorSP climberMotor;
+  static Encoder climberEncoder;
+  static DoubleSolenoid climberPistons;
   static DoubleSolenoid hatchPistons;
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
-  static AHRS gyro;
+  static AHRS ahrs;
   static PowerDistributionPanel pdp;
   static UsbCamera driveCamera, hatchCamera;
   static VideoSink cameraServer;
@@ -56,16 +59,21 @@ public class RobotMap {
     rightSlave1 = createConfiguredMotorController(6);
     rightSlave2 = createConfiguredMotorController(7);
 
+    // Initialize motors on the climbing mech
+    climberMotor = new VictorSP(1);
+    climberEncoder = new Encoder(new DigitalInput(4), new DigitalInput(5));
+    climberPistons = new DoubleSolenoid(6, 1);
+
     // Initialize motors on the cargo mech
     cargoRoller = new VictorSP(0);
 
     // Initialize solenoid on hatch panel mech
-    hatchPistons = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse 
+    hatchPistons = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
 
-    gyro = new AHRS(SPI.Port.kMXP);
+    ahrs = new AHRS(SPI.Port.kMXP);
     pdp = new PowerDistributionPanel();
 
     // Initialize cameras
@@ -74,7 +82,7 @@ public class RobotMap {
     cameraServer = CameraServer.getInstance().getServer();
     cameraServer.setSource(driveCamera);
 
-    cargoPDPPort = 5;  // TODO: set ports to actual cargo motor port in pdp
+    cargoPDPPort = 5; // TODO: set ports to actual cargo motor port in pdp
   }
 
   private static BaseMotorController createConfiguredMotorController(int port) {

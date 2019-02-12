@@ -29,23 +29,23 @@ public class Drivetrain extends Subsystem {
     LEFT, RIGHT
   }
 
-  private WPI_TalonSRX leftMotor, rightMotor;
+  private WPI_TalonSRX leftMaster, rightMaster;
   private Encoder leftEnc, rightEnc;
   public Joystick leftJoy, rightJoy;
-  private AHRS gyro;
+  private AHRS ahrs;
   private double kV, kA, vIntercept;
 
   public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
       WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Joystick leftJoy,
-      Joystick rightJoy, Encoder leftEnc, Encoder rightEnc, AHRS gyro) {
+      Joystick rightJoy, Encoder leftEnc, Encoder rightEnc, AHRS ahrs) {
 
     leftSlave1.follow(leftMaster);
     leftSlave2.follow(leftMaster);
-    this.leftMotor = leftMaster;
+    this.leftMaster = leftMaster;
 
     rightSlave1.follow(rightMaster);
     rightSlave2.follow(rightMaster);
-    this.rightMotor = rightMaster;
+    this.rightMaster = rightMaster;
 
     rightMaster.setInverted(true);
     rightSlave1.setInverted(true);
@@ -62,7 +62,7 @@ public class Drivetrain extends Subsystem {
     leftEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
     rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
 
-    this.gyro = gyro;
+    this.ahrs = ahrs;
 
     try {
       Scanner filereader = new Scanner(new File("/home/lvuser/drive_char_params.csv"));
@@ -83,15 +83,19 @@ public class Drivetrain extends Subsystem {
   }
 
   public void drive(double left, double right) {
-    leftMotor.set(left);
-    rightMotor.set(right);
+    leftMaster.set(left);
+    rightMaster.set(right);
     SmartDashboard.putNumber("Encoder Distance Left:", leftEnc.getDistance());
     SmartDashboard.putNumber("Encoder Distance Right:", rightEnc.getDistance());
   }
 
   public void stop() {
-    leftMotor.stopMotor();
-    rightMotor.stopMotor();
+    leftMaster.stopMotor();
+    rightMaster.stopMotor();
+  }
+
+  public boolean isStalled() {
+    return leftMaster.getOutputCurrent() >= 30 || rightMaster.getOutputCurrent() >= 30; // TODO: Find value that actually works (test)
   }
 
   public double getEncDist(Side type) {
@@ -111,15 +115,15 @@ public class Drivetrain extends Subsystem {
   }
 
   public void resetGyro() {
-    gyro.reset();
+    ahrs.reset();
   }
 
   public double getGyroRate() {
-    return gyro.getRate();
+    return ahrs.getRate();
   }
 
   public double getGyroAngle() {
-    return gyro.getYaw();
+    return ahrs.getYaw();
   }
 
   public double getMaxSpeed() { // Return must be adjusted in the future;

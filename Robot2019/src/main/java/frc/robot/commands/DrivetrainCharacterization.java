@@ -10,19 +10,13 @@ import frc.robot.subsystems.Drivetrain;
 /* Command which supplies the motors with a desired voltage that increases linearly.
 */
 public class DrivetrainCharacterization extends Command {
-    public enum Mode {
-        LINEAR, STEP;
-    }
-
-    private Mode mode;
     private Drivetrain dt;
     private FileWriter fw;
     private String filename;
     public double suppliedVoltage, voltStep, stepwiseVoltage, voltageRuntime, maxVoltage;
 
-    public DrivetrainCharacterization(Mode mode, Drivetrain dt, double voltStep, double stepwiseVoltage, String filename) {
+    public DrivetrainCharacterization(Drivetrain dt, double voltStep, double stepwiseVoltage, String filename) {
         requires(dt);
-        this.mode = mode;
         this.dt = dt;
         this.voltStep = voltStep;
         this.stepwiseVoltage = stepwiseVoltage;
@@ -53,35 +47,12 @@ public class DrivetrainCharacterization extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        double throttle = suppliedVoltage / maxVoltage;
-        dt.drive(throttle, throttle);
-        writeMeasuredVelocity(fw);
-
-        if (mode == Mode.LINEAR) {
-            if (suppliedVoltage + voltStep <= maxVoltage) {
-                suppliedVoltage += voltStep;
-            }
-        } else {
-            suppliedVoltage = voltStep;
-        }
     }
 
     // Make this return true when this Command no longer needs to run execute()
     @Override
     protected boolean isFinished() {
-        if (mode == Mode.LINEAR) {
-            if (suppliedVoltage == maxVoltage) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (dt.getEncRate(Drivetrain.Side.LEFT) >= 0.75 * dt.getMaxSpeed() || dt.getEncRate(Drivetrain.Side.RIGHT) >= 0.75 * dt.getMaxSpeed()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+        return false;
     }
 
     // Called once after isFinished returns true
