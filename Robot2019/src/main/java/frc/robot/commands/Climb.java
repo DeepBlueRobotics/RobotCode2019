@@ -20,7 +20,6 @@ public class Climb extends Command {
     this.dt = dt;
     requires(climber);
     requires(dt);
-    onStage = false;
     up = true;
   }
 
