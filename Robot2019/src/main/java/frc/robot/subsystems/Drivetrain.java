@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TeleopDrive;
 
 public class Drivetrain extends Subsystem {
-  private enum Side {
+  public enum Side {
     LEFT, RIGHT
   }
 
@@ -30,7 +30,6 @@ public class Drivetrain extends Subsystem {
   private Encoder leftEnc, rightEnc;
   public Joystick leftJoy, rightJoy;
   private AHRS gyro;
-  public double suppliedVoltage, maxVoltage, voltage_runtime;
 
   public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
       WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Joystick leftJoy,
@@ -60,10 +59,6 @@ public class Drivetrain extends Subsystem {
     rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
 
     this.gyro = gyro;
-
-    suppliedVoltage = 0.0;
-    maxVoltage = 12.0; // For drivetrain characterization.
-    voltage_runtime = 0.0;
   }
 
   @Override
@@ -115,38 +110,6 @@ public class Drivetrain extends Subsystem {
     return 204.0;
   }
 
-  public void writeMeasuredVelocity(FileWriter fw) {
-    double leftMotorVelocity, rightMotorVelocity;
-    StringBuilder sb = new StringBuilder();
-
-    leftMotorVelocity = getEncRate(Side.LEFT);
-    rightMotorVelocity = getEncRate(Side.RIGHT);
-
-    voltage_runtime += 0.02; // IncreaseVoltage occurs every 1/50 of a second
-    sb.append(String.valueOf(voltage_runtime) + ",");
-    sb.append(String.valueOf(suppliedVoltage) + ",");
-    sb.append(String.valueOf(leftMotorVelocity) + ",");
-    sb.append(String.valueOf(rightMotorVelocity) + "\r\n");
-
-    try {
-      fw.write(sb.toString());
-    } catch (IOException e) {
-      System.out.println("FileWriter object cannot write StringBuilder object: " + e);
-    }
-  }
-
-  public Side getSideValue(String type) {
-    if (type.equals("LEFT")) {
-      return Side.LEFT;
-    } else if (type.equals("RIGHT")) {
-      return Side.RIGHT;
-    } else {
-      System.out.println(
-          "Type value provided to Drivetrain.getSideValue does not match either LEFT or RIGHT. Value of type: " + type);
-      return Side.LEFT;
-    }
-  }
-
   public void setVoltageCompensation(double volts) {
     ErrorCode ecVoltSat = leftMotor.configVoltageCompSaturation(volts, 10);
 
@@ -160,13 +123,13 @@ public class Drivetrain extends Subsystem {
       throw new RuntimeException("Voltage Saturation Configuration could not be set");
     }
 
-    ((BaseMotorController) leftMotor).enableVoltageCompensation(true);
-    ((BaseMotorController) rightMotor).enableVoltageCompensation(true);
+    leftMotor.enableVoltageCompensation(true);
+    rightMotor.enableVoltageCompensation(true);
     maxVoltage = volts;
   }
 
   public void disableVoltageCompensation() {
-    ((BaseMotorController) leftMotor).enableVoltageCompensation(false);
-    ((BaseMotorController) rightMotor).enableVoltageCompensation(false);
+    leftMotor.enableVoltageCompensation(false);
+    rightMotor.enableVoltageCompensation(false);
   }
 }

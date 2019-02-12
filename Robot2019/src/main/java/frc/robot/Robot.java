@@ -12,8 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.IncreaseVoltageLinear;
-import frc.robot.commands.IncreaseVoltageStepwise;
+import frc.robot.commands.DrivetrainCharacterization;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Drivetrain;
@@ -44,8 +43,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto Mode", chooser);
 
     fname = "/home/lvuser/drive_char.csv";
-    SmartDashboard.putData(new IncreaseVoltageLinear(dt, 0.25 / 50, fname));
-    SmartDashboard.putData(new IncreaseVoltageStepwise(dt, 6.0, fname));
+    DrivetrainCharacterization ivl = new DrivetrainCharacterization(DrivetrainCharacterization.Mode.LINEAR, dt, 0.25/50, 6.0, fname);
+    DrivetrainCharacterization ivs = new DrivetrainCharacterization(DrivetrainCharacterization.Mode.STEP, dt, 0.25/50, 6.0, fname);
+    SmartDashboard.putData("Increase Voltage Linearly", ivl);
+    SmartDashboard.putData("Increase Voltage Stepwise", ivs);
   }
 
   /**
