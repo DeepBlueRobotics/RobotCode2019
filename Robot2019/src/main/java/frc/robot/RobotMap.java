@@ -18,7 +18,6 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
@@ -59,8 +58,8 @@ public class RobotMap {
     rightMaster = createConfiguredTalon(5);
     rightSlave1 = createConfiguredMotorController(6);
     rightSlave2 = createConfiguredMotorController(7);
-    
-    //Initialize motors on the climbing mech
+
+    // Initialize motors on the climbing mech
     climberMotor = new VictorSP(1);
     climberEncoder = new Encoder(new DigitalInput(4), new DigitalInput(5));
     climberPistons = new DoubleSolenoid(6, 1);
@@ -69,7 +68,7 @@ public class RobotMap {
     cargoRoller = new VictorSP(0);
 
     // Initialize solenoid on hatch panel mech
-    hatchPistons = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse 
+    hatchPistons = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
@@ -83,7 +82,7 @@ public class RobotMap {
     cameraServer = CameraServer.getInstance().getServer();
     cameraServer.setSource(driveCamera);
 
-    cargoPDPPort = 5;  // TODO: set ports to actual cargo motor port in pdp
+    cargoPDPPort = 5; // TODO: set ports to actual cargo motor port in pdp
   }
 
   private static BaseMotorController createConfiguredMotorController(int port) {

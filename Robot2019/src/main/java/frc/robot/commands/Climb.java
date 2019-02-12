@@ -15,6 +15,7 @@ public class Climb extends Command {
   private Climber climber;
   private Drivetrain dt;
   private boolean up;
+
   public Climb(Climber climber, Drivetrain dt) {
     // Use requires() here to declare subsystem dependencies
     this.climber = climber;
@@ -33,12 +34,14 @@ public class Climb extends Command {
   @Override
   protected void execute() {
     dt.drive(-0.5, -0.5);
-    if(up) {
-        climber.runClimber(0.5);
-	if(!climber.needToClimb()) up = false;
+    if (up) {
+      climber.runClimber(0.5);
+      if (!climber.needToClimb())
+        up = false;
     } else {
-	climber.runClimber(-0.5);
-	if(!climber.canDrop()) up = true;
+      climber.runClimber(-0.5);
+      if (!climber.canDrop())
+        up = true;
     }
   }
 

@@ -52,8 +52,8 @@ public class OI {
     cargoEjectBtn = new JoystickButton(manipulator, 3); // TODO: set ports to correct values
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
-    climberRailBtn = new JoystickButton(manipulator, 5); // TODO: confirm button number 
-    
+    climberRailBtn = new JoystickButton(manipulator, 5); // TODO: confirm button number
+
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
   }

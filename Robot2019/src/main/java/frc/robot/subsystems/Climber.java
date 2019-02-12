@@ -9,7 +9,6 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -21,8 +20,8 @@ public class Climber extends Subsystem {
   private AHRS gyro;
   private DoubleSolenoid pistons;
 
-  final private double minTilt = 0; //In degrees
-  final private double maxTilt = 30; //In degrees // TODO: Update with actual number
+  final private double minTilt = 0; // In degrees
+  final private double maxTilt = 30; // In degrees // TODO: Update with actual number
 
   public Climber(VictorSP motor, Encoder enc, AHRS gyro, DoubleSolenoid pistons) {
     this.motor = motor;
@@ -34,7 +33,7 @@ public class Climber extends Subsystem {
   public void actuateRails() {
     pistons.set(DoubleSolenoid.Value.kForward);
   }
-  
+
   public void runClimber(double speed) {
     motor.set(speed);
   }
@@ -47,6 +46,7 @@ public class Climber extends Subsystem {
     double angle = Math.atan2(gyro.getRawAccelZ(), gyro.getRawAccelX());
     return angle < maxTilt;
   }
+
   public boolean canDrop() {
     double angle = Math.atan2(gyro.getRawAccelZ(), gyro.getRawAccelX());
     return angle > minTilt;
