@@ -15,6 +15,7 @@ import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.csv.CSVFormat;
+import com.google.common.collect.Iterables;
 
 public class DrivetrainCharAnalysis {
     public static void main(String[] args) {
@@ -149,7 +150,9 @@ public class DrivetrainCharAnalysis {
         Reader in = new FileReader(filename);
         Iterable<CSVRecord> records = CSVFormat.RFC4180.parse(in);
 
-        double[] leftVelocities, rightVelocities, velocities, voltages, accelerations = new double[records.size() - spread];
+        int num_values = Iterables.size(records);
+        double[] leftVelocities, rightVelocities, velocities, voltages, accelerations;
+        leftVelocities = rightVelocities = velocities = voltages = accelerations = new double[num_values - spread];
 
         for (CSVRecord record : records) {
             if (!record.get(0).equals("Timestamp (s)")) {
@@ -167,7 +170,7 @@ public class DrivetrainCharAnalysis {
                     accelerations[n] = Math.abs(a1) + Math.abs(a2);
                 }
 
-                if (leftVelocities.length < records.size() - spread) {
+                if (leftVelocities.length < num_values - spread) {
                     leftVelocities[n] = v1;
                     rightVelocities[n] = v2;
                 }
