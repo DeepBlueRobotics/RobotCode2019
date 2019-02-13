@@ -34,11 +34,11 @@ public class Robot extends TimedRobot {
     cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
     climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
 
-    oi = new OI(cargo, hp, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
+    oi = new OI(cargo, hp, climber, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
         RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
-        RobotMap.gyro);
+        RobotMap.ahrs);
 
     fname1 = "/home/lvuser/drive_char_linear.csv";
     fname2 = "/home/lvuser/drive_char_stepwise.csv";

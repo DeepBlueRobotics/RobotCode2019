@@ -13,7 +13,8 @@ import java.io.Reader;
 
 import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.csv;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.csv.CSVFormat;
 
 public class DrivetrainCharAnalysis {
     public static void main(String[] args) {

@@ -131,24 +131,24 @@ public class Drivetrain extends Subsystem {
   }
 
   public void setVoltageCompensation(double volts) {
-    ErrorCode ecVoltSat = leftMotor.configVoltageCompSaturation(volts, 10);
+    ErrorCode ecVoltSat = leftMaster.configVoltageCompSaturation(volts, 10);
 
     if (!ecVoltSat.equals(ErrorCode.OK)) {
       throw new RuntimeException("Voltage Saturation Configuration could not be set");
     }
 
-    ecVoltSat = rightMotor.configVoltageCompSaturation(volts, 10);
+    ecVoltSat = rightMaster.configVoltageCompSaturation(volts, 10);
 
     if (!ecVoltSat.equals(ErrorCode.OK)) {
       throw new RuntimeException("Voltage Saturation Configuration could not be set");
     }
 
-    leftMotor.enableVoltageCompensation(true);
-    rightMotor.enableVoltageCompensation(true);
+    leftMaster.enableVoltageCompensation(true);
+    rightMaster.enableVoltageCompensation(true);
   }
 
   public void disableVoltageCompensation() {
-    leftMotor.enableVoltageCompensation(false);
-    rightMotor.enableVoltageCompensation(false);
+    leftMaster.enableVoltageCompensation(false);
+    rightMaster.enableVoltageCompensation(false);
   }
 }
