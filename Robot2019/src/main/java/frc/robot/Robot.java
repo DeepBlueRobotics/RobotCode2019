@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
@@ -23,15 +24,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
+        RobotMap.rightSlave1, RobotMap.rightSlave2, RobotMap.leftEnc, RobotMap.rightEnc, RobotMap.ahrs);
     hp = new HatchPanel(RobotMap.hatchPistons);
     cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
     climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
-    
-    oi = new OI(cargo, hp, climber, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
-    dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
-        RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
-        RobotMap.ahrs);
+    oi = new OI(dt, hp, cargo, climber, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
+
+    dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
   }
 
   /**
