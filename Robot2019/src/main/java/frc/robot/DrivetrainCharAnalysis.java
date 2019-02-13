@@ -147,37 +147,45 @@ public class DrivetrainCharAnalysis {
     }
 
     public static double[][] parseCSV(String filename, int spread) {
-        Reader in = new FileReader(filename);
-        Iterable<CSVRecord> records = CSVFormat.RFC4180.parse(in);
+        try {
+            Reader in = new FileReader(filename);
+            Iterable<CSVRecord> records = CSVFormat.RFC4180.parse(in);
 
-        int num_values = Iterables.size(records);
-        double[] leftVelocities, rightVelocities, velocities, voltages, accelerations;
-        leftVelocities = rightVelocities = velocities = voltages = accelerations = new double[num_values - spread];
+            int num_values = Iterables.size(records);
+            double[] leftVelocities, rightVelocities, velocities, voltages, accelerations;
+            leftVelocities = rightVelocities = velocities = voltages = accelerations = new double[num_values - spread];
 
-        for (CSVRecord record : records) {
-            if (!record.get(0).equals("Timestamp (s)")) {
-                double v1 = Double.valueOf(record.get(2));
-                double v2 = Double.valueOf(record.get(3));
-                double v3 = 0.5 * (v1 - v2);
-                int n = (int) record.getRecordNumber();
-                velocities[n] = v3;
-                voltages[n] = Double.valueOf(record.get(1));
+            for (CSVRecord record : records) {
+                if (!record.get(0).equals("Timestamp (s)")) {
+                    double v1 = Double.valueOf(record.get(2));
+                    double v2 = Double.valueOf(record.get(3));
+                    double v3 = 0.5 * (v1 - v2);
+                    int n = (int) record.getRecordNumber();
+                    velocities[n] = v3;
+                    voltages[n] = Double.valueOf(record.get(1));
 
-                if (leftVelocities.length >= spread) {
-                    double a1 = (v1 - leftVelocities[leftVelocities.length - spread]) / (spread * 0.02);
-                    double a2 = (v2 - rightVelocities[rightVelocities.length - spread]) / (spread * 0.02); // right
-                                                                                                                // velocity
-                    accelerations[n] = Math.abs(a1) + Math.abs(a2);
-                }
+                    if (leftVelocities.length >= spread) {
+                        double a1 = (v1 - leftVelocities[leftVelocities.length - spread]) / (spread * 0.02);
+                        double a2 = (v2 - rightVelocities[rightVelocities.length - spread]) / (spread * 0.02); // right
+                                                                                                                    // velocity
+                        accelerations[n] = Math.abs(a1) + Math.abs(a2);
+                    }
 
-                if (leftVelocities.length < num_values - spread) {
-                    leftVelocities[n] = v1;
-                    rightVelocities[n] = v2;
+                    if (leftVelocities.length < num_values - spread) {
+                        leftVelocities[n] = v1;
+                        rightVelocities[n] = v2;
+                    }
                 }
             }
-        }
 
-        double[][] returns = {velocities, voltages, accelerations};
-        return returns;
+            double[][] returns = {velocities, voltages, accelerations};
+            return returns;
+        } catch (FileNotFoundException fnf) {
+            fnf.printStackTrace();
+            return null;
+        } catch (IOException io) {
+            io.printStackTrace();
+            return null;
+        }
     }
 }
