@@ -42,6 +42,10 @@ public class Climber extends Subsystem {
     motor.set(speed);
   }
 
+  public void retractClimber() {
+    motor.set(-1);
+  }
+
   public void stopClimber() {
     motor.stopMotor();
   }
@@ -58,6 +62,10 @@ public class Climber extends Subsystem {
 
   public double getEncDistance() {
     return enc.getDistance();
+  }
+
+  public void resetEncoder() {
+    enc.reset();
   }
 
   @Override

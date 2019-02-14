@@ -61,7 +61,7 @@ public class OI {
     climberRailBtn.whenPressed(new ActuateClimberRails(climber));
 
     climbBtn = new JoystickButton(manipulator, 4); // TODO: confirm button number
-    climbBtn.whenPressed(new Climb(climber, dt));
+    climbBtn.whenPressed(new Climb(climber, dt, leftJoy));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));

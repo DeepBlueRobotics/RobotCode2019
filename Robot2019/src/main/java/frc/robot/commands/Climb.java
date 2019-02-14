@@ -10,19 +10,26 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj.Joystick;
 
 public class Climb extends Command {
   private Climber climber;
   private Drivetrain dt;
+  private Joystick dtJoy;
   private boolean up;
+  private boolean climbing;
+  private boolean finished;
 
-  public Climb(Climber climber, Drivetrain dt) {
+  public Climb(Climber climber, Drivetrain dt, Joystick joy) {
     // Use requires() here to declare subsystem dependencies
     this.climber = climber;
     this.dt = dt;
+    dtJoy = joy;
     requires(climber);
     requires(dt);
     up = true;
+    climbing = true;
+    finished = false;
   }
 
   // Called just before this Command runs the first time
@@ -33,6 +40,40 @@ public class Climb extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if (climbing) {
+      climb();
+      if (!dt.isStalled() || Math.abs(dtJoy.getY()) > 0.1) { // 0.1 = Placeholder/approximation 
+        climbing = false;
+        climber.resetEncoder();
+      }
+    } else {
+      retract();
+      if (climber.getEncDistance() > 23) { // 23 = Placeholder/approximation 
+        finished = true;
+      }
+    }
+  }
+
+  // Make this return true when this Command no longer needs to run execute()
+  @Override
+  protected boolean isFinished() {
+    return finished;
+  }
+
+  // Called once after isFinished returns true
+  @Override
+  protected void end() {
+    climber.retractClimber();
+  }
+
+  // Called when another command which requires one or more of the same
+  // subsystems is scheduled to run
+  @Override
+  protected void interrupted() {
+    end();
+  }
+
+  private void climb() {
     dt.drive(-0.5, -0.5);
     if (up) {
       climber.runClimber(0.5);
@@ -45,22 +86,7 @@ public class Climb extends Command {
     }
   }
 
-  // Make this return true when this Command no longer needs to run execute()
-  @Override
-  protected boolean isFinished() {
-    return !dt.isStalled();
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-    climber.stopClimber();
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
+  private void retract() {
+    climber.retractClimber();
   }
 }
