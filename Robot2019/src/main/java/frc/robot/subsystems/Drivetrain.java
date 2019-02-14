@@ -65,6 +65,7 @@ public class Drivetrain extends Subsystem {
       kV = Double.valueOf(line.split(",")[0]);
       kA = Double.valueOf(line.split(",")[1]);
       vIntercept = Double.valueOf(line.split(",")[2]);
+      filereader.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
@@ -147,5 +148,9 @@ public class Drivetrain extends Subsystem {
   public void disableVoltageCompensation() {
     leftMaster.enableVoltageCompensation(false);
     rightMaster.enableVoltageCompensation(false);
+  }
+
+  public double calculateVoltage(double velocity, double acceleration) {
+    return kV * velocity + kA * acceleration + vIntercept;
   }
 }

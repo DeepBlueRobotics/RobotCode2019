@@ -11,18 +11,18 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-
+import frc.robot.commands.ActuateClimberRails;
+import frc.robot.commands.CharDrive;
+import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.SlowDrive;
-import frc.robot.commands.ToggleHatch;
 import frc.robot.commands.ToggleCamera;
-import frc.robot.commands.ActuateClimberRails;
-import frc.robot.commands.Climb;
-import frc.robot.subsystems.HatchPanel;
+import frc.robot.commands.ToggleHatch;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.HatchPanel;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -32,6 +32,7 @@ public class OI {
   Joystick leftJoy, rightJoy, manipulator;
 
   JoystickButton leftSlowBtn, rightSlowBtn;
+  JoystickButton charDriveBtn;
   JoystickButton toggleHatchBtn;
   JoystickButton cargoIntakeBtn, cargoEjectBtn;
   JoystickButton climberRailBtn;
@@ -48,6 +49,9 @@ public class OI {
     leftSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
     rightSlowBtn = new JoystickButton(rightJoy, 1);
     rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
+
+    charDriveBtn = new JoystickButton(leftJoy, 3);
+    charDriveBtn.whileHeld(new CharDrive());
 
     toggleHatchBtn = new JoystickButton(manipulator, 1); // TODO: set ports to correct values
     toggleHatchBtn.whenPressed(new ToggleHatch(hp));

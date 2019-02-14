@@ -15,6 +15,7 @@ import frc.robot.subsystems.Drivetrain;
 public class TeleopDrive extends Command {
   Drivetrain dt;
   Joystick leftJoy, rightJoy;
+  double prevLeft, prevRight;
 
   /**
    * Handles all the teleoperated driving functionality
@@ -27,6 +28,7 @@ public class TeleopDrive extends Command {
     this.dt = dt;
     this.leftJoy = leftJoy;
     this.rightJoy = rightJoy;
+    prevLeft = prevRight = 0.0;
   }
 
   @Override
@@ -84,7 +86,18 @@ public class TeleopDrive extends Command {
       }
     }
 
-    dt.drive(left, right);
+    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
+      left *= dt.getMaxSpeed();
+      right *= dt.getMaxSpeed();
+      double leftV = dt.calculateVoltage(left, (left - prevLeft) / 0.02);
+      double rightV = dt.calculateVoltage(right, (right - prevRight) / 0.02);
+      dt.drive(leftV, rightV);
+    } else {
+      dt.drive(left, right);
+    }
+
+    prevLeft = left;
+    prevRight = right;
   }
 
   private void tankDrive() {
@@ -103,7 +116,18 @@ public class TeleopDrive extends Command {
       right *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
     }
 
-    dt.drive(left, right);
+    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
+      left *= dt.getMaxSpeed();
+      right *= dt.getMaxSpeed();
+      double leftV = dt.calculateVoltage(left, (left - prevLeft) / 0.02);
+      double rightV = dt.calculateVoltage(right, (right - prevRight) / 0.02);
+      dt.drive(leftV, rightV);
+    } else {
+      dt.drive(left, right);
+    }
+
+    prevLeft = left;
+    prevRight = right;
   }
 
   @Override
