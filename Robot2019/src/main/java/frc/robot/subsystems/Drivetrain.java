@@ -19,10 +19,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.TeleopDrive;
 
 public class Drivetrain extends Subsystem {
   public enum Side {
@@ -31,13 +29,12 @@ public class Drivetrain extends Subsystem {
 
   private WPI_TalonSRX leftMaster, rightMaster;
   private Encoder leftEnc, rightEnc;
-  public Joystick leftJoy, rightJoy;
   private AHRS ahrs;
   private double kV, kA, vIntercept;
 
   public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
-      WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Joystick leftJoy,
-      Joystick rightJoy, Encoder leftEnc, Encoder rightEnc, AHRS ahrs) {
+      WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Encoder leftEnc,
+      Encoder rightEnc, AHRS ahrs) {
 
     leftSlave1.follow(leftMaster);
     leftSlave2.follow(leftMaster);
@@ -50,9 +47,6 @@ public class Drivetrain extends Subsystem {
     rightMaster.setInverted(true);
     rightSlave1.setInverted(true);
     rightSlave2.setInverted(true);
-
-    this.leftJoy = leftJoy;
-    this.rightJoy = rightJoy;
 
     this.leftEnc = leftEnc;
     this.rightEnc = rightEnc;
@@ -71,15 +65,17 @@ public class Drivetrain extends Subsystem {
       kV = Double.valueOf(line.split(",")[0]);
       kA = Double.valueOf(line.split(",")[1]);
       vIntercept = Double.valueOf(line.split(",")[2]);
-    }
-    catch (FileNotFoundException e) {
+    } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
   }
 
+  /**
+   * teleop drive initialized in Robot.robotInit() to avoid dependency loops
+   * between dt and oi
+   */
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new TeleopDrive(this));
   }
 
   public void drive(double left, double right) {
@@ -95,7 +91,8 @@ public class Drivetrain extends Subsystem {
   }
 
   public boolean isStalled() {
-    return leftMaster.getOutputCurrent() >= 30 || rightMaster.getOutputCurrent() >= 30; // TODO: Find value that actually works (test)
+    return leftMaster.getOutputCurrent() >= 30 || rightMaster.getOutputCurrent() >= 30; // TODO: Find value that
+                                                                                        // actually works (test)
   }
 
   public double getEncDist(Side type) {

@@ -22,8 +22,8 @@ public class DrivetrainCharAnalysis {
         String file1 = "/home/lvuser/drive_char_linear.csv";
         String file2 = "/home/lvuser/drive_char_stepwise.csv";
         String outfile = "/home/lvuser/drive_char_params.csv";
-        //System.out.println("Simple Regression: ");
-        //simpleRegression(file1, file2, outfile);
+        // System.out.println("Simple Regression: ");
+        // simpleRegression(file1, file2, outfile);
         System.out.println("Ordinary Least Squares: ");
         ordinaryLeastSquares(file1, file2, outfile);
     }
@@ -104,7 +104,7 @@ public class DrivetrainCharAnalysis {
         velocities = returns[0];
         voltages = returns[1];
         accelerations = returns[2];
-        stepwise_x = velocities;    // To define the size of stepwise_x
+        stepwise_x = velocities; // To define the size of stepwise_x
 
         for (int i = 0; i < velocities.length; i++) {
             stepwise_x[i] = voltages[i] - (kv * velocities[i] + voltageIntercept);
@@ -167,7 +167,7 @@ public class DrivetrainCharAnalysis {
                     if (leftVelocities.length >= spread) {
                         double a1 = (v1 - leftVelocities[leftVelocities.length - spread]) / (spread * 0.02);
                         double a2 = (v2 - rightVelocities[rightVelocities.length - spread]) / (spread * 0.02); // right
-                                                                                                                    // velocity
+                                                                                                               // velocity
                         accelerations[n] = Math.abs(a1) + Math.abs(a2);
                     }
 
@@ -178,7 +178,7 @@ public class DrivetrainCharAnalysis {
                 }
             }
 
-            double[][] returns = {velocities, voltages, accelerations};
+            double[][] returns = { velocities, voltages, accelerations };
             return returns;
         } catch (FileNotFoundException fnf) {
             fnf.printStackTrace();

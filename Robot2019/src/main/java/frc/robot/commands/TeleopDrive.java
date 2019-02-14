@@ -7,12 +7,14 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain;
 
 public class TeleopDrive extends Command {
   Drivetrain dt;
+  Joystick leftJoy, rightJoy;
 
   /**
    * Handles all the teleoperated driving functionality
@@ -20,9 +22,11 @@ public class TeleopDrive extends Command {
    * @param dt the Drivetrain object to use, passing it in is useful for testing
    *           purposes
    */
-  public TeleopDrive(Drivetrain dt) {
+  public TeleopDrive(Drivetrain dt, Joystick leftJoy, Joystick rightJoy) {
     requires(dt);
     this.dt = dt;
+    this.leftJoy = leftJoy;
+    this.rightJoy = rightJoy;
   }
 
   @Override
@@ -35,8 +39,8 @@ public class TeleopDrive extends Command {
   }
 
   private void arcadeDrive() {
-    double speed = -dt.leftJoy.getY();
-    double rot = dt.rightJoy.getX();
+    double speed = -leftJoy.getY();
+    double rot = rightJoy.getX();
 
     // System.out.println("Speed: " + speed + ", Rotation: " + rot);
 
@@ -84,8 +88,8 @@ public class TeleopDrive extends Command {
   }
 
   private void tankDrive() {
-    double left = -dt.leftJoy.getY();
-    double right = -dt.rightJoy.getY();
+    double left = -leftJoy.getY();
+    double right = -rightJoy.getY();
 
     if (SmartDashboard.getBoolean("Square Joysticks", true)) {
       left = Math.copySign(left * left, left);

@@ -9,9 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.DrivetrainCharacterization;
 import frc.robot.commands.IncreaseVoltageLinear;
 import frc.robot.commands.IncreaseVoltageStepwise;
 import frc.robot.commands.TeleopDrive;
@@ -30,22 +28,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
+        RobotMap.rightSlave1, RobotMap.rightSlave2, RobotMap.leftEnc, RobotMap.rightEnc, RobotMap.ahrs);
     hp = new HatchPanel(RobotMap.hatchPistons);
     cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
     climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
 
-    oi = new OI(cargo, hp, climber, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
-
-    dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
-        RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
-        RobotMap.ahrs);
+    oi = new OI(dt, hp, cargo, climber, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
     fname1 = "/home/lvuser/drive_char_linear.csv";
     fname2 = "/home/lvuser/drive_char_stepwise.csv";
-    IncreaseVoltageLinear ivl = new IncreaseVoltageLinear(dt, 0.25/50, 6.0, fname1);
-    IncreaseVoltageStepwise ivs = new IncreaseVoltageStepwise(dt, 0.25/50, 6.0, fname2);
+    IncreaseVoltageLinear ivl = new IncreaseVoltageLinear(dt, 0.25 / 50, 6.0, fname1);
+    IncreaseVoltageStepwise ivs = new IncreaseVoltageStepwise(dt, 0.25 / 50, 6.0, fname2);
     SmartDashboard.putData("Increase Voltage Linearly", ivl);
     SmartDashboard.putData("Increase Voltage Stepwise", ivs);
+
+    dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
   }
 
   /**

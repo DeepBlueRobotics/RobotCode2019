@@ -77,20 +77,20 @@ public class DrivetrainCharacterization extends Command {
     public void writeMeasuredVelocity(FileWriter fw) {
         double leftMotorVelocity, rightMotorVelocity;
         StringBuilder sb = new StringBuilder();
-    
+
         leftMotorVelocity = dt.getEncRate(Drivetrain.Side.LEFT);
         rightMotorVelocity = dt.getEncRate(Drivetrain.Side.RIGHT);
-    
+
         voltageRuntime += 0.02; // IncreaseVoltage occurs every 1/50 of a second
         sb.append(String.valueOf(voltageRuntime) + ",");
         sb.append(String.valueOf(suppliedVoltage) + ",");
         sb.append(String.valueOf(leftMotorVelocity) + ",");
         sb.append(String.valueOf(rightMotorVelocity) + "\r\n");
-    
+
         try {
-          fw.write(sb.toString());
+            fw.write(sb.toString());
         } catch (IOException e) {
-          System.out.println("FileWriter object cannot write StringBuilder object: " + e);
+            System.out.println("FileWriter object cannot write StringBuilder object: " + e);
         }
     }
 }
