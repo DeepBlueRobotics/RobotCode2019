@@ -18,6 +18,13 @@ public class Climb extends Command {
   private Joystick dtJoy;
   private State state;
 
+  private final double backDrive = -0.5; // TODO: Set this to reasonable/tested value;
+  private final double climbUp = 0.5; // TODO: Set this to reasonable/tested value;
+  private final double climbDown = -0.5; // TODO: Set this to reasonable/tested value;
+  private final double retract = -0.5; // TODO: Set this to reasonable/tested value;
+  private final double overrideThreshold = 0.1; // TODO: Set this to reasonable/tested value;
+  private final double retractGoal = 0; // TODO: Set this to reasonable/tested value;
+
   public Climb(Climber climber, Drivetrain dt, Joystick joy) {
     // Use requires() here to declare subsystem dependencies
     this.climber = climber;
@@ -25,43 +32,45 @@ public class Climb extends Command {
     dtJoy = joy;
     requires(climber);
     requires(dt);
-    state = State.CLIMBING;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    state = State.CLIMBING;
+    climber.resetEncoder();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
     switch (state) {
-      case CLIMBING: 
-        dt.drive(-0.5, -0.5);
-        climber.runClimber(0.5);
-        if (!climber.needToClimb()) {
-          state = State.LEVELING;
-        }
-        checkForRetracting();
-        break;
-      case LEVELING: 
-        dt.drive(-0.5, -0.5);
-        climber.runClimber(-0.5);
-        if (!climber.canDrop()) {
-          state = State.CLIMBING;
-        }
-        checkForRetracting();
-        break;
-      case RETRACTING:
-        climber.retractClimber();
-        double retractGoal = 23.5; // Test for actual number 
-        if (climber.getEncDistance() > retractGoal) {
-          state = State.FINISHED;
-        }
-        break;
-      case FINISHED:
-        end();
+    case CLIMBING:
+      dt.drive(backDrive, backDrive);
+      climber.runClimber(climbUp);
+      if (!climber.needToClimb()) {
+        state = State.LEVELING;
+      }
+      if (robotOnPlatform())
+        state = State.RETRACTING;
+      break;
+    case LEVELING:
+      dt.drive(backDrive, backDrive);
+      climber.runClimber(climbDown);
+      if (!climber.canDrop()) {
+        state = State.CLIMBING;
+      }
+      if (robotOnPlatform())
+        state = State.RETRACTING;
+      break;
+    case RETRACTING:
+      climber.runClimber(retract);
+      if (climber.getEncDistance() <= retractGoal) {
+        state = State.FINISHED;
+      }
+      break;
+    case FINISHED:
+      end();
     }
   }
 
@@ -84,18 +93,22 @@ public class Climb extends Command {
     end();
   }
 
-  private void checkForRetracting() {
-    double joyMovingThreshold = 0.1; // Test for actual number
-      if (!dt.isStalled() || Math.abs(dtJoy.getY()) > joyMovingThreshold) { 
-        state = State.RETRACTING;
-        climber.resetEncoder();
-      }
+  /**
+   * This method checks whether 1) The driver is attempting to override the
+   * climbing sequence; or 2) The drivetrain current draw is above average,
+   * implying that the robot is on the platform.
+   * 
+   * @return Returns whether the robot is on the plaform, or the driver is
+   *         overriding the climb
+   */
+  private boolean robotOnPlatform() {
+    return dt.isStalled() || Math.abs(dtJoy.getY()) > overrideThreshold;
   }
 
   private enum State {
-    CLIMBING,
-    LEVELING,
-    RETRACTING,
+    CLIMBING, // going up
+    LEVELING, // going down (needed to level robot)
+    RETRACTING, // retract foot once on ledge
     FINISHED
   }
 }

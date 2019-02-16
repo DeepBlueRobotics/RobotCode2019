@@ -20,8 +20,10 @@ public class Climber extends Subsystem {
   private AHRS ahrs;
   private DoubleSolenoid pistons;
 
-  final private double minTilt = 0; // In degrees
+  final private double minTilt = 0; // In degrees // TODO: Update wtih actual number
+  final private double minDist = 13; // In inches // TODO: Update with actual number
   final private double maxTilt = 30; // In degrees // TODO: Update with actual number
+  final private double maxDist = 15; // In inches // TODO: Update with actual number
 
   public Climber(VictorSP motor, Encoder enc, AHRS ahrs, DoubleSolenoid pistons) {
     this.motor = motor;
@@ -42,10 +44,6 @@ public class Climber extends Subsystem {
     motor.set(speed);
   }
 
-  public void retractClimber() {
-    motor.set(-1);
-  }
-
   public void stopClimber() {
     motor.stopMotor();
   }
@@ -53,13 +51,13 @@ public class Climber extends Subsystem {
   public boolean needToClimb() {
     double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
     angle *= 180 / Math.PI;
-    return angle < maxTilt;
+    return angle < maxTilt || enc.getDistance() < minDist;
   }
 
   public boolean canDrop() {
     double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
     angle *= 180 / Math.PI;
-    return angle > minTilt;
+    return angle > minTilt || enc.getDistance() > maxDist;
   }
 
   public double getEncDistance() {
