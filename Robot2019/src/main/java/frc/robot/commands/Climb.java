@@ -17,8 +17,7 @@ public class Climb extends Command {
   private Drivetrain dt;
   private Joystick dtJoy;
   private boolean up;
-  private boolean climbing;
-  private boolean finished;
+  private State state;
 
   public Climb(Climber climber, Drivetrain dt, Joystick joy) {
     // Use requires() here to declare subsystem dependencies
@@ -28,8 +27,7 @@ public class Climb extends Command {
     requires(climber);
     requires(dt);
     up = true;
-    climbing = true;
-    finished = false;
+    state = State.CLIMB;
   }
 
   // Called just before this Command runs the first time
@@ -40,16 +38,16 @@ public class Climb extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (climbing) {
+    if (state == State.CLIMB) {
       climb();
       if (!dt.isStalled() || Math.abs(dtJoy.getY()) > 0.1) { // 0.1 = Placeholder/approximation 
-        climbing = false;
+        state = State.RETRACT;
         climber.resetEncoder();
       }
     } else {
       retract();
       if (climber.getEncDistance() > 23) { // 23 = Placeholder/approximation 
-        finished = true;
+        state = State.FINISHED;
       }
     }
   }
@@ -57,7 +55,7 @@ public class Climb extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return finished;
+    return state == state.FINISHED;
   }
 
   // Called once after isFinished returns true
@@ -88,5 +86,11 @@ public class Climb extends Command {
 
   private void retract() {
     climber.retractClimber();
+  }
+
+  private enum State {
+    CLIMB,
+    RETRACT,
+    FINISHED
   }
 }
