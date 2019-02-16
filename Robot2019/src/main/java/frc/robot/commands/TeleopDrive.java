@@ -89,9 +89,16 @@ public class TeleopDrive extends Command {
     if (SmartDashboard.getBoolean("Characterized Drive", false)) {
       left *= dt.getMaxSpeed();
       right *= dt.getMaxSpeed();
-      double leftV = dt.calculateVoltage(left, (left - prevLeft) / 0.02);
-      double rightV = dt.calculateVoltage(right, (right - prevRight) / 0.02);
-      dt.drive(leftV, rightV);
+      double leftV = dt.calculateVoltage(Drivetrain.Side.LEFT, left, (left - prevLeft) / 0.02);
+      double rightV = dt.calculateVoltage(Drivetrain.Side.RIGHT, right, (right - prevRight) / 0.02);
+      
+      if (leftV >= 12.0) {
+        leftV = 12.0;
+      } else if (rightV >= 12.0) {
+        rightV = 12.0;
+      }
+      
+      dt.drive(leftV / 12.0, rightV / 12.0);
     } else {
       dt.drive(left, right);
     }
@@ -119,9 +126,16 @@ public class TeleopDrive extends Command {
     if (SmartDashboard.getBoolean("Characterized Drive", false)) {
       left *= dt.getMaxSpeed();
       right *= dt.getMaxSpeed();
-      double leftV = dt.calculateVoltage(left, (left - prevLeft) / 0.02);
-      double rightV = dt.calculateVoltage(right, (right - prevRight) / 0.02);
-      dt.drive(leftV, rightV);
+      double leftV = dt.calculateVoltage(Drivetrain.Side.LEFT, left, (left - prevLeft) / 0.02);
+      double rightV = dt.calculateVoltage(Drivetrain.Side.RIGHT, right, (right - prevRight) / 0.02);
+      
+      if (leftV >= 12.0) {
+        leftV = 12.0;
+      } else if (rightV >= 12.0) {
+        rightV = 12.0;
+      }
+      
+      dt.drive(leftV / 12.0, rightV / 12.0);
     } else {
       dt.drive(left, right);
     }

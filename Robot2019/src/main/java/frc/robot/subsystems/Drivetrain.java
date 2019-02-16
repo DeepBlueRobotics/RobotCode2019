@@ -30,7 +30,8 @@ public class Drivetrain extends Subsystem {
   private WPI_TalonSRX leftMaster, rightMaster;
   private Encoder leftEnc, rightEnc;
   private AHRS ahrs;
-  private double kV, kA, vIntercept;
+  private double leftkV, leftkA, leftVIntercept;
+  private double rightkV, rightkA, rightVIntercept;
 
   public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
       WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Encoder leftEnc,
@@ -60,11 +61,14 @@ public class Drivetrain extends Subsystem {
 
     try {
       Scanner filereader = new Scanner(new File("/home/lvuser/drive_char_params.csv"));
-      filereader.nextLine();
       String line = filereader.next();
-      kV = Double.valueOf(line.split(",")[0]);
-      kA = Double.valueOf(line.split(",")[1]);
-      vIntercept = Double.valueOf(line.split(",")[2]);
+      leftkV = Double.valueOf(line.split(",")[0]);
+      leftkA = Double.valueOf(line.split(",")[1]);
+      leftVIntercept = Double.valueOf(line.split(",")[2]);
+      line = filereader.next();
+      rightkV = Double.valueOf(line.split(",")[0]);
+      rightkA = Double.valueOf(line.split(",")[1]);
+      rightVIntercept = Double.valueOf(line.split(",")[2]);
       filereader.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
@@ -150,7 +154,11 @@ public class Drivetrain extends Subsystem {
     rightMaster.enableVoltageCompensation(false);
   }
 
-  public double calculateVoltage(double velocity, double acceleration) {
-    return kV * velocity + kA * acceleration + vIntercept;
+  public double calculateVoltage(Side side, double velocity, double acceleration) {
+    if (side == Side.LEFT) {
+      return leftkV * velocity + leftkA * acceleration + leftVIntercept;
+    } else {
+      return rightkV * velocity + rightkA * acceleration + rightVIntercept;
+    }
   }
 }

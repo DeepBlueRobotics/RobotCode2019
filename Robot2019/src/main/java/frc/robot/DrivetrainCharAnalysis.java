@@ -26,29 +26,33 @@ public class DrivetrainCharAnalysis {
 
     // Ordinary Least Squares approach (multi-variable approach)
     public static void ordinaryLeastSquares(String file1, String file2, String outfile) {
-        double kv = 0.0;
-        double ka = 0.0;
-        double voltageIntercept = 0.0;
+        double leftKv, rightKv;
+        double leftKa, rightKa;
+        double leftVoltageIntercept, rightVoltageIntercept;
         int spread = 30;
 
         double[][] returns;
-        double[] params, velocities, voltages, accelerations;
+        double[] params, leftVelocities, rightVelocities, voltages, leftAccelerations, rightAccelerations;
 
         returns = parseCSV(file1, spread);
-        velocities = returns[0];
-        voltages = returns[1];
-        accelerations = returns[2];
+        leftVelocities = returns[0];
+        rightVelocities = returns[1];
+        voltages = returns[2];
+        leftAccelerations = returns[3];
+        rightAccelerations = returns[4];
 
         returns = parseCSV(file2, spread);
-        velocities = ArrayUtils.addAll(velocities, returns[0]);
-        voltages = ArrayUtils.addAll(voltages, returns[1]);
-        accelerations = ArrayUtils.addAll(accelerations, returns[2]);
+        leftVelocities = ArrayUtils.addAll(leftVelocities, returns[0]);
+        rightVelocities = ArrayUtils.addAll(rightVelocities, returns[1]);
+        voltages = ArrayUtils.addAll(voltages, returns[2]);
+        leftAccelerations = ArrayUtils.addAll(leftAccelerations, returns[3]);
+        rightAccelerations = ArrayUtils.addAll(rightAccelerations, returns[4]);
 
         double[][] xs = new double[voltages.length][2];
         double[] ys = new double[voltages.length];
         for (int i = 0; i < voltages.length; i++) {
-            xs[i][0] = velocities[i];
-            xs[i][1] = accelerations[i];
+            xs[i][0] = leftVelocities[i];
+            xs[i][1] = leftAccelerations[i];
             ys[i] = voltages[i];
         }
 
@@ -56,24 +60,45 @@ public class DrivetrainCharAnalysis {
         algorithm.newSampleData(ys, xs);
         params = algorithm.estimateRegressionParameters();
         // System.out.println(params.length);
-        kv = params[1];
-        ka = params[2];
-        voltageIntercept = params[0];
-
-        System.out.print("Velocity Constant is " + Double.toString(12 * kv) /* Change inches to feet in printout */);
-        System.out.print(" and the Acceleration Constant is " + Double.toString(12 * ka));
-        System.out.print(" with a voltage intercept of " + Double.toString(voltageIntercept) + "\n");
+        leftKv = params[1];
+        leftKa = params[2];
+        leftVoltageIntercept = params[0];
 
         FileWriter f;
         try {
             f = new FileWriter(new File(outfile));
-            f.append(kv + "," + ka + "," + voltageIntercept);
+            f.append(leftKv + "," + leftKa + "," + leftVoltageIntercept);
+            f.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        xs = new double[voltages.length][2];
+        ys = new double[voltages.length];
+        for (int i = 0; i < voltages.length; i++) {
+            xs[i][0] = rightVelocities[i];
+            xs[i][1] = rightAccelerations[i];
+            ys[i] = voltages[i];
+        }
+
+        algorithm = new OLSMultipleLinearRegression();
+        algorithm.newSampleData(ys, xs);
+        params = algorithm.estimateRegressionParameters();
+        // System.out.println(params.length);
+        rightKv = params[1];
+        rightKa = params[2];
+        rightVoltageIntercept = params[0];
+
+        try {
+            f = new FileWriter(new File(outfile));
+            f.append(rightKv + "," + rightKa + "," + rightVoltageIntercept);
             f.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    // OUTDATED
     // Simplistic approach to the problem.
     public static void simpleRegression(String file1, String file2, String outfile) {
         // Argument 1 should be the filepath of the linear increase CSV file.
@@ -148,23 +173,22 @@ public class DrivetrainCharAnalysis {
             Iterable<CSVRecord> records = CSVFormat.RFC4180.parse(in);
 
             int num_values = Iterables.size(records);
-            double[] leftVelocities, rightVelocities, velocities, voltages, accelerations;
-            leftVelocities = rightVelocities = velocities = voltages = accelerations = new double[num_values - spread];
+            double[] leftVelocities, rightVelocities, voltages, leftAccelerations, rightAccelerations;
+            leftVelocities = rightVelocities = voltages = leftAccelerations = rightAccelerations = new double[num_values - spread];
 
             for (CSVRecord record : records) {
                 if (!record.get(0).equals("Timestamp (s)")) {
                     double v1 = Double.valueOf(record.get(2));
                     double v2 = Double.valueOf(record.get(3));
-                    double v3 = 0.5 * (v1 - v2);
                     int n = (int) record.getRecordNumber();
-                    velocities[n] = v3;
                     voltages[n] = Double.valueOf(record.get(1));
 
                     if (leftVelocities.length >= spread) {
                         double a1 = (v1 - leftVelocities[leftVelocities.length - spread]) / (spread * 0.02);
                         double a2 = (v2 - rightVelocities[rightVelocities.length - spread]) / (spread * 0.02); // right
                                                                                                                // velocity
-                        accelerations[n] = Math.abs(a1) + Math.abs(a2);
+                        leftAccelerations[n] = Math.abs(a1);
+                        rightAccelerations[n] = Math.abs(a2);
                     }
 
                     if (leftVelocities.length < num_values - spread) {
@@ -174,7 +198,7 @@ public class DrivetrainCharAnalysis {
                 }
             }
 
-            double[][] returns = { velocities, voltages, accelerations };
+            double[][] returns = { leftVelocities, rightVelocities, voltages, leftAccelerations, rightAccelerations };
             return returns;
         } catch (FileNotFoundException fnf) {
             fnf.printStackTrace();
