@@ -16,7 +16,6 @@ public class Climb extends Command {
   private Climber climber;
   private Drivetrain dt;
   private Joystick dtJoy;
-  private boolean up;
   private State state;
 
   public Climb(Climber climber, Drivetrain dt, Joystick joy) {
@@ -26,8 +25,7 @@ public class Climb extends Command {
     dtJoy = joy;
     requires(climber);
     requires(dt);
-    up = true;
-    state = State.CLIMB;
+    state = State.CLIMBING;
   }
 
   // Called just before this Command runs the first time
@@ -38,19 +36,32 @@ public class Climb extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (state == State.CLIMB) {
-      climb();
-      double joyMovingThreshold = 0.1; // Test for actual number
-      if (!dt.isStalled() || Math.abs(dtJoy.getY()) > joyMovingThreshold) { 
-        state = State.RETRACT;
-        climber.resetEncoder();
-      }
-    } else {
-      climber.retractClimber();
-      double retractGoal = 23.5; // Test for actual number 
-      if (climber.getEncDistance() > retractGoal) {
-        state = State.FINISHED;
-      }
+    switch (state) {
+      case CLIMBING: 
+        dt.drive(-0.5, -0.5);
+        climber.runClimber(0.5);
+        if (!climber.needToClimb()) {
+          state = State.LEVELING;
+        }
+        checkForRetracting();
+        break;
+      case LEVELING: 
+        dt.drive(-0.5, -0.5);
+        climber.runClimber(-0.5);
+        if (!climber.canDrop()) {
+          state = State.CLIMBING;
+        }
+        checkForRetracting();
+        break;
+      case RETRACTING:
+        climber.retractClimber();
+        double retractGoal = 23.5; // Test for actual number 
+        if (climber.getEncDistance() > retractGoal) {
+          state = State.FINISHED;
+        }
+        break;
+      case FINISHED:
+        end();
     }
   }
 
@@ -73,24 +84,18 @@ public class Climb extends Command {
     end();
   }
 
-  private void climb() {
-    dt.drive(-0.5, -0.5);
-    if (up) {
-      climber.runClimber(0.5);
-      if (!climber.needToClimb()) {
-        up = false;
+  private void checkForRetracting() {
+    double joyMovingThreshold = 0.1; // Test for actual number
+      if (!dt.isStalled() || Math.abs(dtJoy.getY()) > joyMovingThreshold) { 
+        state = State.RETRACTING;
+        climber.resetEncoder();
       }
-    } else {
-      climber.runClimber(-0.5);
-      if (!climber.canDrop()) {
-        up = true;
-      }
-    }
   }
 
   private enum State {
-    CLIMB,
-    RETRACT,
+    CLIMBING,
+    LEVELING,
+    RETRACTING,
     FINISHED
   }
 }
