@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.DrivetrainAnalysis;
 import frc.robot.commands.IncreaseVoltageLinear;
 import frc.robot.commands.IncreaseVoltageStepwise;
 import frc.robot.commands.TeleopDrive;
@@ -40,8 +41,10 @@ public class Robot extends TimedRobot {
     fname2 = "/home/lvuser/drive_char_stepwise.csv";
     IncreaseVoltageLinear ivl = new IncreaseVoltageLinear(dt, 0.25 / 50, 6.0, fname1);
     IncreaseVoltageStepwise ivs = new IncreaseVoltageStepwise(dt, 0.25 / 50, 6.0, fname2);
+    DrivetrainAnalysis dca = new DrivetrainAnalysis();
     SmartDashboard.putData("Increase Voltage Linearly", ivl);
     SmartDashboard.putData("Increase Voltage Stepwise", ivs);
+    SmartDashboard.putData("Drivetrain Characterization Analysis", dca);
 
     dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
   }
