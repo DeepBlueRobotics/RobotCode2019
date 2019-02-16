@@ -40,13 +40,15 @@ public class Climb extends Command {
   protected void execute() {
     if (state == State.CLIMB) {
       climb();
-      if (!dt.isStalled() || Math.abs(dtJoy.getY()) > 0.1) { // 0.1 = Placeholder/approximation 
+      double joyMovingThreshold = 0.1; // Test for actual number
+      if (!dt.isStalled() || Math.abs(dtJoy.getY()) > joyMovingThreshold) { 
         state = State.RETRACT;
         climber.resetEncoder();
       }
     } else {
-      retract();
-      if (climber.getEncDistance() > 23) { // 23 = Placeholder/approximation 
+      climber.retractClimber();
+      double retractGoal = 23.5; // Test for actual number 
+      if (climber.getEncDistance() > retractGoal) {
         state = State.FINISHED;
       }
     }
@@ -55,13 +57,13 @@ public class Climb extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return state == state.FINISHED;
+    return state == State.FINISHED;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    climber.retractClimber();
+    climber.stopClimber();
   }
 
   // Called when another command which requires one or more of the same
@@ -75,17 +77,15 @@ public class Climb extends Command {
     dt.drive(-0.5, -0.5);
     if (up) {
       climber.runClimber(0.5);
-      if (!climber.needToClimb())
+      if (!climber.needToClimb()) {
         up = false;
+      }
     } else {
       climber.runClimber(-0.5);
-      if (!climber.canDrop())
+      if (!climber.canDrop()) {
         up = true;
+      }
     }
-  }
-
-  private void retract() {
-    climber.retractClimber();
   }
 
   private enum State {

@@ -52,11 +52,13 @@ public class Climber extends Subsystem {
 
   public boolean needToClimb() {
     double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
+    angle *= 180 / Math.PI;
     return angle < maxTilt;
   }
 
   public boolean canDrop() {
     double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
+    angle *= 180 / Math.PI;
     return angle > minTilt;
   }
 
