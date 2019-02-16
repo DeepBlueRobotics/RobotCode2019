@@ -57,7 +57,7 @@ public class OI {
     cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
-    climberRailBtn = new JoystickButton(manipulator, Manip.LB); // TODO: confirm button number
+    climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder); // TODO: confirm button number
     climberRailBtn.whenPressed(new ActuateClimberRails(climber));
 
     climbBtn = new JoystickButton(manipulator, Manip.Y); // TODO: confirm button number
@@ -68,6 +68,12 @@ public class OI {
   }
 
   private class Manip {
-    static final int X = 1, A = 2, B = 3, Y = 4, LB = 5, RB = 6, LT = 7, RT = 8, BACK = 9, START = 10;
+    static final int X = 1, A = 2, B = 3, Y = 4, LB_lShoulder = 5, RB_rShoulder = 6, LT_lTrigger = 7, RT_rTrigger = 8,
+        BACK = 9, START = 10;
+
+    // Front four buttons look like:
+    // Y
+    // X B
+    // A
   }
 }
