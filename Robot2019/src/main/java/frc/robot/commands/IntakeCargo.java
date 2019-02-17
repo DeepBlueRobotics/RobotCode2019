@@ -51,8 +51,12 @@ public class IntakeCargo extends Command {
 
   @Override
   protected void end() {
-    cargo.keepIntake();
-    SmartDashboard.putBoolean("Has cargo", true);
+    if (isFinished()) {
+      cargo.keepIntake();
+      SmartDashboard.putBoolean("Has cargo", true);
+    } else {
+      cargo.stopIntake();
+    }
   }
 
   @Override

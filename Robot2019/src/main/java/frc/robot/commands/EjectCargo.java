@@ -44,7 +44,9 @@ public class EjectCargo extends Command {
   @Override
   protected void end() {
     cargo.stopIntake();
-    SmartDashboard.putBoolean("Has cargo", false);
+    if (isFinished()) {
+      SmartDashboard.putBoolean("Has cargo", false);
+    }
   }
 
   @Override
