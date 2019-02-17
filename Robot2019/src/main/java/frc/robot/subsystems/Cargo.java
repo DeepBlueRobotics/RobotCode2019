@@ -15,6 +15,11 @@ public class Cargo extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+  private final double intakeCurrentThreshold = 8.0; // Amps
+  private final double rollerIntakeSpeed = 4.0 / 12;
+  private final double rollerStallSpeed = 3.0 / 12;
+  private final double rollerEjectSpeed = 12.0 / 12;
+
   private VictorSP roller;
   private PowerDistributionPanel pdp;
 
@@ -27,17 +32,23 @@ public class Cargo extends Subsystem {
     roller.stopMotor();
   }
 
+  /**
+   * keeps the cargo in the mechanism by running the rollers at a slower speed
+   */
+  public void keepIntake() {
+    roller.set(rollerStallSpeed);
+  }
+
   public void runIntake() {
-    roller.set(-1);
+    roller.set(rollerIntakeSpeed);
   }
 
   public void runEject() {
-    roller.set(1);
+    roller.set(-1 * rollerEjectSpeed);
   }
 
   public boolean hasCargo() {
-    return pdp.getCurrent(roller.getChannel()) > 15;
-    // TODO: set ports to actual cargo motor port
+    return pdp.getCurrent(roller.getChannel()) > intakeCurrentThreshold;
   }
 
   @Override
