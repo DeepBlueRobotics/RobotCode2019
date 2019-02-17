@@ -15,7 +15,6 @@ import frc.robot.subsystems.Drivetrain;
 public class TeleopDrive extends Command {
   Drivetrain dt;
   Joystick leftJoy, rightJoy;
-  double prevLeft, prevRight;
 
   /**
    * Handles all the teleoperated driving functionality
@@ -28,7 +27,6 @@ public class TeleopDrive extends Command {
     this.dt = dt;
     this.leftJoy = leftJoy;
     this.rightJoy = rightJoy;
-    prevLeft = prevRight = 0.0;
   }
 
   @Override
@@ -89,22 +87,37 @@ public class TeleopDrive extends Command {
     if (SmartDashboard.getBoolean("Characterized Drive", false)) {
       left *= dt.getMaxSpeed();
       right *= dt.getMaxSpeed();
-      double leftV = dt.calculateVoltage(Drivetrain.Side.LEFT, left, (left - prevLeft) / 0.02);
-      double rightV = dt.calculateVoltage(Drivetrain.Side.RIGHT, right, (right - prevRight) / 0.02);
-      
-      if (leftV >= 12.0) {
-        leftV = 12.0;
-      } else if (rightV >= 12.0) {
-        rightV = 12.0;
+      double leftV, rightV;
+
+      if (!(left < 0.0 && right < 0.0)) {
+        if (right >= left) {
+          leftV = dt.calculateVoltage(Drivetrain.Direction.FR, left, 0.0);
+          rightV = dt.calculateVoltage(Drivetrain.Direction.FR, right, 0.0);
+        } else {
+          leftV = dt.calculateVoltage(Drivetrain.Direction.FL, left, 0.0);
+          rightV = dt.calculateVoltage(Drivetrain.Direction.FL, right, 0.0);
+        }
+      } else {
+        if (right >= left) {
+          leftV = dt.calculateVoltage(Drivetrain.Direction.BR, left, 0.0);
+          rightV = dt.calculateVoltage(Drivetrain.Direction.BR, right, 0.0);
+        } else {
+          leftV = dt.calculateVoltage(Drivetrain.Direction.BL, left, 0.0);
+          rightV = dt.calculateVoltage(Drivetrain.Direction.BL, right, 0.0);
+        }
+      }
+
+      if (Math.abs(leftV) >= 12.0) {
+        leftV = 12.0 * Math.signum(leftV);
+      }
+      if (Math.abs(rightV) >= 12.0) {
+        rightV = 12.0 * Math.signum(rightV);
       }
       
       dt.drive(leftV / 12.0, rightV / 12.0);
     } else {
       dt.drive(left, right);
     }
-
-    prevLeft = left;
-    prevRight = right;
   }
 
   private void tankDrive() {
@@ -126,22 +139,37 @@ public class TeleopDrive extends Command {
     if (SmartDashboard.getBoolean("Characterized Drive", false)) {
       left *= dt.getMaxSpeed();
       right *= dt.getMaxSpeed();
-      double leftV = dt.calculateVoltage(Drivetrain.Side.LEFT, left, (left - prevLeft) / 0.02);
-      double rightV = dt.calculateVoltage(Drivetrain.Side.RIGHT, right, (right - prevRight) / 0.02);
-      
-      if (leftV >= 12.0) {
-        leftV = 12.0;
-      } else if (rightV >= 12.0) {
-        rightV = 12.0;
+      double leftV, rightV;
+
+      if (!(left < 0.0 && right < 0.0)) {
+        if (right >= left) {
+          leftV = dt.calculateVoltage(Drivetrain.Direction.FR, left, 0.0);
+          rightV = dt.calculateVoltage(Drivetrain.Direction.FR, right, 0.0);
+        } else {
+          leftV = dt.calculateVoltage(Drivetrain.Direction.FL, left, 0.0);
+          rightV = dt.calculateVoltage(Drivetrain.Direction.FL, right, 0.0);
+        }
+      } else {
+        if (right >= left) {
+          leftV = dt.calculateVoltage(Drivetrain.Direction.BR, left, 0.0);
+          rightV = dt.calculateVoltage(Drivetrain.Direction.BR, right, 0.0);
+        } else {
+          leftV = dt.calculateVoltage(Drivetrain.Direction.BL, left, 0.0);
+          rightV = dt.calculateVoltage(Drivetrain.Direction.BL, right, 0.0);
+        }
+      }
+
+      if (Math.abs(leftV) >= 12.0) {
+        leftV = 12.0 * Math.signum(leftV);
+      }
+      if (Math.abs(rightV) >= 12.0) {
+        rightV = 12.0 * Math.signum(rightV);
       }
       
       dt.drive(leftV / 12.0, rightV / 12.0);
     } else {
       dt.drive(left, right);
     }
-
-    prevLeft = left;
-    prevRight = right;
   }
 
   @Override

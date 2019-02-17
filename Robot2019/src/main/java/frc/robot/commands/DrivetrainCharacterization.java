@@ -10,8 +10,8 @@ import frc.robot.subsystems.Drivetrain;
 /* Command which supplies the motors with a desired voltage that increases linearly.
 */
 public class DrivetrainCharacterization extends Command {
-    private Drivetrain dt;
-    private FileWriter fw;
+    public Drivetrain dt;
+    public FileWriter fw;
     private String filename;
     public double suppliedVoltage, voltStep, stepwiseVoltage, voltageRuntime, maxVoltage;
 

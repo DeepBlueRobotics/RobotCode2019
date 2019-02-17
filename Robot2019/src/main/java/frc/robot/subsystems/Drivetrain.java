@@ -27,11 +27,18 @@ public class Drivetrain extends Subsystem {
     LEFT, RIGHT
   }
 
+  public enum Direction {
+    FL, FR, BL, BR    // Forward-Left, Forward-Right, Backward-Left, Backward-Right
+  }
+
   private WPI_TalonSRX leftMaster, rightMaster;
   private Encoder leftEnc, rightEnc;
   private AHRS ahrs;
-  private double leftkV, leftkA, leftVIntercept;
-  private double rightkV, rightkA, rightVIntercept;
+
+  private double flKV, flKA, flVI;
+  private double frKV, frKA, frVI;
+  private double blKV, blKA, blVI;
+  private double brKV, brKA, brVI;
 
   public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
       WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Encoder leftEnc,
@@ -58,21 +65,6 @@ public class Drivetrain extends Subsystem {
     rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
 
     this.ahrs = ahrs;
-
-    try {
-      Scanner filereader = new Scanner(new File("/home/lvuser/drive_char_params.csv"));
-      String line = filereader.next();
-      leftkV = Double.valueOf(line.split(",")[0]);
-      leftkA = Double.valueOf(line.split(",")[1]);
-      leftVIntercept = Double.valueOf(line.split(",")[2]);
-      line = filereader.next();
-      rightkV = Double.valueOf(line.split(",")[0]);
-      rightkA = Double.valueOf(line.split(",")[1]);
-      rightVIntercept = Double.valueOf(line.split(",")[2]);
-      filereader.close();
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
   }
 
   /**
@@ -154,11 +146,51 @@ public class Drivetrain extends Subsystem {
     rightMaster.enableVoltageCompensation(false);
   }
 
-  public double calculateVoltage(Side side, double velocity, double acceleration) {
-    if (side == Side.LEFT) {
-      return leftkV * velocity + leftkA * acceleration + leftVIntercept;
+  public void updateDrivetrainParameters() {
+    try {
+      Scanner filereader = new Scanner(new File("/home/lvuser/drive_char_params.csv"));
+      String line = filereader.next();
+      // Forward-Left
+      flKV = Double.valueOf(line.split(",")[0]);
+      flKA = Double.valueOf(line.split(",")[1]);
+      flVI = Double.valueOf(line.split(",")[2]);
+      System.out.println(flKV + "," + flKA + "," + flVI);
+
+      line = filereader.next();
+      // Forward-right
+      frKV = Double.valueOf(line.split(",")[0]);
+      frKA = Double.valueOf(line.split(",")[1]);
+      frVI = Double.valueOf(line.split(",")[2]);
+      System.out.println(frKV + "," + frKA + "," + frVI);
+
+      line = filereader.next();
+      // Backward-Left
+      blKV = Double.valueOf(line.split(",")[0]);
+      blKA = Double.valueOf(line.split(",")[1]);
+      blVI = Double.valueOf(line.split(",")[2]);
+      System.out.println(blKV + "," + blKA + "," + blVI);
+
+      line = filereader.next();
+      // Backward-Right
+      brKV = Double.valueOf(line.split(",")[0]);
+      brKA = Double.valueOf(line.split(",")[1]);
+      brVI = Double.valueOf(line.split(",")[2]);
+      System.out.println(brKV + "," + brKA + "," + brVI);
+      filereader.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public double calculateVoltage(Direction dir, double velocity, double acceleration) {
+    if (dir == Direction.FL) {
+      return flKV * velocity + flKA * acceleration + flVI;
+    } else if (dir == Direction.FR) {
+      return frKV * velocity + frKA * acceleration + frVI;
+    } else if (dir == Direction.BL) {
+      return blKV * velocity + blKA * acceleration - blVI;
     } else {
-      return rightkV * velocity + rightkA * acceleration + rightVIntercept;
+      return brKV * velocity + brKA * acceleration - brVI;
     }
   }
 }

@@ -119,7 +119,7 @@ public class RobotMap {
 
     ecDeadband = tsrx.configNeutralDeadband(0.001, 10);
     if (!ecDeadband.equals(ErrorCode.OK)) {
-      throw new RuntimeException("Deadband Configuration could not be set");
+      throw new RuntimeException(ecDeadband.toString());
     }
 
     return tsrx;
@@ -138,7 +138,7 @@ public class RobotMap {
 
     ecDeadband = vspx.configNeutralDeadband(0.001, 10);
     if (!ecDeadband.equals(ErrorCode.OK)) {
-      throw new RuntimeException("Deadband Configuration could not be set");
+      throw new RuntimeException(ecDeadband.toString());
     }
 
     return vspx;

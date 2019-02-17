@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
   private static OI oi;
   private static Cargo cargo;
   private static Climber climber;
-  private static String fname1, fname2;
+  private static String fname1, fname2, fname3, fname4;
 
   @Override
   public void robotInit() {
@@ -37,13 +37,19 @@ public class Robot extends TimedRobot {
 
     oi = new OI(dt, hp, cargo, climber, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
-    fname1 = "/home/lvuser/drive_char_linear.csv";
-    fname2 = "/home/lvuser/drive_char_stepwise.csv";
-    IncreaseVoltageLinear ivl = new IncreaseVoltageLinear(dt, 0.25 / 50, 6.0, fname1);
-    IncreaseVoltageStepwise ivs = new IncreaseVoltageStepwise(dt, 0.25 / 50, 6.0, fname2);
-    DrivetrainAnalysis dca = new DrivetrainAnalysis();
-    SmartDashboard.putData("Increase Voltage Linearly", ivl);
-    SmartDashboard.putData("Increase Voltage Stepwise", ivs);
+    fname1 = "/home/lvuser/drive_char_linear_for.csv";
+    fname2 = "/home/lvuser/drive_char_stepwise_for.csv";
+    fname3 = "/home/lvuser/drive_char_linear_back.csv";
+    fname4 = "/home/lvuser/drive_char_stepwise_back.csv";
+    IncreaseVoltageLinear ivlf = new IncreaseVoltageLinear(dt, 0.25 / 50, 6.0, fname1, "forward");
+    IncreaseVoltageStepwise ivsf = new IncreaseVoltageStepwise(dt, 0.25 / 50, 6.0, fname2, "forward");
+    IncreaseVoltageLinear ivlb = new IncreaseVoltageLinear(dt, 0.25 / 50, 6.0, fname3, "backward");
+    IncreaseVoltageStepwise ivsb = new IncreaseVoltageStepwise(dt, 0.25 / 50, 6.0, fname4, "backward");
+    DrivetrainAnalysis dca = new DrivetrainAnalysis(dt);
+    SmartDashboard.putData("Increase Voltage Linearly Forward", ivlf);
+    SmartDashboard.putData("Increase Voltage Stepwise Forward", ivsf);
+    SmartDashboard.putData("Increase Voltage Linearly Backward", ivlb);
+    SmartDashboard.putData("Increase Voltage Stepwise Backward", ivsb);
     SmartDashboard.putData("Drivetrain Characterization Analysis", dca);
 
     dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
