@@ -49,21 +49,31 @@ public class OI {
     rightSlowBtn = new JoystickButton(rightJoy, 1);
     rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
 
-    toggleHatchBtn = new JoystickButton(manipulator, 1); // TODO: set ports to correct values
+    toggleHatchBtn = new JoystickButton(manipulator, Manip.X); // TODO: set ports to correct values
     toggleHatchBtn.whenPressed(new ToggleHatch(hp));
 
-    cargoIntakeBtn = new JoystickButton(manipulator, 2); // TODO: set ports to correct values
+    cargoIntakeBtn = new JoystickButton(manipulator, Manip.A); // TODO: set ports to correct values
     cargoIntakeBtn.whenPressed(new IntakeCargo(cargo));
-    cargoEjectBtn = new JoystickButton(manipulator, 3); // TODO: set ports to correct values
+    cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
-    climberRailBtn = new JoystickButton(manipulator, 5); // TODO: confirm button number
+    climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder); // TODO: confirm button number
     climberRailBtn.whenPressed(new ActuateClimberRails(climber));
 
-    climbBtn = new JoystickButton(manipulator, 4); // TODO: confirm button number
-    climbBtn.whenPressed(new Climb(climber, dt, leftJoy));
+    climbBtn = new JoystickButton(manipulator, Manip.Y); // TODO: confirm button number
+    climbBtn.whenPressed(new Climb(climber, dt));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
+  }
+
+  private class Manip {
+    static final int X = 1, A = 2, B = 3, Y = 4, LB_lShoulder = 5, RB_rShoulder = 6, LT_lTrigger = 7, RT_rTrigger = 8,
+        BACK = 9, START = 10;
+
+    // Front four buttons look like:
+    // Y
+    // X B
+    // A
   }
 }
