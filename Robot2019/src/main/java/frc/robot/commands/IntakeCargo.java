@@ -50,7 +50,7 @@ public class IntakeCargo extends Command {
 
   @Override
   protected void end() {
-    cargo.stopIntake();
+    cargo.keepIntake();
   }
 
   @Override
