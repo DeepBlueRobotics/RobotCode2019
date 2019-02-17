@@ -8,33 +8,31 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Cargo;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.HatchPanel;
 
 public class Robot extends TimedRobot {
   private static Drivetrain dt;
+  private static HatchPanel hp;
   private static OI oi;
   private static Cargo cargo;
-
-  Command autonomousCommand;
-  SendableChooser<Command> chooser = new SendableChooser<>();
+  private static Climber climber;
 
   @Override
   public void robotInit() {
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
-        RobotMap.rightSlave1, RobotMap.rightSlave2, oi.leftJoy, oi.rightJoy, RobotMap.leftEnc, RobotMap.rightEnc,
-        RobotMap.gyro);
-    cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp);
-    oi = new OI(cargo, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
+        RobotMap.rightSlave1, RobotMap.rightSlave2, RobotMap.leftEnc, RobotMap.rightEnc, RobotMap.ahrs);
+    hp = new HatchPanel(RobotMap.hatchPistons);
+    cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
+    climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
 
-    chooser.setDefaultOption("Default Auto", new TeleopDrive(dt));
-    SmartDashboard.putData("Auto Mode", chooser);
+    oi = new OI(dt, hp, cargo, climber, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
+
+    dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
   }
 
   /**
@@ -62,11 +60,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    autonomousCommand = chooser.getSelected();
-
-    if (autonomousCommand != null) {
-      autonomousCommand.start();
-    }
   }
 
   @Override
@@ -80,9 +73,6 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (autonomousCommand != null) {
-      autonomousCommand.cancel();
-    }
   }
 
   @Override

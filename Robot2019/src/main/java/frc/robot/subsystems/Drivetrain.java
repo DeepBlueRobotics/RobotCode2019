@@ -7,72 +7,85 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.commands.TeleopDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drivetrain extends Subsystem {
-  private SpeedController leftMotor, rightMotor;
-  private Encoder leftEnc, rightEnc;
-  public Joystick leftJoy, rightJoy;
-  private AHRS gyro;
+  public enum Side {
+    LEFT, RIGHT
+  }
 
-  public Drivetrain(WPI_TalonSRX leftMaster, WPI_VictorSPX leftSlave1, WPI_VictorSPX leftSlave2,
-      WPI_TalonSRX rightMaster, WPI_VictorSPX rightSlave1, WPI_VictorSPX rightSlave2, Joystick leftJoy,
-      Joystick rightJoy, Encoder leftEnc, Encoder rightEnc, AHRS gyro) {
+  private WPI_TalonSRX leftMaster, rightMaster;
+  private Encoder leftEnc, rightEnc;
+  private AHRS ahrs;
+
+  public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
+      WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Encoder leftEnc,
+      Encoder rightEnc, AHRS ahrs) {
 
     leftSlave1.follow(leftMaster);
     leftSlave2.follow(leftMaster);
-    this.leftMotor = leftMaster;
+    this.leftMaster = leftMaster;
 
     rightSlave1.follow(rightMaster);
     rightSlave2.follow(rightMaster);
-    this.rightMotor = rightMaster;
+    this.rightMaster = rightMaster;
 
     rightMaster.setInverted(true);
     rightSlave1.setInverted(true);
     rightSlave2.setInverted(true);
 
-    this.leftJoy = leftJoy;
-    this.rightJoy = rightJoy;
-
     this.leftEnc = leftEnc;
     this.rightEnc = rightEnc;
 
-    this.gyro = gyro;
+    double pulseFraction = 1.0 / 256;
+    double wheelDiameter = 5;
+    leftEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
+    rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
+
+    this.ahrs = ahrs;
   }
 
+  /**
+   * teleop drive initialized in Robot.robotInit() to avoid dependency loops
+   * between dt and oi
+   */
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new TeleopDrive(this));
   }
 
   public void drive(double left, double right) {
-    leftMotor.set(left);
-    rightMotor.set(right);
+    leftMaster.set(left);
+    rightMaster.set(right);
+    SmartDashboard.putNumber("Encoder Distance Left:", leftEnc.getDistance());
+    SmartDashboard.putNumber("Encoder Distance Right:", rightEnc.getDistance());
   }
 
   public void stop() {
-    leftMotor.stopMotor();
-    rightMotor.stopMotor();
+    leftMaster.stopMotor();
+    rightMaster.stopMotor();
   }
 
-  public double getEncDist(String type) {
-    if (type.equals("left")) {
+  public boolean isStalled() {
+    return leftMaster.getOutputCurrent() >= 30 || rightMaster.getOutputCurrent() >= 30; // TODO: Find value that
+                                                                                        // actually works (test)
+  }
+
+  public double getEncDist(Side type) {
+    if (type == Side.LEFT) {
       return leftEnc.getDistance();
     } else {
       return rightEnc.getDistance();
     }
   }
 
-  public double getEncRate(String type) {
-    if (type.equals("left")) {
+  public double getEncRate(Side type) {
+    if (type == Side.LEFT) {
       return leftEnc.getRate();
     } else {
       return rightEnc.getRate();
@@ -80,14 +93,14 @@ public class Drivetrain extends Subsystem {
   }
 
   public void resetGyro() {
-    gyro.reset();
+    ahrs.reset();
   }
 
   public double getGyroRate() {
-    return gyro.getRate();
+    return ahrs.getRate();
   }
 
   public double getGyroAngle() {
-    return gyro.getYaw();
+    return ahrs.getYaw();
   }
 }

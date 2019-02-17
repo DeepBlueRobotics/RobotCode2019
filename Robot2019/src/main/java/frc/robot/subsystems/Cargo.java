@@ -22,10 +22,12 @@ public class Cargo extends Subsystem {
 
   private VictorSP roller;
   private PowerDistributionPanel pdp;
+  private int rollerPort; // The port for the VictorSP on the PDP, not the RoboRIO.
 
-  public Cargo(VictorSP roller, PowerDistributionPanel pdp) {
+  public Cargo(VictorSP roller, PowerDistributionPanel pdp, int rollerPort) {
     this.roller = roller;
     this.pdp = pdp;
+    this.rollerPort = rollerPort;
   }
 
   public void stopIntake() {

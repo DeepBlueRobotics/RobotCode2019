@@ -19,6 +19,7 @@ public class IntakeCargo extends Command {
   public IntakeCargo(Cargo cargo) {
     requires(cargo);
     this.cargo = cargo;
+    timer = new Timer();
     overdraw = false;
   }
 
