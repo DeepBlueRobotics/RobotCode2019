@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
 public class HatchPanel extends Subsystem {
   private DoubleSolenoid pistons;
   private String pistonState;
@@ -47,6 +46,19 @@ public class HatchPanel extends Subsystem {
     }
   }
 
+  public void setIn() {
+    pistons.set(DoubleSolenoid.Value.kReverse);
+    pistonState = "IN";
+    SmartDashboard.putString("Hatch Piston State", pistonState);
+  }
+
+  public void setOut() {
+    pistons.set(DoubleSolenoid.Value.kForward);
+    pistonState = "OUT";
+    SmartDashboard.putString("Hatch Piston State", pistonState);
+  }
+
   @Override
-  public void initDefaultCommand() {}
+  public void initDefaultCommand() {
+  }
 }
