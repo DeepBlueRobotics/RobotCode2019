@@ -6,12 +6,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.csv.CSVFormat;
-import com.google.common.collect.Iterables;
+import org.apache.commons.csv.CSVParser;
 
 public class DrivetrainCharAnalysis {
     public static void main(String[] args) {
@@ -64,15 +66,6 @@ public class DrivetrainCharAnalysis {
         leftKa = params[2];
         leftVoltageIntercept = params[0];
 
-        FileWriter f;
-        try {
-            f = new FileWriter(new File(outfile));
-            f.append(leftKv + "," + leftKa + "," + leftVoltageIntercept);
-            f.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         xs = new double[voltages.length][2];
         ys = new double[voltages.length];
         for (int i = 0; i < voltages.length; i++) {
@@ -89,9 +82,11 @@ public class DrivetrainCharAnalysis {
         rightKa = params[2];
         rightVoltageIntercept = params[0];
 
+        FileWriter f;
         try {
-            f = new FileWriter(new File(outfile));
-            f.append(rightKv + "," + rightKa + "," + rightVoltageIntercept);
+            f = new FileWriter(new File(outfile), true);
+            f.append(leftKv + "," + leftKa + "," + leftVoltageIntercept + "\r\n");
+            f.append(rightKv + "," + rightKa + "," + rightVoltageIntercept + "\r\n");
             f.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -170,35 +165,54 @@ public class DrivetrainCharAnalysis {
     public static double[][] parseCSV(String filename, int spread) {
         try {
             Reader in = new FileReader(filename);
-            Iterable<CSVRecord> records = CSVFormat.RFC4180.parse(in);
+            CSVParser csvParser = new CSVParser(in, CSVFormat.DEFAULT);
 
-            int num_values = Iterables.size(records);
-            double[] leftVelocities, rightVelocities, voltages, leftAccelerations, rightAccelerations;
-            leftVelocities = rightVelocities = voltages = leftAccelerations = rightAccelerations = new double[num_values - spread];
+            List<CSVRecord> records = csvParser.getRecords();
+            int num_values = records.size();
+            List<Double> leftVelocities, rightVelocities, voltages, leftAccelerations, rightAccelerations;
+            leftVelocities = new ArrayList<Double>();
+            rightVelocities = new ArrayList<Double>();
+            voltages = new ArrayList<Double>();
+            leftAccelerations = new ArrayList<Double>();
+            rightAccelerations = new ArrayList<Double>();
+            leftAccelerations.add(0.0);
+            rightAccelerations.add(0.0);
 
-            for (CSVRecord record : records) {
+            for (int n = 0; n < num_values; n++) {
+                CSVRecord record = records.get(n);
                 if (!record.get(0).equals("Timestamp (s)")) {
-                    double v1 = Double.valueOf(record.get(2));
-                    double v2 = Double.valueOf(record.get(3));
-                    int n = (int) record.getRecordNumber();
-                    voltages[n] = Double.valueOf(record.get(1));
+                    double v1 = Math.abs(Double.valueOf(record.get(2)));
+                    double v2 = Math.abs(Double.valueOf(record.get(3)));
+                    double v = Double.valueOf(record.get(1));
 
-                    if (leftVelocities.length >= spread) {
-                        double a1 = (v1 - leftVelocities[leftVelocities.length - spread]) / (spread * 0.02);
-                        double a2 = (v2 - rightVelocities[rightVelocities.length - spread]) / (spread * 0.02); // right
-                                                                                                               // velocity
-                        leftAccelerations[n] = Math.abs(a1);
-                        rightAccelerations[n] = Math.abs(a2);
+                    if (leftVelocities.size() >= spread) {
+                        double a1 = (v1 - leftVelocities.get(leftVelocities.size() - spread)) / (spread * 0.02);
+                        double a2 = (v2 - rightVelocities.get(rightVelocities.size() - spread)) / (spread * 0.02);
+                        leftAccelerations.add(Math.abs(a1));
+                        rightAccelerations.add(Math.abs(a2));
                     }
 
-                    if (leftVelocities.length < num_values - spread) {
-                        leftVelocities[n] = v1;
-                        rightVelocities[n] = v2;
+                    if (leftVelocities.size() < num_values - spread) {
+                        leftVelocities.add(v1);
+                        rightVelocities.add(v2);
+                        voltages.add(v);
                     }
                 }
             }
 
-            double[][] returns = { leftVelocities, rightVelocities, voltages, leftAccelerations, rightAccelerations };
+            Double[][] Returns = { leftVelocities.toArray(new Double[leftVelocities.size()]), 
+                rightVelocities.toArray(new Double[rightVelocities.size()]), 
+                voltages.toArray(new Double[voltages.size()]), 
+                leftAccelerations.toArray(new Double[leftAccelerations.size()]), 
+                rightAccelerations.toArray(new Double[rightAccelerations.size()]) };
+
+            double[][] returns = new double[5][voltages.size()];
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < voltages.size(); j++) {
+                    returns[i][j] = Returns[i][j];
+                }
+            }    
+
             return returns;
         } catch (FileNotFoundException fnf) {
             fnf.printStackTrace();

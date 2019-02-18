@@ -53,7 +53,6 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     compile group: 'org.apache.commons', name: 'commons-csv', version: '1.6'
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
