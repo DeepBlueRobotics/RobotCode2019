@@ -60,7 +60,7 @@ public class RobotMap {
     rightSlave2 = createConfiguredMotorController(7);
 
     // Initialize motors on the climbing mech
-    climberMotor = new VictorSP(1);
+    climberMotor = new VictorSP(2);
     climberEncoder = new Encoder(new DigitalInput(4), new DigitalInput(5));
     climberPistons = new DoubleSolenoid(6, 1);
 

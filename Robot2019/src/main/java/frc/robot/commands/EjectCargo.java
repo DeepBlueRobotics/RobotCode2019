@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Cargo;
 
 public class EjectCargo extends Command {
@@ -43,6 +44,9 @@ public class EjectCargo extends Command {
   @Override
   protected void end() {
     cargo.stopIntake();
+    if (isFinished()) {
+      SmartDashboard.putBoolean("Has cargo", false);
+    }
   }
 
   @Override
