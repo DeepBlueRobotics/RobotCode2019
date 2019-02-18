@@ -47,6 +47,7 @@ public class RobotMap {
   static VideoSink cameraServer;
 
   final static int cargoPDPPort;
+  final static int climberPDPPort;
 
   static {
     // Initialize motors on the left side of the drivetrain.
@@ -60,7 +61,7 @@ public class RobotMap {
     rightSlave2 = createConfiguredMotorController(7);
 
     // Initialize motors on the climbing mech
-    climberMotor = new VictorSP(2);
+    climberMotor = new VictorSP(1);
     climberEncoder = new Encoder(new DigitalInput(4), new DigitalInput(5));
     climberPistons = new DoubleSolenoid(6, 1);
 
@@ -83,6 +84,7 @@ public class RobotMap {
     cameraServer.setSource(driveCamera);
 
     cargoPDPPort = 5; // TODO: set ports to actual cargo motor port in pdp
+    climberPDPPort = 3;
   }
 
   private static BaseMotorController createConfiguredMotorController(int port) {
