@@ -90,21 +90,11 @@ public class TeleopDrive extends Command {
       double leftV, rightV;
 
       if (!(left < 0.0 && right < 0.0)) {
-        if (right >= left) {
-          leftV = dt.calculateVoltage(Drivetrain.Direction.FR, left, 0.0);
-          rightV = dt.calculateVoltage(Drivetrain.Direction.FR, right, 0.0);
-        } else {
-          leftV = dt.calculateVoltage(Drivetrain.Direction.FL, left, 0.0);
-          rightV = dt.calculateVoltage(Drivetrain.Direction.FL, right, 0.0);
-        }
+        leftV = dt.calculateVoltage(Drivetrain.Direction.FL, left, 0.0);
+        rightV = dt.calculateVoltage(Drivetrain.Direction.FR, right, 0.0);
       } else {
-        if (right >= left) {
-          leftV = dt.calculateVoltage(Drivetrain.Direction.BR, left, 0.0);
-          rightV = dt.calculateVoltage(Drivetrain.Direction.BR, right, 0.0);
-        } else {
-          leftV = dt.calculateVoltage(Drivetrain.Direction.BL, left, 0.0);
-          rightV = dt.calculateVoltage(Drivetrain.Direction.BL, right, 0.0);
-        }
+        leftV = dt.calculateVoltage(Drivetrain.Direction.BL, left, 0.0);
+        rightV = dt.calculateVoltage(Drivetrain.Direction.BR, right, 0.0);
       }
 
       if (Math.abs(leftV) >= 12.0) {
@@ -142,21 +132,11 @@ public class TeleopDrive extends Command {
       double leftV, rightV;
 
       if (!(left < 0.0 && right < 0.0)) {
-        if (right >= left) {
-          leftV = dt.calculateVoltage(Drivetrain.Direction.FR, left, 0.0);
-          rightV = dt.calculateVoltage(Drivetrain.Direction.FR, right, 0.0);
-        } else {
-          leftV = dt.calculateVoltage(Drivetrain.Direction.FL, left, 0.0);
-          rightV = dt.calculateVoltage(Drivetrain.Direction.FL, right, 0.0);
-        }
+        leftV = dt.calculateVoltage(Drivetrain.Direction.FL, left, 0.0);
+        rightV = dt.calculateVoltage(Drivetrain.Direction.FR, right, 0.0);
       } else {
-        if (right >= left) {
-          leftV = dt.calculateVoltage(Drivetrain.Direction.BR, left, 0.0);
-          rightV = dt.calculateVoltage(Drivetrain.Direction.BR, right, 0.0);
-        } else {
-          leftV = dt.calculateVoltage(Drivetrain.Direction.BL, left, 0.0);
-          rightV = dt.calculateVoltage(Drivetrain.Direction.BL, right, 0.0);
-        }
+        leftV = dt.calculateVoltage(Drivetrain.Direction.BL, left, 0.0);
+        rightV = dt.calculateVoltage(Drivetrain.Direction.BR, right, 0.0);
       }
 
       if (Math.abs(leftV) >= 12.0) {

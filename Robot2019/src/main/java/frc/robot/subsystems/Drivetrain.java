@@ -9,8 +9,6 @@ package frc.robot.subsystems;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Scanner;
 
 import com.ctre.phoenix.ErrorCode;
@@ -191,6 +189,18 @@ public class Drivetrain extends Subsystem {
       return blKV * velocity + blKA * acceleration - blVI;
     } else {
       return brKV * velocity + brKA * acceleration - brVI;
+    }
+  }
+
+  public double calculateAcceleration(Direction dir, double velocity, double voltage) {
+    if (dir == Direction.FL) {
+      return (voltage - flKV * velocity -flVI) / flKA;
+    } else if (dir == Direction.FR) {
+      return (voltage - frKV * velocity - frVI) / frKA;
+    } else if (dir == Direction.BL) {
+      return (voltage - blKV * velocity - blVI) / blKA;
+    } else {
+      return (voltage - brKV * velocity + brVI) / brKA;
     }
   }
 }
