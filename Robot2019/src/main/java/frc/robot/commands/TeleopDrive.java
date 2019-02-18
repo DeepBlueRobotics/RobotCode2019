@@ -53,7 +53,7 @@ public class TeleopDrive extends Command {
       speed *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
     }
     if (SmartDashboard.getBoolean("Slow Right", false)) {
-      rot *= SmartDashboard.getNumber("Rotation Slow Ratio", 0.5);
+      rot *= SmartDashboard.getNumber("Rotation Slow Ratio", 0.35);
     }
 
     double left, right;
