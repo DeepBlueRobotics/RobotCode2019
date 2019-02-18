@@ -102,19 +102,18 @@ public class RobotMap {
 
   private static WPI_TalonSRX createConfiguredTalon(int port) {
     WPI_TalonSRX tsrx = new WPI_TalonSRX(port);
-
     // Put all configurations for the talon motor controllers in here.
     // All values are from last year's code.
-    tsrx.configNominalOutputForward(0, 10);
-    tsrx.configNominalOutputReverse(0, 10);
-    tsrx.configPeakOutputForward(1, 10);
-    tsrx.configPeakOutputReverse(-1, 10);
-    tsrx.configPeakCurrentLimit(0, 0);
-    tsrx.configPeakCurrentDuration(0, 0);
+    catchError(tsrx.configNominalOutputForward(0, 10));
+    catchError(tsrx.configNominalOutputReverse(0, 10));
+    catchError(tsrx.configPeakOutputForward(1, 10));
+    catchError(tsrx.configPeakOutputReverse(-1, 10));
+    catchError(tsrx.configPeakCurrentLimit(0, 0));
+    catchError(tsrx.configPeakCurrentDuration(0, 0));
     // 40 Amps is the amp limit of a CIM. lThe PDP has 40 amp circuit breakers,
-    tsrx.configContinuousCurrentLimit(40, 0);
+    catchError(tsrx.configContinuousCurrentLimit(40, 0));
     tsrx.enableCurrentLimit(true);
-    tsrx.configNeutralDeadband(0.001, 10);
+    catchError(tsrx.configNeutralDeadband(0.001, 10));
     tsrx.setNeutralMode(NeutralMode.Brake);
 
     return tsrx;
@@ -124,11 +123,11 @@ public class RobotMap {
     WPI_VictorSPX vspx = new WPI_VictorSPX(port);
 
     // Put all configurations for the victor motor controllers in here.
-    vspx.configNominalOutputForward(0, 10);
-    vspx.configNominalOutputReverse(0, 10);
-    vspx.configPeakOutputForward(1, 10);
-    vspx.configPeakOutputReverse(-1, 10);
-    vspx.configNeutralDeadband(0.001, 10);
+    catchError(vspx.configNominalOutputForward(0, 10));
+    catchError(vspx.configNominalOutputReverse(0, 10));
+    catchError(vspx.configPeakOutputForward(1, 10));
+    catchError(vspx.configPeakOutputReverse(-1, 10));
+    catchError(vspx.configNeutralDeadband(0.001, 10));
     vspx.setNeutralMode(NeutralMode.Brake);
 
     return vspx;
@@ -138,5 +137,13 @@ public class RobotMap {
     UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(port);
     camera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
     return camera;
+  }
+
+  /**
+   * Checks an error code and prints it to standard out if it is not ok
+   * @param ec The error code to check
+   */
+  private static void catchError(ErrorCode ec) {
+    if(ec != ErrorCode.OK) System.out.println("Error configuring in RobotMap.java at line: " + new Throwable().getStackTrace()[1].getLineNumber());
   }
 }
