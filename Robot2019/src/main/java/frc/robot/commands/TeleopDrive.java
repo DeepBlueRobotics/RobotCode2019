@@ -85,26 +85,7 @@ public class TeleopDrive extends Command {
     }
 
     if (SmartDashboard.getBoolean("Characterized Drive", false)) {
-      left *= dt.getMaxSpeed();
-      right *= dt.getMaxSpeed();
-      double leftV, rightV;
-
-      if (!(left < 0.0 && right < 0.0)) {
-        leftV = dt.calculateVoltage(Drivetrain.Direction.FL, left, 0.0);
-        rightV = dt.calculateVoltage(Drivetrain.Direction.FR, right, 0.0);
-      } else {
-        leftV = dt.calculateVoltage(Drivetrain.Direction.BL, left, 0.0);
-        rightV = dt.calculateVoltage(Drivetrain.Direction.BR, right, 0.0);
-      }
-
-      if (Math.abs(leftV) >= 12.0) {
-        leftV = 12.0 * Math.signum(leftV);
-      }
-      if (Math.abs(rightV) >= 12.0) {
-        rightV = 12.0 * Math.signum(rightV);
-      }
-      
-      dt.drive(leftV / 12.0, rightV / 12.0);
+      charDrive(left, right);
     } else {
       dt.drive(left, right);
     }
@@ -127,29 +108,40 @@ public class TeleopDrive extends Command {
     }
 
     if (SmartDashboard.getBoolean("Characterized Drive", false)) {
-      left *= dt.getMaxSpeed();
-      right *= dt.getMaxSpeed();
-      double leftV, rightV;
-
-      if (!(left < 0.0 && right < 0.0)) {
-        leftV = dt.calculateVoltage(Drivetrain.Direction.FL, left, 0.0);
-        rightV = dt.calculateVoltage(Drivetrain.Direction.FR, right, 0.0);
-      } else {
-        leftV = dt.calculateVoltage(Drivetrain.Direction.BL, left, 0.0);
-        rightV = dt.calculateVoltage(Drivetrain.Direction.BR, right, 0.0);
-      }
-
-      if (Math.abs(leftV) >= 12.0) {
-        leftV = 12.0 * Math.signum(leftV);
-      }
-      if (Math.abs(rightV) >= 12.0) {
-        rightV = 12.0 * Math.signum(rightV);
-      }
-      
-      dt.drive(leftV / 12.0, rightV / 12.0);
+      charDrive(left, right);
     } else {
       dt.drive(left, right);
     }
+  }
+
+  private void charDrive(double left, double right) {
+    left *= dt.getMaxSpeed();
+    right *= dt.getMaxSpeed();
+    double leftV, rightV, maxV;
+    dt.setVoltageCompensation(12.0);
+    maxV = dt.getMaxVoltage();
+
+    if (left >= 0.0) {
+      leftV = dt.calculateVoltage(Drivetrain.Direction.FL, left, 0.0);
+    } else {
+      leftV = dt.calculateVoltage(Drivetrain.Direction.BL, left, 0.0);
+    }
+
+    if (right >= 0.0) {
+      rightV = dt.calculateVoltage(Drivetrain.Direction.FR, right, 0.0);
+    } else {
+      rightV = dt.calculateVoltage(Drivetrain.Direction.BR, right, 0.0);
+    }
+
+    if (Math.abs(leftV) >= maxV) {
+      leftV = maxV * Math.signum(leftV);
+    }
+    if (Math.abs(rightV) >= maxV) {
+      rightV = maxV * Math.signum(rightV);
+    }
+    
+    dt.drive(leftV / maxV, rightV / maxV);
+    dt.disableVoltageCompensation();
   }
 
   @Override

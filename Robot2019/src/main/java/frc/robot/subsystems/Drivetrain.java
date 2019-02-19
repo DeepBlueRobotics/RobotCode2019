@@ -33,6 +33,8 @@ public class Drivetrain extends Subsystem {
   private Encoder leftEnc, rightEnc;
   private AHRS ahrs;
 
+  private double maxVoltage;
+
   private double flKV, flKA, flVI;
   private double frKV, frKA, frVI;
   private double blKV, blKA, blVI;
@@ -63,6 +65,7 @@ public class Drivetrain extends Subsystem {
     rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
 
     this.ahrs = ahrs;
+    updateDrivetrainParameters();
   }
 
   /**
@@ -119,7 +122,11 @@ public class Drivetrain extends Subsystem {
   }
 
   public double getMaxSpeed() { // Return must be adjusted in the future;
-    return 204.0;
+    return 168.0;
+  }
+
+  public double getMaxVoltage() {
+    return maxVoltage;
   }
 
   public void setVoltageCompensation(double volts) {

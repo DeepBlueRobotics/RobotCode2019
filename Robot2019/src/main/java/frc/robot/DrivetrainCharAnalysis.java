@@ -16,22 +16,12 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 
 public class DrivetrainCharAnalysis {
-    public static void main(String[] args) {
-        String file1 = "/home/lvuser/drive_char_linear.csv";
-        String file2 = "/home/lvuser/drive_char_stepwise.csv";
-        String outfile = "/home/lvuser/drive_char_params.csv";
-        // System.out.println("Simple Regression: ");
-        // simpleRegression(file1, file2, outfile);
-        System.out.println("Ordinary Least Squares: ");
-        ordinaryLeastSquares(file1, file2, outfile);
-    }
-
     // Ordinary Least Squares approach (multi-variable approach)
     public static void ordinaryLeastSquares(String file1, String file2, String outfile) {
         double leftKv, rightKv;
         double leftKa, rightKa;
         double leftVoltageIntercept, rightVoltageIntercept;
-        int spread = 30;
+        int spread = 20;
 
         double[][] returns;
         double[] params, leftVelocities, rightVelocities, voltages, leftAccelerations, rightAccelerations;
