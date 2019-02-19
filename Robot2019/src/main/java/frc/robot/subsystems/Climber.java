@@ -20,7 +20,6 @@ public class Climber extends Subsystem {
   private Encoder enc;
   private AHRS ahrs;
   private DoubleSolenoid pistons;
-  public boolean climbing;
 
   final private double minTilt = 0; // In degrees // TODO: Update wtih actual number
   final private double minDist = 13; // In inches // TODO: Update with actual number
@@ -33,7 +32,6 @@ public class Climber extends Subsystem {
     this.enc = enc;
     this.ahrs = ahrs;
     this.pistons = pistons;
-    climbing = false;
 
     double pulseFraction = 1.0/256;
     double pitchDiameter = 1.790; // https://www.vexrobotics.com/35-sprockets.html#Drawing

@@ -29,7 +29,11 @@ public class KeepClimber extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(climber.slipping()) climber.runClimber(retractSpeed);
+    if(climber.slipping()) {
+      climber.runClimber(retractSpeed);
+    } else {
+      climber.stopClimber();
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
