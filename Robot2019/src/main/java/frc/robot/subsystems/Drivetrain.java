@@ -65,6 +65,7 @@ public class Drivetrain extends Subsystem {
     rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
     leftEnc.reset();
     rightEnc.reset();
+    rightEnc.setReverseDirection(true);
 
     this.ahrs = ahrs;
     updateDrivetrainParameters();
