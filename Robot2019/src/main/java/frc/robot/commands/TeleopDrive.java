@@ -122,24 +122,31 @@ public class TeleopDrive extends Command {
     double DT = 1 / 4.0;
     double actualLeftVel = dt.getEncRate(Drivetrain.Side.LEFT);
     double actualRightVel = dt.getEncRate(Drivetrain.Side.RIGHT);
+    double actualAvgVel = 0.5 * (actualLeftVel + actualRightVel);
 
     double desiredLeftVel = left * dt.getMaxSpeed();
     double desiredRightVel = right * dt.getMaxSpeed();
+    double desiredAvgVel = 0.5 * (desiredLeftVel + desiredRightVel);
 
     double leftDV = desiredLeftVel - actualLeftVel;
     double rightDV = desiredRightVel - actualRightVel;
+    double avgDV = 0.5 * (desiredAvgVel - actualAvgVel);
 
     double leftA = leftDV / DT;
     double rightA = rightDV / DT;
+    double avgA = avgDV / DT;
 
+    SmartDashboard.putNumber("Left Speed", actualLeftVel);
+    SmartDashboard.putNumber("Right Speed", actualRightVel);
     //System.out.println("Left Speed: " + actualLeftVel + ", Right Speed: " + actualRightVel);
+    double maxAccel = SmartDashboard.getNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);
 
-    if (leftA >= dt.getMaxSpeed()) { // dt.getMaxSpeed() is a temporary value. The actual value will be determined
+    if (Math.abs(avgA) >= maxAccel) { // dt.getMaxSpeed() is a temporary value. The actual value will be determined
                                      // through experimentation
-      leftA = dt.getMaxSpeed();
+      leftA = Math.signum(leftA) * Math.abs(leftA / avgA) * maxAccel;
     }
-    if (rightA >= dt.getMaxSpeed()) {
-      rightA = dt.getMaxSpeed();
+    if (Math.abs(avgA) >= maxAccel) {
+      rightA = Math.signum(rightA) * Math.abs(rightA / avgA) * maxAccel;
     }
 
     //System.out.println("Left Accel: " + leftA + ", Right Accel: " + rightA);
@@ -163,7 +170,9 @@ public class TeleopDrive extends Command {
       rightV = maxV * Math.signum(rightV);
     }
 
-    System.out.println("LeftV: " + leftV + ", RightV: " + rightV);
+    SmartDashboard.putNumber("Left Volts", leftV);
+    SmartDashboard.putNumber("Right Volts", rightV);
+    //System.out.println("LeftV: " + leftV + ", RightV: " + rightV);
 
     dt.drive(leftV / maxV, rightV / maxV);
     dt.disableVoltageCompensation();

@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Drivetrain Characterization Analysis", dca);
 
     dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
+    SmartDashboard.putNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);
   }
 
   /**
