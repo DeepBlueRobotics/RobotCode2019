@@ -15,6 +15,7 @@ import frc.robot.commands.ActuateClimberRails;
 import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
 import frc.robot.commands.IntakeOnlyCargo;
+import frc.robot.commands.ManualClimb;
 import frc.robot.commands.SlowDrive;
 import frc.robot.commands.ToggleCamera;
 import frc.robot.commands.ToggleHatch;
@@ -60,7 +61,7 @@ public class OI {
     climberRailBtn.whenPressed(new ActuateClimberRails(climber));
 
     climbBtn = new JoystickButton(manipulator, Manip.Y); // TODO: confirm button number
-    climbBtn.whenPressed(new Climb(climber, dt, leftJoy));
+    climbBtn.toggleWhenPressed(new ManualClimb(climber, dt, leftJoy, rightJoy));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));

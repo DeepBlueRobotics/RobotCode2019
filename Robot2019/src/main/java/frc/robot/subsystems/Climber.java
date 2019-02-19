@@ -51,17 +51,17 @@ public class Climber extends Subsystem {
     motor.stopMotor();
   }
 
+  public double getAngle() {
+    return Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX()) * 180 / Math.PI;
+  }
+
   //We are erring on the side of changing directions too much
   public boolean needToClimb() {
-    double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
-    angle *= 180 / Math.PI;
-    return angle < maxTilt && enc.getDistance() < maxDist;
+    return getAngle() < maxTilt && enc.getDistance() < maxDist;
   }
 
   public boolean canDrop() {
-    double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
-    angle *= 180 / Math.PI;
-    return angle > minTilt && enc.getDistance() > minDist;
+    return getAngle() > minTilt && enc.getDistance() > minDist;
   }
 
   public double getEncDistance() {
