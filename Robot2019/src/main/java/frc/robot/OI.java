@@ -20,6 +20,7 @@ import frc.robot.commands.SetArcadeOrTank;
 import frc.robot.commands.SlowDrive;
 import frc.robot.commands.ToggleCamera;
 import frc.robot.commands.ToggleHatch;
+import frc.robot.commands.WobbleDrive;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
@@ -40,6 +41,7 @@ public class OI {
   JoystickButton climberRailBtn;
   JoystickButton climbBtn;
   JoystickButton toggleCameraBtn;
+  JoystickButton wobbleDriveBtn;
 
   OI(Drivetrain dt, HatchPanel hp, Cargo cargo, Climber climber, UsbCamera driveCamera, UsbCamera hatchCamera,
       VideoSink cameraServer) {
@@ -51,6 +53,8 @@ public class OI {
     leftSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
     rightSlowBtn = new JoystickButton(rightJoy, 1);
     rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
+    wobbleDriveBtn = new JoystickButton(rightJoy, 4); // TODO: confirm button with drivers
+    wobbleDriveBtn.whileHeld(new WobbleDrive(dt));
 
     arcadeOrTankBtn = new JoystickButton(leftJoy, 4);
     arcadeOrTankBtn.whenPressed(new SetArcadeOrTank());
