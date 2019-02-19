@@ -10,9 +10,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class CharDrive extends Command {
+public class NormalDrive extends Command {
   protected void initialize() {
-    SmartDashboard.putBoolean("Characterized Drive", true);
+    SmartDashboard.putBoolean("Characterized Drive", false);
   }
 
   @Override
@@ -22,7 +22,7 @@ public class CharDrive extends Command {
 
   @Override
   protected void end() {
-    SmartDashboard.putBoolean("Characterized Drive", false);
+    SmartDashboard.putBoolean("Characterized Drive", true);
   }
 
   @Override

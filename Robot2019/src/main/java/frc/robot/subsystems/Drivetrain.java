@@ -61,9 +61,10 @@ public class Drivetrain extends Subsystem {
 
     double pulseFraction = 1.0 / 256;
     double wheelDiameter = 5;
-    this.leftEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
-    this.rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
-    this.rightEnc.setReverseDirection(true);
+    leftEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
+    rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
+    leftEnc.reset();
+    rightEnc.reset();
 
     this.ahrs = ahrs;
     updateDrivetrainParameters();
@@ -92,8 +93,7 @@ public class Drivetrain extends Subsystem {
   }
 
   public boolean isStalled() {
-    return leftMaster.getOutputCurrent() >= 30 || rightMaster.getOutputCurrent() >= 30; // TODO: Find value that
-                                                                                        // actually works (test)
+    return leftMaster.getOutputCurrent() >= 30 || rightMaster.getOutputCurrent() >= 30;
   }
 
   public double getEncDist(Side type) {
