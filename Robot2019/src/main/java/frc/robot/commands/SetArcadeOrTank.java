@@ -14,6 +14,6 @@ public class SetArcadeOrTank extends InstantCommand {
         } else {
             SmartDashboard.putBoolean("Arcade Drive", true);
         }
-        
+
     }
 }
