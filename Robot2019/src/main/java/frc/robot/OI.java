@@ -12,6 +12,7 @@ import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.ActuateClimberRails;
+import frc.robot.commands.NormalDrive;
 import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
 import frc.robot.commands.IntakeOnlyCargo;
@@ -33,6 +34,7 @@ public class OI {
 
   JoystickButton leftSlowBtn, rightSlowBtn;
   JoystickButton arcadeOrTankBtn;
+  JoystickButton normDriveBtn;
   JoystickButton toggleHatchBtn;
   JoystickButton cargoIntakeBtn, cargoEjectBtn;
   JoystickButton climberRailBtn;
@@ -52,6 +54,8 @@ public class OI {
 
     arcadeOrTankBtn = new JoystickButton(leftJoy, 4);
     arcadeOrTankBtn.whenPressed(new SetArcadeOrTank());
+    normDriveBtn = new JoystickButton(leftJoy, 3);
+    normDriveBtn.whileHeld(new NormalDrive());
 
     toggleHatchBtn = new JoystickButton(manipulator, Manip.X); // TODO: set ports to correct values
     toggleHatchBtn.whenPressed(new ToggleHatch(hp));

@@ -104,6 +104,8 @@ public class RobotMap {
 
   private static WPI_TalonSRX createConfiguredTalon(int port) {
     WPI_TalonSRX tsrx = new WPI_TalonSRX(port);
+    ErrorCode ecDeadband;
+
     // Put all configurations for the talon motor controllers in here.
     // All values are from last year's code.
     catchError(tsrx.configNominalOutputForward(0, 10));
@@ -118,11 +120,17 @@ public class RobotMap {
     catchError(tsrx.configNeutralDeadband(0.001, 10));
     tsrx.setNeutralMode(NeutralMode.Brake);
 
+    ecDeadband = tsrx.configNeutralDeadband(0.001, 10);
+    if (!ecDeadband.equals(ErrorCode.OK)) {
+      throw new RuntimeException(ecDeadband.toString());
+    }
+
     return tsrx;
   }
 
   private static WPI_VictorSPX createConfiguredVictor(int port) {
     WPI_VictorSPX vspx = new WPI_VictorSPX(port);
+    ErrorCode ecDeadband;
 
     // Put all configurations for the victor motor controllers in here.
     catchError(vspx.configNominalOutputForward(0, 10));
@@ -131,6 +139,11 @@ public class RobotMap {
     catchError(vspx.configPeakOutputReverse(-1, 10));
     catchError(vspx.configNeutralDeadband(0.001, 10));
     vspx.setNeutralMode(NeutralMode.Brake);
+
+    ecDeadband = vspx.configNeutralDeadband(0.001, 10);
+    if (!ecDeadband.equals(ErrorCode.OK)) {
+      throw new RuntimeException(ecDeadband.toString());
+    }
 
     return vspx;
   }
