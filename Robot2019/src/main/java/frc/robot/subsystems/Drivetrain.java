@@ -189,6 +189,13 @@ public class Drivetrain extends Subsystem {
       brVI = Double.valueOf(line.split(",")[2]);
       System.out.println(brKV + "," + brKA + "," + brVI);
       filereader.close();
+
+      // Averaging numbers because they vary so much
+      double avg = (flKA + frKA + blKA + brKA) / 4;
+      flKA = avg;
+      frKA = avg;
+      blKA = avg;
+      brKA = avg;
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
@@ -214,7 +221,7 @@ public class Drivetrain extends Subsystem {
 
   public double calculateAcceleration(Direction dir, double velocity, double voltage) {
     if (dir == Direction.FL) {
-      return (voltage - flKV * velocity -flVI) / flKA;
+      return (voltage - flKV * velocity - flVI) / flKA;
     } else if (dir == Direction.FR) {
       return (voltage - frKV * velocity - frVI) / frKA;
     } else if (dir == Direction.BL) {
