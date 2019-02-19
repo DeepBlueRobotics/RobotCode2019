@@ -19,7 +19,7 @@ public class ManualClimb extends Command {
   private Joystick leftJoy, rightJoy;
   
   final private double minDist = 0;
-  final private double maxDist = 13; // In inches // TODO: Update to correct value
+  final private double maxDist = 24.46; // In inches
 
   public ManualClimb(Climber climber, Drivetrain dt, Joystick leftJoy, Joystick rightJoy) {
     // Use requires() here to declare subsystem dependencies
