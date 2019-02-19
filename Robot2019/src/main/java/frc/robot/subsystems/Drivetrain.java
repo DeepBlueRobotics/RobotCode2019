@@ -61,11 +61,14 @@ public class Drivetrain extends Subsystem {
 
     double pulseFraction = 1.0 / 256;
     double wheelDiameter = 5;
-    leftEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
-    rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
+    this.leftEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
+    this.rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
+    this.rightEnc.setReverseDirection(true);
 
     this.ahrs = ahrs;
     updateDrivetrainParameters();
+
+    maxVoltage = 12.0;
   }
 
   /**
@@ -123,6 +126,10 @@ public class Drivetrain extends Subsystem {
 
   public double getMaxSpeed() { // Return must be adjusted in the future;
     return 13 * 12;
+  }
+
+  public void setMaxVoltage(double volts) {
+    maxVoltage = volts;
   }
 
   public double getMaxVoltage() {
@@ -188,6 +195,12 @@ public class Drivetrain extends Subsystem {
   }
 
   public double calculateVoltage(Direction dir, double velocity, double acceleration) {
+    /*System.out.println("Velocity: " + velocity + ", Acceleration: " + acceleration);
+    System.out.println(flKV + "," + flKA + "," + flVI);
+    System.out.println(frKV + "," + frKA + "," + frVI);
+    System.out.println(blKV + "," + blKA + "," + blVI);
+    System.out.println(brKV + "," + brKA + "," + brVI);*/
+
     if (dir == Direction.FL) {
       return flKV * velocity + flKA * acceleration + flVI;
     } else if (dir == Direction.FR) {

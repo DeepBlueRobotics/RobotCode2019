@@ -21,7 +21,7 @@ public class DrivetrainCharAnalysis {
         double leftKv, rightKv;
         double leftKa, rightKa;
         double leftVoltageIntercept, rightVoltageIntercept;
-        int spread = 20;
+        int spread = 30;
 
         double[][] returns;
         double[] params, leftVelocities, rightVelocities, voltages, leftAccelerations, rightAccelerations;
