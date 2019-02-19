@@ -47,6 +47,8 @@ public class Drivetrain extends Subsystem {
     double wheelDiameter = 5;
     leftEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
     rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
+    leftEnc.reset();
+    rightEnc.reset();
 
     this.ahrs = ahrs;
   }
