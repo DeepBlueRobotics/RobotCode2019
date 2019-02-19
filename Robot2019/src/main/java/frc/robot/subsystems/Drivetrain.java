@@ -122,7 +122,7 @@ public class Drivetrain extends Subsystem {
   }
 
   public double getMaxSpeed() { // Return must be adjusted in the future;
-    return 168.0;
+    return 13 * 12;
   }
 
   public double getMaxVoltage() {

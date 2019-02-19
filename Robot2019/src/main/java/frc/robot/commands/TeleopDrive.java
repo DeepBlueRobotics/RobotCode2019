@@ -126,19 +126,30 @@ public class TeleopDrive extends Command {
     double desiredLeftVel = left * dt.getMaxSpeed();
     double desiredRightVel = right * dt.getMaxSpeed();
 
-    double leftDV = Math.abs(left - actualLeftVel);
-    double rightDV = Math.abs(right - actualRightVel);
+    double leftDV = Math.abs(desiredLeftVel - actualLeftVel);
+    double rightDV = Math.abs(desiredRightVel - actualRightVel);
+
+    double leftA = leftDV / DT;
+    double rightA = rightDV / DT;
+
+    if (leftA >= dt.getMaxSpeed()) { // dt.getMaxSpeed() is a temporary value. The actual value will be determined
+                                     // through experimentation
+      leftA = dt.getMaxSpeed();
+    }
+    if (rightA >= dt.getMaxSpeed()) {
+      rightA = dt.getMaxSpeed();
+    }
 
     if (left >= 0.0) {
-      leftV = dt.calculateVoltage(Drivetrain.Direction.FL, desiredLeftVel, leftDV / DT);
+      leftV = dt.calculateVoltage(Drivetrain.Direction.FL, actualLeftVel, leftA);
     } else {
-      leftV = dt.calculateVoltage(Drivetrain.Direction.BL, desiredLeftVel, -leftDV / DT);
+      leftV = dt.calculateVoltage(Drivetrain.Direction.BL, actualLeftVel, -leftA);
     }
 
     if (right >= 0.0) {
-      rightV = dt.calculateVoltage(Drivetrain.Direction.FR, desiredRightVel, rightDV / DT);
+      rightV = dt.calculateVoltage(Drivetrain.Direction.FR, actualRightVel, rightA);
     } else {
-      rightV = dt.calculateVoltage(Drivetrain.Direction.BR, desiredRightVel, -rightDV / DT);
+      rightV = dt.calculateVoltage(Drivetrain.Direction.BR, actualRightVel, -rightA);
     }
 
     if (Math.abs(leftV) >= maxV) {
@@ -147,7 +158,7 @@ public class TeleopDrive extends Command {
     if (Math.abs(rightV) >= maxV) {
       rightV = maxV * Math.signum(rightV);
     }
-    
+
     dt.drive(leftV / maxV, rightV / maxV);
     dt.disableVoltageCompensation();
   }
