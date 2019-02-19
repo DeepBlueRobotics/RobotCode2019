@@ -126,8 +126,8 @@ public class TeleopDrive extends Command {
     double desiredLeftVel = left * dt.getMaxSpeed();
     double desiredRightVel = right * dt.getMaxSpeed();
 
-    double leftDV = Math.abs(desiredLeftVel - actualLeftVel);
-    double rightDV = Math.abs(desiredRightVel - actualRightVel);
+    double leftDV = desiredLeftVel - actualLeftVel;
+    double rightDV = desiredRightVel - actualRightVel;
 
     double leftA = leftDV / DT;
     double rightA = rightDV / DT;
@@ -147,13 +147,13 @@ public class TeleopDrive extends Command {
     if (left >= 0.0) {
       leftV = dt.calculateVoltage(Drivetrain.Direction.FL, actualLeftVel, leftA);
     } else {
-      leftV = dt.calculateVoltage(Drivetrain.Direction.BL, actualLeftVel, -leftA);
+      leftV = dt.calculateVoltage(Drivetrain.Direction.BL, actualLeftVel, leftA);
     }
 
     if (right >= 0.0) {
       rightV = dt.calculateVoltage(Drivetrain.Direction.FR, actualRightVel, rightA);
     } else {
-      rightV = dt.calculateVoltage(Drivetrain.Direction.BR, actualRightVel, -rightA);
+      rightV = dt.calculateVoltage(Drivetrain.Direction.BR, actualRightVel, rightA);
     }
 
     if (Math.abs(leftV) >= maxV) {
