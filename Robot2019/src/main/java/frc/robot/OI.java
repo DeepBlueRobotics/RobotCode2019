@@ -18,6 +18,7 @@ import frc.robot.commands.IntakeOnlyCargo;
 import frc.robot.commands.SlowDrive;
 import frc.robot.commands.ToggleCamera;
 import frc.robot.commands.ToggleHatch;
+import frc.robot.commands.SetArcadeOrTank;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
@@ -31,6 +32,7 @@ public class OI {
   Joystick leftJoy, rightJoy, manipulator;
 
   JoystickButton leftSlowBtn, rightSlowBtn;
+  JoystickButton arcadeOrTankBtn;
   JoystickButton toggleHatchBtn;
   JoystickButton cargoIntakeBtn, cargoEjectBtn;
   JoystickButton climberRailBtn;
@@ -47,6 +49,9 @@ public class OI {
     leftSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
     rightSlowBtn = new JoystickButton(rightJoy, 1);
     rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
+
+    arcadeOrTankBtn = new JoystickButton(leftJoy, 4);
+    arcadeOrTankBtn.whenPressed(new SetArcadeOrTank());
 
     toggleHatchBtn = new JoystickButton(manipulator, Manip.X); // TODO: set ports to correct values
     toggleHatchBtn.whenPressed(new ToggleHatch(hp));
