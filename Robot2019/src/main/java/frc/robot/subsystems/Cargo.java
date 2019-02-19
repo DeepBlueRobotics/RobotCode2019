@@ -50,7 +50,7 @@ public class Cargo extends Subsystem {
   }
 
   public boolean hasCargo() {
-    return pdp.getCurrent(roller.getChannel()) > intakeCurrentThreshold;
+    return pdp.getCurrent(rollerPort) > intakeCurrentThreshold;
   }
 
   @Override
