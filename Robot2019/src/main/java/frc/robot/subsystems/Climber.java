@@ -13,27 +13,32 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.commands.KeepClimber;
 
 public class Climber extends Subsystem {
   private VictorSP motor; // Mini-CIM
   private Encoder enc;
   private AHRS ahrs;
   private DoubleSolenoid pistons;
+  public boolean climbing;
 
   final private double minTilt = 0; // In degrees // TODO: Update wtih actual number
   final private double minDist = 13; // In inches // TODO: Update with actual number
   final private double maxTilt = 30; // In degrees // TODO: Update with actual number
   final private double maxDist = 15; // In inches // TODO: Update with actual number
+  final private double slipTolerance = 0.5; // In inches // TODO: Update with actual number;
 
   public Climber(VictorSP motor, Encoder enc, AHRS ahrs, DoubleSolenoid pistons) {
     this.motor = motor;
     this.enc = enc;
     this.ahrs = ahrs;
     this.pistons = pistons;
+    climbing = false;
 
     double pulseFraction = 1.0/256;
     double pitchDiameter = 1.790; // https://www.vexrobotics.com/35-sprockets.html#Drawing
     enc.setDistancePerPulse(pulseFraction * Math.PI * pitchDiameter);
+    enc.reset();
   }
 
   public void actuateRails() {
@@ -68,7 +73,12 @@ public class Climber extends Subsystem {
     enc.reset();
   }
 
+  public boolean slipping() {
+    return enc.getDistance() > slipTolerance;
+  }
+
   @Override
   public void initDefaultCommand() {
+    setDefaultCommand(new KeepClimber(this));
   }
 }
