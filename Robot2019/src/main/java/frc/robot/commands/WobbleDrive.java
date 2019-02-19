@@ -14,7 +14,6 @@ import frc.robot.subsystems.Drivetrain.Side;
 
 public class WobbleDrive extends Command {
   Drivetrain dt;
-  int wobblesNeeded = 3; // Set by driver preference
   Side side = Side.LEFT; // We start with left side. TODO: confirm this
   Timer tim;
   private final double wobbleTime = 0.75; // TODO: Set to actual number
@@ -43,7 +42,6 @@ public class WobbleDrive extends Command {
         side = Side.RIGHT;
       } else {
         side = Side.LEFT;
-        wobblesNeeded--;
       }
       tim.reset();
       tim.start();
@@ -56,7 +54,7 @@ public class WobbleDrive extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return wobblesNeeded <= 0;
+    return false;
   }
 
   // Called once after isFinished returns true
