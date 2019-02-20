@@ -52,7 +52,7 @@ public class WobbleDrive extends Command {
     } else {
       dt.drive(side == Side.LEFT ? driveSpeed : 0, side == Side.RIGHT ? driveSpeed : 0);
     }
-    if (dt.getEncDist(Side.LEFT) < encRateTolerance && dt.getEncDist(Side.RIGHT) < encRateTolerance)
+    if (dt.getEncRate(Side.LEFT) < encRateTolerance && dt.getEncRate(Side.RIGHT) < encRateTolerance)
       dt.setWobbleDone(true);
   }
 
