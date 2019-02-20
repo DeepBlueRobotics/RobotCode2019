@@ -16,8 +16,11 @@ public class WobbleDrive extends Command {
   Drivetrain dt;
   Side side = Side.LEFT; // We start with left side. TODO: confirm this
   Timer tim;
+  double lastLeftDist;
+  double lastRightDist;
   private final double wobbleTime = 0.75; // TODO: Set to actual number
   private final double driveSpeed = 0.5; // TODO: Set to actual number
+  private final double encDistTolerance = 0.25; // TODO: Set to actual number
 
   public WobbleDrive(Drivetrain dt) {
     // Use requires() here to declare subsystem dependencies
@@ -32,11 +35,15 @@ public class WobbleDrive extends Command {
     tim = new Timer();
     tim.reset();
     tim.start();
+    lastLeftDist = dt.getEncDist(Side.LEFT);
+    lastRightDist = dt.getEncDist(Side.RIGHT);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if (dt.wobbleDone())
+      return;
     if (tim.get() > wobbleTime) {
       if (side == Side.LEFT) {
         side = Side.RIGHT;
@@ -49,6 +56,9 @@ public class WobbleDrive extends Command {
     } else {
       dt.drive(side == Side.LEFT ? driveSpeed : 0, side == Side.RIGHT ? driveSpeed : 0);
     }
+    if (Math.abs(lastLeftDist - dt.getEncDist(Side.LEFT)) > encDistTolerance
+        && Math.abs(lastRightDist - dt.getEncDist(Side.RIGHT)) > encDistTolerance)
+      dt.setWobbleDone(true);
   }
 
   // Make this return true when this Command no longer needs to run execute()

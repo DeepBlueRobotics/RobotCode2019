@@ -40,6 +40,8 @@ public class Drivetrain extends Subsystem {
   private double blKV, blKA, blVI;
   private double brKV, brKA, brVI;
 
+  private boolean wobbleDone;
+
   public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
       WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Encoder leftEnc,
       Encoder rightEnc, AHRS ahrs) {
@@ -71,6 +73,7 @@ public class Drivetrain extends Subsystem {
     updateDrivetrainParameters();
 
     maxVoltage = 12.0;
+    wobbleDone = false;
   }
 
   /**
@@ -125,6 +128,14 @@ public class Drivetrain extends Subsystem {
     return ahrs.getYaw();
   }
 
+  public void setWobbleDone(boolean set) {
+    wobbleDone = set;
+  }
+
+  public boolean wobbleDone() {
+    return wobbleDone;
+  }
+  
   public double getMaxSpeed() { // Return must be adjusted in the future;
     return 13 * 12;
   }
