@@ -12,10 +12,11 @@ import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.ActuateClimberRails;
-import frc.robot.commands.NormalDrive;
 import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
 import frc.robot.commands.IntakeOnlyCargo;
+import frc.robot.commands.NormalDrive;
+import frc.robot.commands.ResetWobble;
 import frc.robot.commands.SetArcadeOrTank;
 import frc.robot.commands.SlowDrive;
 import frc.robot.commands.ToggleCamera;
@@ -55,6 +56,7 @@ public class OI {
     rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
     wobbleDriveBtn = new JoystickButton(rightJoy, 4); // TODO: confirm button with drivers
     wobbleDriveBtn.whileHeld(new WobbleDrive(dt));
+    wobbleDriveBtn.whenReleased(new ResetWobble(dt));
 
     arcadeOrTankBtn = new JoystickButton(leftJoy, 4);
     arcadeOrTankBtn.whenPressed(new SetArcadeOrTank());
