@@ -16,6 +16,8 @@ public class WobbleDrive extends Command {
   Drivetrain dt;
   Side side = Side.LEFT; // We start with left side. TODO: confirm this
   Timer tim;
+  boolean leftSideDone;
+  boolean rightSideDone;
   private final double wobbleTime = 0.75; // TODO: Set to actual number
   private final double driveSpeed = 0.5; // TODO: Set to actual number
   private final double encRateTolerance = 0.5; // TODO: Set to actual number
@@ -25,6 +27,8 @@ public class WobbleDrive extends Command {
     // eg. requires(chassis);
     requires(dt);
     this.dt = dt;
+    leftSideDone = false;
+    rightSideDone = false;
   }
 
   // Called just before this Command runs the first time
@@ -33,17 +37,19 @@ public class WobbleDrive extends Command {
     tim = new Timer();
     tim.reset();
     tim.start();
+    dt.setWobbleDone(false);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (dt.wobbleDone())
-      return;
     if (tim.get() > wobbleTime) {
+      boolean done = dt.getEncRate(Side.LEFT) < encRateTolerance && dt.getEncRate(Side.RIGHT) < encRateTolerance;
       if (side == Side.LEFT) {
+        leftSideDone = done;
         side = Side.RIGHT;
       } else {
+        rightSideDone = done;
         side = Side.LEFT;
       }
       tim.reset();
@@ -52,14 +58,12 @@ public class WobbleDrive extends Command {
     } else {
       dt.drive(side == Side.LEFT ? driveSpeed : 0, side == Side.RIGHT ? driveSpeed : 0);
     }
-    if (dt.getEncRate(Side.LEFT) < encRateTolerance && dt.getEncRate(Side.RIGHT) < encRateTolerance)
-      dt.setWobbleDone(true);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return dt.wobbleDone() || (leftSideDone && rightSideDone);
   }
 
   // Called once after isFinished returns true

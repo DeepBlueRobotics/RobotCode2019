@@ -55,7 +55,7 @@ public class OI {
     rightSlowBtn = new JoystickButton(rightJoy, 1);
     rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
     wobbleDriveBtn = new JoystickButton(rightJoy, 4); // TODO: confirm button with drivers
-    wobbleDriveBtn.whileHeld(new WobbleDrive(dt));
+    wobbleDriveBtn.whenPressed(new WobbleDrive(dt));
     wobbleDriveBtn.whenReleased(new ResetWobble(dt));
 
     arcadeOrTankBtn = new JoystickButton(leftJoy, 4);

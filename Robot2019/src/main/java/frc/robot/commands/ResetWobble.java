@@ -28,7 +28,7 @@ public class ResetWobble extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
-    dt.setWobbleDone(false);
+    dt.setWobbleDone(true);
   }
 
 }
