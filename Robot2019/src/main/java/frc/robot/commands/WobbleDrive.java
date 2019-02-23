@@ -18,17 +18,16 @@ public class WobbleDrive extends Command {
   Timer tim;
   boolean leftSideDone;
   boolean rightSideDone;
-  private final double wobbleTime = 0.75; // TODO: Set to actual number
-  private final double driveSpeed = 0.5; // TODO: Set to actual number
-  private final double encRateTolerance = 0.5; // TODO: Set to actual number
+  private final double minTime = 0.2;
+  private final double wobbleTime = 0.3; // TODO: Set to actual number
+  private final double driveSpeed = 0.3; // TODO: Set to actual number
+  private final double encRateTolerance = 1; // TODO: Set to actual number
 
   public WobbleDrive(Drivetrain dt) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(dt);
     this.dt = dt;
-    leftSideDone = false;
-    rightSideDone = false;
   }
 
   // Called just before this Command runs the first time
@@ -38,18 +37,36 @@ public class WobbleDrive extends Command {
     tim.reset();
     tim.start();
     dt.setWobbleDone(false);
+    leftSideDone = false;
+    rightSideDone = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (tim.get() > wobbleTime) {
-      boolean done = dt.getEncRate(Side.LEFT) < encRateTolerance && dt.getEncRate(Side.RIGHT) < encRateTolerance;
+    boolean done = dt.getEncRate(Side.LEFT) < encRateTolerance && dt.getEncRate(Side.RIGHT) < encRateTolerance;
+    if (tim.get() > minTime) {
       if (side == Side.LEFT) {
         leftSideDone = done;
-        side = Side.RIGHT;
       } else {
         rightSideDone = done;
+      }
+    }
+    if (leftSideDone) {
+      tim.reset();
+      tim.start();
+      side = Side.RIGHT;
+    }
+    if (rightSideDone) {
+      tim.reset();
+      tim.start();
+      side = Side.LEFT;
+    }
+
+    if (tim.get() > wobbleTime && (!leftSideDone && !rightSideDone)) {
+      if (side == Side.LEFT) {
+        side = Side.RIGHT;
+      } else {
         side = Side.LEFT;
       }
       tim.reset();
