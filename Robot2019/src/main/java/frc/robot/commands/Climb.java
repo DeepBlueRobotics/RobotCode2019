@@ -19,9 +19,9 @@ public class Climb extends Command {
   private State state;
 
   private final double backDrive = -0.5; // TODO: Set this to reasonable/tested value;
-  private final double climbUp = 0.5; // TODO: Set this to reasonable/tested value;
-  private final double climbDown = -0.5; // TODO: Set this to reasonable/tested value;
-  private final double retract = -0.5; // TODO: Set this to reasonable/tested value;
+  private final double climbUp = 1;
+  private final double climbDown = -1;
+  private final double retract = -1;
   private final double overrideThreshold = 0.1; // TODO: Set this to reasonable/tested value;
   private final double retractGoal = 0; // TODO: Set this to reasonable/tested value;
 
