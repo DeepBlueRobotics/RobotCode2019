@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Drivetrain.Side;
 
@@ -39,6 +40,7 @@ public class WobbleDrive extends Command {
     dt.setWobbleDone(false);
     leftSideDone = false;
     rightSideDone = false;
+    SmartDashboard.putBoolean("Wobble drive done", false);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -87,6 +89,7 @@ public class WobbleDrive extends Command {
   @Override
   protected void end() {
     dt.stop();
+    SmartDashboard.putBoolean("Wobble drive done", true);
   }
 
   // Called when another command which requires one or more of the same
