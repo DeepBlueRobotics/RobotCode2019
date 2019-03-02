@@ -11,12 +11,14 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Climb extends Command {
   private Climber climber;
   private Drivetrain dt;
   private Joystick dtJoy;
   private State state;
+  private Timer timer;
 
   private final double backDrive = -0.5; // TODO: Set this to reasonable/tested value;
   private final double climbUp = 1;
@@ -24,11 +26,13 @@ public class Climb extends Command {
   private final double retract = -1;
   private final double overrideThreshold = 0.1; // TODO: Set this to reasonable/tested value;
   private final double retractGoal = 0; // TODO: Set this to reasonable/tested value;
+  private final double startTime = 2; // Time to lift off the floor. TODO: Set this to reasonable/tested value
 
   public Climb(Climber climber, Drivetrain dt, Joystick joy) {
     // Use requires() here to declare subsystem dependencies
     this.climber = climber;
     this.dt = dt;
+    timer = new Timer();
     dtJoy = joy;
     requires(climber);
     requires(dt);
@@ -39,6 +43,7 @@ public class Climb extends Command {
   protected void initialize() {
     state = State.CLIMBING;
     climber.resetEncoder();
+    timer.reset();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -102,7 +107,7 @@ public class Climb extends Command {
    *         overriding the climb
    */
   private boolean robotOnPlatform() {
-    return dt.isStalled() || Math.abs(dtJoy.getY()) > overrideThreshold;
+    return timer.get() > startTime && (dt.isStalled() || Math.abs(dtJoy.getY()) > overrideThreshold);
   }
 
   private enum State {
