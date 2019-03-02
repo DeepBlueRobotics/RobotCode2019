@@ -52,8 +52,8 @@ public class TeleopDrive extends Command {
     if (SmartDashboard.getBoolean("Slow Left", false)) {
       speed *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
     }
-    if (SmartDashboard.getBoolean("Slow Left", false)) {
-      rot *= SmartDashboard.getNumber("Rotation Slow Ratio", 0.5);
+    if (SmartDashboard.getBoolean("Slow Right", false)) {
+      rot *= SmartDashboard.getNumber("Rotation Slow Ratio", 0.35);
     }
 
     double left, right;
@@ -84,7 +84,11 @@ public class TeleopDrive extends Command {
       }
     }
 
-    dt.drive(left, right);
+    if (SmartDashboard.getBoolean("Characterized Drive", true)) {
+      charDrive(left, right);
+    } else {
+      dt.drive(left, right);
+    }
   }
 
   private void tankDrive() {
@@ -103,7 +107,75 @@ public class TeleopDrive extends Command {
       right *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
     }
 
-    dt.drive(left, right);
+    if (SmartDashboard.getBoolean("Characterized Drive", true)) {
+      charDrive(left, right);
+    } else {
+      dt.drive(left, right);
+    }
+  }
+
+  private void charDrive(double left, double right) {
+    double leftV, rightV;
+    dt.setVoltageCompensation(12.0);
+    double maxV = dt.getMaxVoltage();
+
+    double DT = 1 / 4.0;
+    double actualLeftVel = dt.getEncRate(Drivetrain.Side.LEFT);
+    double actualRightVel = dt.getEncRate(Drivetrain.Side.RIGHT);
+    double actualAvgVel = 0.5 * (actualLeftVel + actualRightVel);
+
+    double desiredLeftVel = left * dt.getMaxSpeed();
+    double desiredRightVel = right * dt.getMaxSpeed();
+    double desiredAvgVel = 0.5 * (desiredLeftVel + desiredRightVel);
+
+    double leftDV = desiredLeftVel - actualLeftVel;
+    double rightDV = desiredRightVel - actualRightVel;
+    double avgDV = 0.5 * (desiredAvgVel - actualAvgVel);
+
+    double leftA = leftDV / DT;
+    double rightA = rightDV / DT;
+    double avgA = avgDV / DT;
+
+    SmartDashboard.putNumber("Left Speed", actualLeftVel);
+    SmartDashboard.putNumber("Right Speed", actualRightVel);
+    //System.out.println("Left Speed: " + actualLeftVel + ", Right Speed: " + actualRightVel);
+    double maxAccel = SmartDashboard.getNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);
+
+    if (Math.abs(avgA) >= maxAccel) { // dt.getMaxSpeed() is a temporary value. The actual value will be determined
+                                     // through experimentation
+      leftA = Math.signum(leftA) * Math.abs(leftA / avgA) * maxAccel;
+    }
+    if (Math.abs(avgA) >= maxAccel) {
+      rightA = Math.signum(rightA) * Math.abs(rightA / avgA) * maxAccel;
+    }
+
+    //System.out.println("Left Accel: " + leftA + ", Right Accel: " + rightA);
+
+    if (left >= 0.0) {
+      leftV = dt.calculateVoltage(Drivetrain.Direction.FL, actualLeftVel, leftA);
+    } else {
+      leftV = dt.calculateVoltage(Drivetrain.Direction.BL, actualLeftVel, leftA);
+    }
+
+    if (right >= 0.0) {
+      rightV = dt.calculateVoltage(Drivetrain.Direction.FR, actualRightVel, rightA);
+    } else {
+      rightV = dt.calculateVoltage(Drivetrain.Direction.BR, actualRightVel, rightA);
+    }
+
+    if (Math.abs(leftV) >= maxV) {
+      leftV = maxV * Math.signum(leftV);
+    }
+    if (Math.abs(rightV) >= maxV) {
+      rightV = maxV * Math.signum(rightV);
+    }
+
+    SmartDashboard.putNumber("Left Volts", leftV);
+    SmartDashboard.putNumber("Right Volts", rightV);
+    //System.out.println("LeftV: " + leftV + ", RightV: " + rightV);
+
+    dt.drive(leftV / maxV, rightV / maxV);
+    dt.disableVoltageCompensation();
   }
 
   @Override

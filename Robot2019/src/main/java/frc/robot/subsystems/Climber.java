@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.commands.KeepClimber;
 
 public class Climber extends Subsystem {
   private VictorSP motor; // Mini-CIM
@@ -24,6 +25,7 @@ public class Climber extends Subsystem {
   final private double minDist = 13; // In inches // TODO: Update with actual number
   final private double maxTilt = 30; // In degrees // TODO: Update with actual number
   final private double maxDist = 15; // In inches // TODO: Update with actual number
+  final private double slipTolerance = 0.5; // In inches // TODO: Update with actual number;
 
   public Climber(VictorSP motor, Encoder enc, AHRS ahrs, DoubleSolenoid pistons) {
     this.motor = motor;
@@ -34,6 +36,7 @@ public class Climber extends Subsystem {
     double pulseFraction = 1.0/256;
     double pitchDiameter = 1.790; // https://www.vexrobotics.com/35-sprockets.html#Drawing
     enc.setDistancePerPulse(pulseFraction * Math.PI * pitchDiameter);
+    enc.reset();
   }
 
   public void actuateRails() {
@@ -48,16 +51,17 @@ public class Climber extends Subsystem {
     motor.stopMotor();
   }
 
+  //We are erring on the side of changing directions too much
   public boolean needToClimb() {
     double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
     angle *= 180 / Math.PI;
-    return angle < maxTilt || enc.getDistance() < minDist;
+    return angle < maxTilt && enc.getDistance() < maxDist;
   }
 
   public boolean canDrop() {
     double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
     angle *= 180 / Math.PI;
-    return angle > minTilt || enc.getDistance() > maxDist;
+    return angle > minTilt && enc.getDistance() > minDist;
   }
 
   public double getEncDistance() {
@@ -68,7 +72,12 @@ public class Climber extends Subsystem {
     enc.reset();
   }
 
+  public boolean slipping() {
+    return enc.getDistance() > slipTolerance;
+  }
+
   @Override
   public void initDefaultCommand() {
+    setDefaultCommand(new KeepClimber(this));
   }
 }

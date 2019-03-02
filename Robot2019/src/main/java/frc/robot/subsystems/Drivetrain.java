@@ -7,6 +7,11 @@
 
 package frc.robot.subsystems;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
@@ -20,9 +25,20 @@ public class Drivetrain extends Subsystem {
     LEFT, RIGHT
   }
 
+  public enum Direction {
+    FL, FR, BL, BR    // Forward-Left, Forward-Right, Backward-Left, Backward-Right
+  }
+
   private WPI_TalonSRX leftMaster, rightMaster;
   private Encoder leftEnc, rightEnc;
   private AHRS ahrs;
+
+  private double maxVoltage;
+
+  private double flKV, flKA, flVI;
+  private double frKV, frKA, frVI;
+  private double blKV, blKA, blVI;
+  private double brKV, brKA, brVI;
 
   public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
       WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Encoder leftEnc,
@@ -47,8 +63,14 @@ public class Drivetrain extends Subsystem {
     double wheelDiameter = 5;
     leftEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
     rightEnc.setDistancePerPulse(pulseFraction * Math.PI * wheelDiameter);
+    leftEnc.reset();
+    rightEnc.reset();
+    rightEnc.setReverseDirection(true);
 
     this.ahrs = ahrs;
+    updateDrivetrainParameters();
+
+    maxVoltage = 12.0;
   }
 
   /**
@@ -72,8 +94,7 @@ public class Drivetrain extends Subsystem {
   }
 
   public boolean isStalled() {
-    return leftMaster.getOutputCurrent() >= 30 || rightMaster.getOutputCurrent() >= 30; // TODO: Find value that
-                                                                                        // actually works (test)
+    return leftMaster.getOutputCurrent() >= 30 || rightMaster.getOutputCurrent() >= 30;
   }
 
   public double getEncDist(Side type) {
@@ -102,5 +123,112 @@ public class Drivetrain extends Subsystem {
 
   public double getGyroAngle() {
     return ahrs.getYaw();
+  }
+
+  public double getMaxSpeed() { // Return must be adjusted in the future;
+    return 13 * 12;
+  }
+
+  public void setMaxVoltage(double volts) {
+    maxVoltage = volts;
+  }
+
+  public double getMaxVoltage() {
+    return maxVoltage;
+  }
+
+  public void setVoltageCompensation(double volts) {
+    ErrorCode ecVoltSat = leftMaster.configVoltageCompSaturation(volts, 10);
+
+    if (!ecVoltSat.equals(ErrorCode.OK)) {
+      throw new RuntimeException("Voltage Saturation Configuration could not be set");
+    }
+
+    ecVoltSat = rightMaster.configVoltageCompSaturation(volts, 10);
+
+    if (!ecVoltSat.equals(ErrorCode.OK)) {
+      throw new RuntimeException("Voltage Saturation Configuration could not be set");
+    }
+
+    leftMaster.enableVoltageCompensation(true);
+    rightMaster.enableVoltageCompensation(true);
+  }
+
+  public void disableVoltageCompensation() {
+    leftMaster.enableVoltageCompensation(false);
+    rightMaster.enableVoltageCompensation(false);
+  }
+
+  public void updateDrivetrainParameters() {
+    try {
+      Scanner filereader = new Scanner(new File("/home/lvuser/drive_char_params.csv"));
+      String line = filereader.next();
+      // Forward-Left
+      flKV = Double.valueOf(line.split(",")[0]);
+      flKA = Double.valueOf(line.split(",")[1]);
+      flVI = Double.valueOf(line.split(",")[2]);
+      System.out.println(flKV + "," + flKA + "," + flVI);
+
+      line = filereader.next();
+      // Forward-right
+      frKV = Double.valueOf(line.split(",")[0]);
+      frKA = Double.valueOf(line.split(",")[1]);
+      frVI = Double.valueOf(line.split(",")[2]);
+      System.out.println(frKV + "," + frKA + "," + frVI);
+
+      line = filereader.next();
+      // Backward-Left
+      blKV = Double.valueOf(line.split(",")[0]);
+      blKA = Double.valueOf(line.split(",")[1]);
+      blVI = Double.valueOf(line.split(",")[2]);
+      System.out.println(blKV + "," + blKA + "," + blVI);
+
+      line = filereader.next();
+      // Backward-Right
+      brKV = Double.valueOf(line.split(",")[0]);
+      brKA = Double.valueOf(line.split(",")[1]);
+      brVI = Double.valueOf(line.split(",")[2]);
+      System.out.println(brKV + "," + brKA + "," + brVI);
+      filereader.close();
+
+      // Averaging numbers because they vary so much
+      double avg = (flKA + frKA + blKA + brKA) / 4;
+      flKA = avg;
+      frKA = avg;
+      blKA = avg;
+      brKA = avg;
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public double calculateVoltage(Direction dir, double velocity, double acceleration) {
+    /*System.out.println("Velocity: " + velocity + ", Acceleration: " + acceleration);
+    System.out.println(flKV + "," + flKA + "," + flVI);
+    System.out.println(frKV + "," + frKA + "," + frVI);
+    System.out.println(blKV + "," + blKA + "," + blVI);
+    System.out.println(brKV + "," + brKA + "," + brVI);*/
+
+    if (dir == Direction.FL) {
+      return flKV * velocity + flKA * acceleration + flVI;
+    } else if (dir == Direction.FR) {
+      return frKV * velocity + frKA * acceleration + frVI;
+    } else if (dir == Direction.BL) {
+      return blKV * velocity + blKA * acceleration - blVI;
+    } else {
+      return brKV * velocity + brKA * acceleration - brVI;
+    }
+  }
+
+  public double calculateAcceleration(Direction dir, double velocity, double voltage) {
+    if (dir == Direction.FL) {
+      return (voltage - flKV * velocity - flVI) / flKA;
+    } else if (dir == Direction.FR) {
+      return (voltage - frKV * velocity - frVI) / frKA;
+    } else if (dir == Direction.BL) {
+      return (voltage - blKV * velocity - blVI) / blKA;
+    } else {
+      return (voltage - brKV * velocity + brVI) / brKA;
+    }
   }
 }
