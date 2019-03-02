@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.SetLight;
 
 /**
@@ -30,6 +31,15 @@ public class Lights extends Subsystem {
 
   public void setLights() {
     lights.set(lightsValue);
+    String color;
+    if (lightsValue == 0) {
+      color = "None";
+    } else if (lightsValue == 0.5) {
+      color = "Yellow";
+    } else {
+      color = "Orange";
+    }
+    SmartDashboard.putString("Lights Current Color", color);
   }
 
   public void toggleLights() {
