@@ -12,11 +12,12 @@ import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.ActuateClimberRails;
-import frc.robot.commands.NormalDrive;
 import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
 import frc.robot.commands.IntakeOnlyCargo;
+import frc.robot.commands.NormalDrive;
 import frc.robot.commands.SetArcadeOrTank;
+import frc.robot.commands.SetLight;
 import frc.robot.commands.SlowDrive;
 import frc.robot.commands.ToggleCamera;
 import frc.robot.commands.ToggleHatch;
@@ -25,6 +26,7 @@ import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchPanel;
+import frc.robot.subsystems.Lights;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -42,9 +44,10 @@ public class OI {
   JoystickButton climbBtn;
   JoystickButton toggleCameraBtn;
   JoystickButton wobbleDriveBtn;
+  JoystickButton cycleLightBtn;
 
-  OI(Drivetrain dt, HatchPanel hp, Cargo cargo, Climber climber, UsbCamera driveCamera, UsbCamera hatchCamera,
-      VideoSink cameraServer) {
+  OI(Drivetrain dt, HatchPanel hp, Cargo cargo, Climber climber, Lights lights, UsbCamera driveCamera,
+      UsbCamera hatchCamera, VideoSink cameraServer) {
     leftJoy = new Joystick(0);
     rightJoy = new Joystick(1);
     manipulator = new Joystick(2);
@@ -77,6 +80,9 @@ public class OI {
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
+
+    cycleLightBtn = new JoystickButton(manipulator, Manip.START);
+    cycleLightBtn.whenPressed(new SetLight(lights));
   }
 
   private class Manip {
