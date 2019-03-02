@@ -52,7 +52,14 @@ public class Climber extends Subsystem {
   }
 
   public double getAngle() {
-    return Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX()) * 180 / Math.PI;
+    double rawAngle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
+    double angle;
+    if (rawAngle > 0) {
+      angle = rawAngle - Math.PI;
+    } else {
+      angle = rawAngle + Math.PI;
+    }
+    return angle * 180 / Math.PI;
   }
 
   //We are erring on the side of changing directions too much
