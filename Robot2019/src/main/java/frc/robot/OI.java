@@ -17,10 +17,10 @@ import frc.robot.commands.EjectCargo;
 import frc.robot.commands.IntakeOnlyCargo;
 import frc.robot.commands.NormalDrive;
 import frc.robot.commands.SetArcadeOrTank;
-import frc.robot.commands.SetLight;
 import frc.robot.commands.SlowDrive;
 import frc.robot.commands.ToggleCamera;
 import frc.robot.commands.ToggleHatch;
+import frc.robot.commands.ToggleLight;
 import frc.robot.commands.WobbleDrive;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
@@ -82,7 +82,7 @@ public class OI {
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
 
     cycleLightBtn = new JoystickButton(manipulator, Manip.START);
-    cycleLightBtn.whenPressed(new SetLight(lights));
+    cycleLightBtn.whenPressed(new ToggleLight(lights));
   }
 
   private class Manip {
