@@ -24,7 +24,7 @@ public class Climb extends Command {
   private final double retract = -1;
   private final double overrideThreshold = 0.1; // TODO: Set this to reasonable/tested value;
   private final double retractGoal = 0; // TODO: Set this to reasonable/tested value;
-  private final double offGroundHeight = 15; // TODO: Set this to reasonable/tested value;
+  private final double offGroundHeight = 10; // TODO: Set this to reasonable/tested value;
 
   public Climb(Climber climber, Drivetrain dt, Joystick joy) {
     // Use requires() here to declare subsystem dependencies
@@ -40,7 +40,6 @@ public class Climb extends Command {
   protected void initialize() {
     state = State.CLIMBING;
     climber.resetEncoder();
-    timer.reset();
   }
 
   // Called repeatedly when this Command is scheduled to run
