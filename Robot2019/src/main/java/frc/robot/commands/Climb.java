@@ -23,8 +23,8 @@ public class Climb extends Command {
   private final double climbDown = -1;
   private final double retract = -1;
   private final double overrideThreshold = 0.1; // TODO: Set this to reasonable/tested value;
-  private final double retractGoal = 0; // TODO: Set this to reasonable/tested value;
-  private final double offGroundHeight = 10; // TODO: Set this to reasonable/tested value;
+  private final double retractGoal = 15; // This only needs to be off the ground. Climb is 19 inches.
+  private final double offGroundHeight = 10;
 
   public Climb(Climber climber, Drivetrain dt, Joystick joy) {
     // Use requires() here to declare subsystem dependencies
