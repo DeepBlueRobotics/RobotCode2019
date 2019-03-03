@@ -124,11 +124,6 @@ public class RobotMap {
     catchError(tsrx.configNeutralDeadband(0.001, 10));
     tsrx.setNeutralMode(NeutralMode.Brake);
 
-    ecDeadband = tsrx.configNeutralDeadband(0.001, 10);
-    if (!ecDeadband.equals(ErrorCode.OK)) {
-      throw new RuntimeException(ecDeadband.toString());
-    }
-
     return tsrx;
   }
 
@@ -143,11 +138,6 @@ public class RobotMap {
     catchError(vspx.configPeakOutputReverse(-1, 10));
     catchError(vspx.configNeutralDeadband(0.001, 10));
     vspx.setNeutralMode(NeutralMode.Brake);
-
-    ecDeadband = vspx.configNeutralDeadband(0.001, 10);
-    if (!ecDeadband.equals(ErrorCode.OK)) {
-      throw new RuntimeException(ecDeadband.toString());
-    }
 
     return vspx;
   }
