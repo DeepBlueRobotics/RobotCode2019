@@ -209,6 +209,22 @@ public class Drivetrain extends Subsystem {
       blKA = avg;
       brKA = avg;
     } catch (FileNotFoundException e) {
+      flKV = 0.06369046755507658;
+      flKA = 0.0215894793277297;
+      flVI = 0.8403701236277824;
+
+      frKV = 0.0619423013628032;
+      frKA = 0.04044703465602449;
+      frVI = 0.810212379284332;
+
+      blKV = 0.06388520699977113;
+      blKA = 0.025492804438184545;
+      blVI = 0.8071078220643216;
+
+      brKV = 0.06140765089854154;
+      brKA = 0.042046502553651215;
+      brVI = 0.7929289166816246;
+      
       e.printStackTrace();
     }
   }

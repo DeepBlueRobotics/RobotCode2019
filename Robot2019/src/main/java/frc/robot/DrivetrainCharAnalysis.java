@@ -7,9 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
+import org.apache.commons.math3.linear.SingularMatrixException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.csv.CSVFormat;
@@ -64,9 +66,14 @@ public class DrivetrainCharAnalysis {
             ys[i] = voltages[i];
         }
 
-        algorithm = new OLSMultipleLinearRegression();
-        algorithm.newSampleData(ys, xs);
-        params = algorithm.estimateRegressionParameters();
+        try {
+            algorithm = new OLSMultipleLinearRegression();
+            algorithm.newSampleData(ys, xs);
+            params = algorithm.estimateRegressionParameters();
+        } catch (SingularMatrixException e) {
+            System.out.println(Arrays.deepToString(xs));
+            System.out.println(Arrays.toString(ys));
+        }
         // System.out.println(params.length);
         rightKv = params[1];
         rightKa = params[2];
