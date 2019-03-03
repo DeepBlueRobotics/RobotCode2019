@@ -13,7 +13,8 @@ import frc.robot.subsystems.Climber;
 public class KeepClimber extends Command {
   private Climber climber;
 
-  private final double retractSpeed = -1; // TODO: Confirm number
+  private final double retractSpeed = -1;
+
   public KeepClimber(Climber climber) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -29,7 +30,7 @@ public class KeepClimber extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(climber.slipping()) {
+    if (climber.slipping()) {
       climber.runClimber(retractSpeed);
     } else {
       climber.stopClimber();
