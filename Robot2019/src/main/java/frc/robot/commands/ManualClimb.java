@@ -36,9 +36,9 @@ public class ManualClimb extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    SmartDashboard.putNumber("current angle", 0);
-    SmartDashboard.putNumber("max angle", 0);
-    SmartDashboard.putNumber("min angle", 0);
+    SmartDashboard.putNumber("Current Angle", 0);
+    SmartDashboard.putNumber("Max Angle", 0);
+    SmartDashboard.putNumber("Min Angle", 0);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -56,12 +56,12 @@ public class ManualClimb extends Command {
     dt.drive(driveSpeed, driveSpeed);
 
     double angle = climber.getAngle();
-    SmartDashboard.putNumber("current angle", angle);
-    if (angle > SmartDashboard.getNumber("max angle", 0)) {
-      SmartDashboard.putNumber("max angle", angle);
+    SmartDashboard.putNumber("Current Angle", angle);
+    if (angle > SmartDashboard.getNumber("Max Angle", 0)) {
+      SmartDashboard.putNumber("Max Angle", angle);
     }
-    if (angle < SmartDashboard.getNumber("min angle", 0)) {
-      SmartDashboard.putNumber("min angle", angle);
+    if (angle < SmartDashboard.getNumber("Min Angle", 0)) {
+      SmartDashboard.putNumber("Min Angle", angle);
     }
   }
 
