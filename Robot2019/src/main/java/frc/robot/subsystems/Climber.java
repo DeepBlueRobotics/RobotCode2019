@@ -36,6 +36,7 @@ public class Climber extends Subsystem {
     double pulseFraction = 1.0/256;
     double pitchDiameter = 1.790; // https://www.vexrobotics.com/35-sprockets.html#Drawing
     enc.setDistancePerPulse(pulseFraction * Math.PI * pitchDiameter);
+    enc.setReverseDirection(true);
     enc.reset();
   }
 
