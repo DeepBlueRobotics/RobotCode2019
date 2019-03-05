@@ -65,7 +65,7 @@ public class Climb extends Command {
       break;
     case RETRACTING:
       climber.runClimber(retract);
-      if (climber.getEncDistance() <= retractGoal) {
+      if (climber.getEncDistance() >= retractGoal) {
         state = State.FINISHED;
       }
       break;

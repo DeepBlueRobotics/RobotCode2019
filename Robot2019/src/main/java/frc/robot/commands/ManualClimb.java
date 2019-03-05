@@ -18,8 +18,8 @@ public class ManualClimb extends Command {
   private Drivetrain dt;
   private Joystick leftJoy, rightJoy;
   
-  final private double minDist = 0;
-  final private double maxDist = 24.46; // In inches
+  final private double retractDist = 0;
+  final private double climbDist = -24.46; // In inches, reversed
 
   public ManualClimb(Climber climber, Drivetrain dt, Joystick leftJoy, Joystick rightJoy) {
     // Use requires() here to declare subsystem dependencies
@@ -47,9 +47,9 @@ public class ManualClimb extends Command {
     double climbSpeed = -leftJoy.getY();
     double driveSpeed = -rightJoy.getY();
 
-    if (climbSpeed > 0 && climber.getEncDistance() >= maxDist) {
+    if (climbSpeed > 0 && climber.getEncDistance() <= climbDist) {
       climbSpeed = 0;
-    } else if (climbSpeed < 0 && climber.getEncDistance() <= minDist) {
+    } else if (climbSpeed < 0 && climber.getEncDistance() >= retractDist) {
       climbSpeed = 0;
     }
     climber.runClimber(climbSpeed);
