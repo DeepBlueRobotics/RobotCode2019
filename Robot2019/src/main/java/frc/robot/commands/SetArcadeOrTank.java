@@ -8,6 +8,7 @@ public class SetArcadeOrTank extends InstantCommand {
 
     }
 
+    @Override
     protected void initialize() {
         if (SmartDashboard.getBoolean("Arcade Drive", true)) {
             SmartDashboard.putBoolean("Arcade Drive", false);

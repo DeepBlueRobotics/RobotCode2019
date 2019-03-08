@@ -41,6 +41,7 @@ public class RobotMap {
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
+  static VictorSP lights;
   static AHRS ahrs;
   static PowerDistributionPanel pdp;
   static UsbCamera driveCamera, hatchCamera;
@@ -73,6 +74,9 @@ public class RobotMap {
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
+
+    // Initialize lights
+    lights = new VictorSP(3); // TODO: Set this to correct port
 
     ahrs = new AHRS(SPI.Port.kMXP);
     pdp = new PowerDistributionPanel();
@@ -120,11 +124,6 @@ public class RobotMap {
     catchError(tsrx.configNeutralDeadband(0.001, 10));
     tsrx.setNeutralMode(NeutralMode.Brake);
 
-    ecDeadband = tsrx.configNeutralDeadband(0.001, 10);
-    if (!ecDeadband.equals(ErrorCode.OK)) {
-      throw new RuntimeException(ecDeadband.toString());
-    }
-
     return tsrx;
   }
 
@@ -140,11 +139,6 @@ public class RobotMap {
     catchError(vspx.configNeutralDeadband(0.001, 10));
     vspx.setNeutralMode(NeutralMode.Brake);
 
-    ecDeadband = vspx.configNeutralDeadband(0.001, 10);
-    if (!ecDeadband.equals(ErrorCode.OK)) {
-      throw new RuntimeException(ecDeadband.toString());
-    }
-
     return vspx;
   }
 
@@ -156,9 +150,12 @@ public class RobotMap {
 
   /**
    * Checks an error code and prints it to standard out if it is not ok
+   * 
    * @param ec The error code to check
    */
   private static void catchError(ErrorCode ec) {
-    if(ec != ErrorCode.OK) System.out.println("Error configuring in RobotMap.java at line: " + new Throwable().getStackTrace()[1].getLineNumber());
+    if (ec != ErrorCode.OK)
+      System.out
+          .println("Error configuring in RobotMap.java at line: " + new Throwable().getStackTrace()[1].getLineNumber());
   }
 }

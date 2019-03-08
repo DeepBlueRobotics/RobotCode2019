@@ -18,6 +18,7 @@ import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchPanel;
+import frc.robot.subsystems.Lights;
 
 public class Robot extends TimedRobot {
   private static Drivetrain dt;
@@ -25,6 +26,7 @@ public class Robot extends TimedRobot {
   private static OI oi;
   private static Cargo cargo;
   private static Climber climber;
+  private static Lights lights;
   private static String fname1, fname2, fname3, fname4;
 
   @Override
@@ -34,8 +36,8 @@ public class Robot extends TimedRobot {
     hp = new HatchPanel(RobotMap.hatchPistons);
     cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
     climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
-
-    oi = new OI(dt, hp, cargo, climber, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
+    lights = new Lights(RobotMap.lights);
+    oi = new OI(dt, hp, cargo, climber, lights, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
     fname1 = "/home/lvuser/drive_char_linear_for.csv";
     fname2 = "/home/lvuser/drive_char_stepwise_for.csv";

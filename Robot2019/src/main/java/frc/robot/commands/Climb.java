@@ -19,11 +19,12 @@ public class Climb extends Command {
   private State state;
 
   private final double backDrive = -0.5; // TODO: Set this to reasonable/tested value;
-  private final double climbUp = 0.5; // TODO: Set this to reasonable/tested value;
-  private final double climbDown = -0.5; // TODO: Set this to reasonable/tested value;
-  private final double retract = -0.5; // TODO: Set this to reasonable/tested value;
+  private final double climbUp = 1;
+  private final double climbDown = -1;
+  private final double retract = -1;
   private final double overrideThreshold = 0.1; // TODO: Set this to reasonable/tested value;
-  private final double retractGoal = 0; // TODO: Set this to reasonable/tested value;
+  private final double retractGoal = 15; // This only needs to be off the ground. Climb is 19 inches.
+  private final double offGroundHeight = 10;
 
   public Climb(Climber climber, Drivetrain dt, Joystick joy) {
     // Use requires() here to declare subsystem dependencies
@@ -102,7 +103,7 @@ public class Climb extends Command {
    *         overriding the climb
    */
   private boolean robotOnPlatform() {
-    return dt.isStalled() || Math.abs(dtJoy.getY()) > overrideThreshold;
+    return (dt.isStalled() && climber.getEncDistance() > offGroundHeight) || Math.abs(dtJoy.getY()) > overrideThreshold;
   }
 
   private enum State {

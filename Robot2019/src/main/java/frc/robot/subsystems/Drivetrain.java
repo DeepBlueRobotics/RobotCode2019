@@ -40,6 +40,8 @@ public class Drivetrain extends Subsystem {
   private double blKV, blKA, blVI;
   private double brKV, brKA, brVI;
 
+  private boolean wobbleDone;
+
   public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
       WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Encoder leftEnc,
       Encoder rightEnc, AHRS ahrs) {
@@ -71,6 +73,7 @@ public class Drivetrain extends Subsystem {
     updateDrivetrainParameters();
 
     maxVoltage = 12.0;
+    wobbleDone = false;
   }
 
   /**
@@ -125,6 +128,14 @@ public class Drivetrain extends Subsystem {
     return ahrs.getYaw();
   }
 
+  public void setWobbleDone(boolean set) {
+    wobbleDone = set;
+  }
+
+  public boolean wobbleDone() {
+    return wobbleDone;
+  }
+  
   public double getMaxSpeed() { // Return must be adjusted in the future;
     return 13 * 12;
   }
@@ -198,6 +209,22 @@ public class Drivetrain extends Subsystem {
       blKA = avg;
       brKA = avg;
     } catch (FileNotFoundException e) {
+      flKV = 0.06369046755507658;
+      flKA = 0.0215894793277297;
+      flVI = 0.8403701236277824;
+
+      frKV = 0.0619423013628032;
+      frKA = 0.04044703465602449;
+      frVI = 0.810212379284332;
+
+      blKV = 0.06388520699977113;
+      blKA = 0.025492804438184545;
+      blVI = 0.8071078220643216;
+
+      brKV = 0.06140765089854154;
+      brKA = 0.042046502553651215;
+      brVI = 0.7929289166816246;
+      
       e.printStackTrace();
     }
   }
