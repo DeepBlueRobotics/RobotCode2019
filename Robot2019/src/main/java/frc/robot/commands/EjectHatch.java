@@ -17,6 +17,9 @@ public class EjectHatch extends Command {
   private Timer timey;
   private boolean ejecting;
 
+  /**
+   * Toggles the eject pistons of the hatch panel mechanism
+   */
   public EjectHatch(HatchPanel hp) {
     requires(hp);
     this.hp = hp;
@@ -28,9 +31,9 @@ public class EjectHatch extends Command {
     }
   }
 
-  // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    // If the pistons are currently extend them, retract them back, otherwise release and then eject
     if (hp.state == HatchPanel.State.EJECTING) {
       hp.reset();
       ejecting = false;
@@ -43,26 +46,22 @@ public class EjectHatch extends Command {
     }
   }
 
-  // Called repeatedly when this Command is scheduled to run
-  @Override
-  protected void execute() {
-  }
-
-  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
+    // if it's ejecting, wait until end of delay to extend pistons after release
     return !ejecting || (timey.get() > SmartDashboard.getNumber("Hatch Eject Delay", 0.5));
   }
 
-  // Called once after isFinished returns true
   @Override
   protected void end() {
-    hp.eject();
+    if (ejecting) {
+      hp.eject();
+    }
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
   @Override
-  protected void interrupted() {
-  }
+  protected void execute() {}
+
+  @Override
+  protected void interrupted() {}
 }

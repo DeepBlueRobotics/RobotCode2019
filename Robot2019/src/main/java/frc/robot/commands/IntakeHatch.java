@@ -13,6 +13,9 @@ import frc.robot.subsystems.HatchPanel;
 public class IntakeHatch extends InstantCommand {
   private HatchPanel hp;
 
+  /**
+   * Toggles the grabbing piston of the hatch mechanism
+   */
   public IntakeHatch(HatchPanel hp) {
     requires(hp);
     this.hp = hp;
