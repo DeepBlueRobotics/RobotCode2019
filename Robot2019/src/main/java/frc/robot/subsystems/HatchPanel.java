@@ -12,53 +12,48 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class HatchPanel extends Subsystem {
-  private DoubleSolenoid pistons;
-  private String pistonState;
+  private DoubleSolenoid grabPiston, ejectPistons;
+  public State state;
 
   /**
    * Subsystem for controlling the hatch panel mechanism
    * 
-   * @param pistons the solenoid that controls all three pistons on the mechanism
+   * @param grabPiston the center piston that is used to grab the hatch panel through the hole
+   * @param ejectPistons the two side pistons that facilitate ejecting the hatch panel
    */
-  public HatchPanel(DoubleSolenoid pistons) {
-    this.pistons = pistons;
-    pistonState = "IN";
-    pistons.set(DoubleSolenoid.Value.kReverse);
-    SmartDashboard.putString("Hatch Piston State", pistonState);
+  public HatchPanel(DoubleSolenoid grabPiston, DoubleSolenoid ejectPistons) {
+    this.grabPiston = grabPiston;
+    this.ejectPistons = ejectPistons;
+
+    reset();
+
+    SmartDashboard.putString("Hatch Piston State", state.name());
   }
 
-  /**
-   * toggles the hatch panel pistons
-   * 
-   * @return if the pistons are extended after the call
-   */
-  public boolean toggle() {
-    if (pistons.get() == DoubleSolenoid.Value.kForward) {
-      pistons.set(DoubleSolenoid.Value.kReverse);
-      pistonState = "IN";
-      SmartDashboard.putString("Hatch Piston State", pistonState);
-      return false;
-    } else {
-      pistons.set(DoubleSolenoid.Value.kForward);
-      pistonState = "OUT";
-      SmartDashboard.putString("Hatch Piston State", pistonState);
-      return true;
-    }
+  public void reset() {
+    grabPiston.set(DoubleSolenoid.Value.kReverse);
+    ejectPistons.set(DoubleSolenoid.Value.kReverse);
+    state = State.DEFAULT;
   }
 
-  public void setIn() {
-    pistons.set(DoubleSolenoid.Value.kReverse);
-    pistonState = "IN";
-    SmartDashboard.putString("Hatch Piston State", pistonState);
+  public void grab() {
+    grabPiston.set(DoubleSolenoid.Value.kForward);
+    ejectPistons.set(DoubleSolenoid.Value.kReverse);
+    state = State.GRABBING;
   }
 
-  public void setOut() {
-    pistons.set(DoubleSolenoid.Value.kForward);
-    pistonState = "OUT";
-    SmartDashboard.putString("Hatch Piston State", pistonState);
+  public void eject() {
+    grabPiston.set(DoubleSolenoid.Value.kReverse);
+    ejectPistons.set(DoubleSolenoid.Value.kForward);
+    state = State.EJECTING;
   }
 
   @Override
-  public void initDefaultCommand() {
+  public void initDefaultCommand() {}
+
+  public enum State {
+    DEFAULT,
+    GRABBING,
+    EJECTING
   }
 }

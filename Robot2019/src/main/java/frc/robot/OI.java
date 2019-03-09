@@ -14,13 +14,14 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.ActuateClimberRails;
 import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
-import frc.robot.commands.IntakeOnlyCargo;
+import frc.robot.commands.EjectHatch;
+import frc.robot.commands.IntakeCargo;
+import frc.robot.commands.IntakeHatch;
 import frc.robot.commands.NormalDrive;
 import frc.robot.commands.ResetWobble;
 import frc.robot.commands.SetArcadeOrTank;
 import frc.robot.commands.SlowDrive;
 import frc.robot.commands.ToggleCamera;
-import frc.robot.commands.ToggleHatch;
 import frc.robot.commands.ToggleLight;
 import frc.robot.commands.WobbleDrive;
 import frc.robot.subsystems.Cargo;
@@ -39,7 +40,7 @@ public class OI {
   JoystickButton leftSlowBtn, rightSlowBtn;
   JoystickButton arcadeOrTankBtn;
   JoystickButton normDriveBtn;
-  JoystickButton toggleHatchBtn;
+  JoystickButton hatchIntakeBtn, hatchEjectBtn;
   JoystickButton cargoIntakeBtn, cargoEjectBtn;
   JoystickButton climberRailBtn;
   JoystickButton climbBtn;
@@ -66,11 +67,13 @@ public class OI {
     normDriveBtn = new JoystickButton(leftJoy, 3);
     normDriveBtn.whileHeld(new NormalDrive());
 
-    toggleHatchBtn = new JoystickButton(manipulator, Manip.X); // TODO: set ports to correct values
-    toggleHatchBtn.whenPressed(new ToggleHatch(hp));
+    hatchIntakeBtn = new JoystickButton(manipulator, Manip.X);
+    hatchIntakeBtn.whenPressed(new IntakeHatch(hp));
+    hatchEjectBtn = new JoystickButton(manipulator, Manip.Y);
+    hatchEjectBtn.whenPressed(new EjectHatch(hp));
 
     cargoIntakeBtn = new JoystickButton(manipulator, Manip.A); // TODO: set ports to correct values
-    cargoIntakeBtn.whenPressed(new IntakeOnlyCargo(cargo, hp, dt));
+    cargoIntakeBtn.whenPressed(new IntakeCargo(cargo));
     cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
