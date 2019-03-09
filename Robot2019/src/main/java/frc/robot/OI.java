@@ -43,7 +43,8 @@ public class OI {
   JoystickButton toggleHatchBtn;
   JoystickButton cargoIntakeBtn, cargoEjectBtn;
   JoystickButton climberRailBtn;
-  JoystickButton climbBtn;
+  JoystickButton autoClimbBtn;
+  JoystickButton manualClimbBtn;
   JoystickButton toggleCameraBtn;
   JoystickButton wobbleDriveBtn;
   JoystickButton cycleLightBtn;
@@ -67,19 +68,22 @@ public class OI {
     normDriveBtn = new JoystickButton(leftJoy, 3);
     normDriveBtn.whileHeld(new NormalDrive());
 
-    toggleHatchBtn = new JoystickButton(manipulator, Manip.X); // TODO: set ports to correct values
+    toggleHatchBtn = new JoystickButton(manipulator, Manip.X);
     toggleHatchBtn.whenPressed(new ToggleHatch(hp));
 
-    cargoIntakeBtn = new JoystickButton(manipulator, Manip.A); // TODO: set ports to correct values
+    cargoIntakeBtn = new JoystickButton(manipulator, Manip.A);
     cargoIntakeBtn.whenPressed(new IntakeOnlyCargo(cargo, hp, dt));
-    cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
+    cargoEjectBtn = new JoystickButton(manipulator, Manip.B);
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
-    climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder); // TODO: confirm button number
+    climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder);
     climberRailBtn.whenPressed(new ActuateClimberRails(climber));
 
-    climbBtn = new JoystickButton(manipulator, Manip.Y); // TODO: confirm button number
-    climbBtn.toggleWhenPressed(new ManualClimb(climber, dt, leftJoy, rightJoy));
+    autoClimbBtn = new JoystickButton(manipulator, Manip.Y);
+    autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy));
+
+    manualClimbBtn = new JoystickButton(manipulator, Manip.LT_lTrigger);
+    manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, dt, leftJoy, rightJoy));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
