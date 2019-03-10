@@ -36,6 +36,7 @@ public class Climber extends Subsystem {
     double pulseFraction = 1.0 / 256;
     double pitchDiameter = 1.790; // https://www.vexrobotics.com/35-sprockets.html#Drawing
     enc.setDistancePerPulse(pulseFraction * Math.PI * pitchDiameter);
+    enc.setReverseDirection(true);
     enc.reset();
   }
 
@@ -51,17 +52,24 @@ public class Climber extends Subsystem {
     motor.stopMotor();
   }
 
-  // We are erring on the side of changing directions too much
+  public double getAngle() {
+    double rawAngle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
+    double angle;
+    if (rawAngle > 0) {
+      angle = rawAngle - Math.PI;
+    } else {
+      angle = rawAngle + Math.PI;
+    }
+    return angle * 180 / Math.PI;
+  }
+
+  //We are erring on the side of changing directions too much
   public boolean needToClimb() {
-    double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
-    angle *= 180 / Math.PI;
-    return angle < maxTilt && enc.getDistance() < maxDist;
+    return getAngle() < maxTilt && enc.getDistance() < maxDist;
   }
 
   public boolean canDrop() {
-    double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
-    angle *= 180 / Math.PI;
-    return angle > minTilt && enc.getDistance() > minDist;
+    return getAngle() > minTilt && enc.getDistance() > minDist;
   }
 
   public double getEncDistance() {

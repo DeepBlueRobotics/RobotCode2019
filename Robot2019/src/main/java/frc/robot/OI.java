@@ -17,6 +17,7 @@ import frc.robot.commands.EjectCargo;
 import frc.robot.commands.EjectHatch;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.IntakeHatch;
+import frc.robot.commands.ManualClimb;
 import frc.robot.commands.NormalDrive;
 import frc.robot.commands.ResetWobble;
 import frc.robot.commands.SetArcadeOrTank;
@@ -43,7 +44,8 @@ public class OI {
   JoystickButton hatchIntakeBtn, hatchEjectBtn;
   JoystickButton cargoIntakeBtn, cargoEjectBtn;
   JoystickButton climberRailBtn;
-  JoystickButton climbBtn;
+  JoystickButton autoClimbBtn;
+  JoystickButton manualClimbBtn;
   JoystickButton toggleCameraBtn;
   JoystickButton wobbleDriveBtn;
   JoystickButton cycleLightBtn;
@@ -77,11 +79,14 @@ public class OI {
     cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
-    climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder); // TODO: confirm button number
+    climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder);
     climberRailBtn.whenPressed(new ActuateClimberRails(climber));
 
-    climbBtn = new JoystickButton(manipulator, Manip.Y); // TODO: confirm button number
-    climbBtn.whenPressed(new Climb(climber, dt, leftJoy));
+    autoClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
+    autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy));
+
+    manualClimbBtn = new JoystickButton(manipulator, Manip.LT_lTrigger);
+    manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, dt, leftJoy, rightJoy));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
