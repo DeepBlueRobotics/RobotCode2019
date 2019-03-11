@@ -158,7 +158,10 @@ public class RobotMap {
    * Checks an error code and prints it to standard out if it is not ok
    * @param ec The error code to check
    */
-  private static void catchError(ErrorCode ec) {
-    if(ec != ErrorCode.OK) System.out.println("Error configuring in RobotMap.java at line: " + new Throwable().getStackTrace()[1].getLineNumber());
+  public static void catchError(ErrorCode ec) {
+    if(ec != ErrorCode.OK) {
+      System.out.println("Error configuring in RobotMap.java at line: " + new Throwable().getStackTrace()[1].getLineNumber());
+      System.out.println(ec.toString());
+    }  
   }
 }

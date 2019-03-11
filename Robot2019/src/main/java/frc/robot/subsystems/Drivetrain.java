@@ -19,6 +19,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotMap;
 
 public class Drivetrain extends Subsystem {
   public enum Side {
@@ -150,16 +151,10 @@ public class Drivetrain extends Subsystem {
 
   public void setVoltageCompensation(double volts) {
     ErrorCode ecVoltSat = leftMaster.configVoltageCompSaturation(volts, 10);
-
-    if (!ecVoltSat.equals(ErrorCode.OK)) {
-      throw new RuntimeException("Voltage Saturation Configuration could not be set");
-    }
+    RobotMap.catchError(ecVoltSat);
 
     ecVoltSat = rightMaster.configVoltageCompSaturation(volts, 10);
-
-    if (!ecVoltSat.equals(ErrorCode.OK)) {
-      throw new RuntimeException("Voltage Saturation Configuration could not be set");
-    }
+    RobotMap.catchError(ecVoltSat);
 
     leftMaster.enableVoltageCompensation(true);
     rightMaster.enableVoltageCompensation(true);
