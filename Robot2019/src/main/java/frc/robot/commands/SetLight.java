@@ -8,18 +8,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Lights;
 
-public class KeepClimber extends Command {
-  private Climber climber;
+public class SetLight extends Command {
+  private Lights lights;
 
-  private final double retractSpeed = -1;
-
-  public KeepClimber(Climber climber) {
+  public SetLight(Lights lights) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this.climber = climber;
-    requires(climber);
+    this.lights = lights;
+    requires(lights);
   }
 
   // Called just before this Command runs the first time
@@ -30,11 +28,7 @@ public class KeepClimber extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (climber.slipping()) {
-      climber.runClimber(retractSpeed);
-    } else {
-      climber.stopClimber();
-    }
+    lights.setLights();
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -46,7 +40,6 @@ public class KeepClimber extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    climber.stopClimber();
   }
 
   // Called when another command which requires one or more of the same

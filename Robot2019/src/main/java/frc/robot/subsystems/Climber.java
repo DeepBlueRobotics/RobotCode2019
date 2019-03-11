@@ -22,9 +22,9 @@ public class Climber extends Subsystem {
   private DoubleSolenoid pistons;
 
   final private double minTilt = 0; // In degrees // TODO: Update wtih actual number
-  final private double minDist = 13; // In inches // TODO: Update with actual number
+  final private double minDist = 20; // In inches // TODO: Update with actual number
   final private double maxTilt = 30; // In degrees // TODO: Update with actual number
-  final private double maxDist = 15; // In inches // TODO: Update with actual number
+  final private double maxDist = 24; // In inches // TODO: Update with actual number
   final private double slipTolerance = 0.5; // In inches // TODO: Update with actual number;
 
   public Climber(VictorSP motor, Encoder enc, AHRS ahrs, DoubleSolenoid pistons) {
@@ -33,9 +33,10 @@ public class Climber extends Subsystem {
     this.ahrs = ahrs;
     this.pistons = pistons;
 
-    double pulseFraction = 1.0/256;
+    double pulseFraction = 1.0 / 256;
     double pitchDiameter = 1.790; // https://www.vexrobotics.com/35-sprockets.html#Drawing
     enc.setDistancePerPulse(pulseFraction * Math.PI * pitchDiameter);
+    enc.setReverseDirection(true);
     enc.reset();
   }
 
@@ -51,17 +52,24 @@ public class Climber extends Subsystem {
     motor.stopMotor();
   }
 
+  public double getAngle() {
+    double rawAngle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
+    double angle;
+    if (rawAngle > 0) {
+      angle = rawAngle - Math.PI;
+    } else {
+      angle = rawAngle + Math.PI;
+    }
+    return angle * 180 / Math.PI;
+  }
+
   //We are erring on the side of changing directions too much
   public boolean needToClimb() {
-    double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
-    angle *= 180 / Math.PI;
-    return angle < maxTilt && enc.getDistance() < maxDist;
+    return getAngle() < maxTilt && enc.getDistance() < maxDist;
   }
 
   public boolean canDrop() {
-    double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
-    angle *= 180 / Math.PI;
-    return angle > minTilt && enc.getDistance() > minDist;
+    return getAngle() > minTilt && enc.getDistance() > minDist;
   }
 
   public double getEncDistance() {
