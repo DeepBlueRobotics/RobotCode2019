@@ -10,29 +10,27 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.subsystems.HatchPanel;
 
-public class SetHatch extends InstantCommand {
+public class IntakeHatch extends InstantCommand {
   private HatchPanel hp;
-  private String state;
 
-  public SetHatch(HatchPanel hp, String state) {
-    super();
+  /**
+   * Toggles the grabbing piston of the hatch mechanism
+   */
+  public IntakeHatch(HatchPanel hp) {
     requires(hp);
-    this.state = state;
     this.hp = hp;
   }
 
-  // Called once when the command executes
   @Override
   protected void initialize() {
-    if ("IN".equals(state)) {
-      hp.setIn();
-      return;
+    switch(hp.state) {
+      case EJECTING:
+      case DEFAULT:
+        hp.grab();
+        break;
+      case GRABBING:
+        hp.reset();
+        break;
     }
-    if ("OUT".equals(state)) {
-      hp.setOut();
-      return;
-    }
-    System.out.println("Failed: bug in SetHatch");
   }
-
 }

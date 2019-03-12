@@ -37,7 +37,7 @@ public class RobotMap {
   static VictorSP climberMotor;
   static Encoder climberEncoder;
   static DoubleSolenoid climberPistons;
-  static DoubleSolenoid hatchPistons;
+  static DoubleSolenoid hatchGrabberPiston, hatchEjectPistons;
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
@@ -70,7 +70,8 @@ public class RobotMap {
     cargoRoller = new VictorSP(0);
 
     // Initialize solenoid on hatch panel mech
-    hatchPistons = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse
+    hatchGrabberPiston = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse
+    hatchEjectPistons = new DoubleSolenoid(6, 1);
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
