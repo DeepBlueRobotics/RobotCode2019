@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.KeepClimber;
 
 public class Climber extends Subsystem {
@@ -53,6 +54,11 @@ public class Climber extends Subsystem {
   }
 
   public double getAngle() {
+    SmartDashboard.putNumber("AHRS Z", ahrs.getRawAccelZ());
+    double zee = ahrs.getRawAccelZ() * -1;
+    double angle = Math.asin(zee) * 180 / Math.PI;
+    return angle;
+    /*
     double rawAngle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
     double angle;
     if (rawAngle > 0) {
@@ -61,6 +67,7 @@ public class Climber extends Subsystem {
       angle = rawAngle + Math.PI;
     }
     return angle * 180 / Math.PI;
+    */
   }
 
   //We are erring on the side of changing directions too much
