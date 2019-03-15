@@ -54,21 +54,7 @@ public class Climber extends Subsystem {
   }
 
   public double getAngle() {
-    SmartDashboard.putNumber("AHRS Z", ahrs.getRawAccelZ());
-    double zee = ahrs.getRawAccelZ() * -1;
-    double why = ahrs.getRawAccelY() * -1;
-    double angle = Math.atan2(zee, why) * 180 / Math.PI;
-    return angle;
-    /*
-    double rawAngle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
-    double angle;
-    if (rawAngle > 0) {
-      angle = rawAngle - Math.PI;
-    } else {
-      angle = rawAngle + Math.PI;
-    }
-    return angle * 180 / Math.PI;
-    */
+    return ahrs.getPitch();
   }
 
   //We are erring on the side of changing directions too much
