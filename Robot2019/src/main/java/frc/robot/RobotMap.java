@@ -64,7 +64,7 @@ public class RobotMap {
     // Initialize motors on the climbing mech
     climberMotor = new VictorSP(1);
     climberEncoder = new Encoder(new DigitalInput(4), new DigitalInput(5));
-    climberPistons = new DoubleSolenoid(6, 1);
+    climberPistons = new DoubleSolenoid(5, 2);
 
     // Initialize motors on the cargo mech
     cargoRoller = new VictorSP(0);
