@@ -41,13 +41,13 @@ public class ManualClimb extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double climbSpeed = -manip.getRawAxis(climbJoyAxis);
+    double climbSpeed = manip.getRawAxis(climbJoyAxis);
 
-    if (climbSpeed > 0 && climber.getEncDistance() >= climbDist) {
-      climbSpeed = 0;
-    } else if (climbSpeed < 0 && climber.getEncDistance() <= retractDist) {
-      climbSpeed = 0;
-    }
+    // if (climbSpeed > 0 && climber.getEncDistance() >= climbDist) {
+    //   climbSpeed = 0;
+    // } else if (climbSpeed < 0 && climber.getEncDistance() <= retractDist) {
+    //   climbSpeed = 0;
+    // }
     climber.runClimber(climbSpeed);
 
     double angle = climber.getAngle();
