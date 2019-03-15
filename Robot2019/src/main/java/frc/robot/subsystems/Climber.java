@@ -40,8 +40,12 @@ public class Climber extends Subsystem {
     enc.reset();
   }
 
-  public void actuateRails() {
-    pistons.set(DoubleSolenoid.Value.kForward);
+  public void toggleRails() {
+    if (pistons.get() == DoubleSolenoid.Value.kForward) {
+      pistons.set(DoubleSolenoid.Value.kReverse);
+    } else {
+      pistons.set(DoubleSolenoid.Value.kForward);
+    }
   }
 
   public void runClimber(double speed) {

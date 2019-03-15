@@ -11,7 +11,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.commands.ActuateClimberRails;
+import frc.robot.commands.ToggleClimberRails;
 import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
 import frc.robot.commands.EjectHatch;
@@ -80,7 +80,7 @@ public class OI {
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
     climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder);
-    climberRailBtn.whenPressed(new ActuateClimberRails(climber));
+    climberRailBtn.whenPressed(new ToggleClimberRails(climber));
 
     autoClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
     autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy));
