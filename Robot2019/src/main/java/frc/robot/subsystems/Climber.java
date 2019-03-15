@@ -56,7 +56,8 @@ public class Climber extends Subsystem {
   public double getAngle() {
     SmartDashboard.putNumber("AHRS Z", ahrs.getRawAccelZ());
     double zee = ahrs.getRawAccelZ() * -1;
-    double angle = Math.asin(zee) * 180 / Math.PI;
+    double why = ahrs.getRawAccelY() * -1;
+    double angle = Math.atan2(zee, why) * 180 / Math.PI;
     return angle;
     /*
     double rawAngle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
