@@ -83,7 +83,7 @@ public class OI {
     autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy));
 
     manualClimbBtn = new JoystickButton(manipulator, Manip.LT_lTrigger);
-    manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, dt, leftJoy, rightJoy));
+    manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, manipulator));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
