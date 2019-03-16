@@ -14,9 +14,15 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.ActuateClimberRails;
 import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
+<<<<<<< HEAD
 import frc.robot.commands.ToggleHatchEject;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.ToggleHatchIntake;
+=======
+import frc.robot.commands.EjectHatch;
+import frc.robot.commands.IntakeCargo;
+import frc.robot.commands.IntakeHatch;
+>>>>>>> 34c28bf7e05ac21665898956d6f1f61883b6f56d
 import frc.robot.commands.ManualClimb;
 import frc.robot.commands.NormalDrive;
 import frc.robot.commands.ResetWobble;
