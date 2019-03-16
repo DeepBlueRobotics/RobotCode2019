@@ -11,26 +11,23 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Drivetrain;
 
 public class ManualClimb extends Command {
   private Climber climber;
-  private Drivetrain dt;
-  private Joystick leftJoy, rightJoy;
+  private Joystick manip;
   
   final private double retractDist = 0;
   final private double climbDist = 24.46; // In inches
 
-  public ManualClimb(Climber climber, Drivetrain dt, Joystick leftJoy, Joystick rightJoy) {
+  final private int climbJoyAxis = 1;
+
+  public ManualClimb(Climber climber, Joystick manip) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(climber);
-    requires(dt);
 
     this.climber = climber;
-    this.dt = dt;
-    this.leftJoy = leftJoy;
-    this.rightJoy = rightJoy;
+    this.manip = manip;
   }
 
   // Called just before this Command runs the first time
@@ -44,16 +41,14 @@ public class ManualClimb extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double climbSpeed = -leftJoy.getY();
-    double driveSpeed = -rightJoy.getY();
+    double climbSpeed = manip.getRawAxis(climbJoyAxis);
 
-    if (climbSpeed > 0 && climber.getEncDistance() >= climbDist) {
-      climbSpeed = 0;
-    } else if (climbSpeed < 0 && climber.getEncDistance() <= retractDist) {
-      climbSpeed = 0;
-    }
+    // if (climbSpeed > 0 && climber.getEncDistance() >= climbDist) {
+    //   climbSpeed = 0;
+    // } else if (climbSpeed < 0 && climber.getEncDistance() <= retractDist) {
+    //   climbSpeed = 0;
+    // }
     climber.runClimber(climbSpeed);
-    dt.drive(driveSpeed, driveSpeed);
 
     double angle = climber.getAngle();
     SmartDashboard.putNumber("Current Angle", angle);
@@ -75,7 +70,6 @@ public class ManualClimb extends Command {
   @Override
   protected void end() {
     climber.stopClimber();
-    dt.stop();
   }
 
   // Called when another command which requires one or more of the same
