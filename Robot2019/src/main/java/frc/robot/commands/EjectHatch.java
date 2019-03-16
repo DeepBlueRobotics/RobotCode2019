@@ -7,15 +7,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.subsystems.HatchPanel;
 
-public class EjectHatch extends Command {
+public class EjectHatch extends InstantCommand {
   private HatchPanel hp;
-  private Timer timey;
-  private boolean ejecting;
 
   /**
    * Toggles the eject pistons of the hatch panel mechanism
@@ -23,12 +19,6 @@ public class EjectHatch extends Command {
   public EjectHatch(HatchPanel hp) {
     requires(hp);
     this.hp = hp;
-
-    timey = new Timer();
-
-    if (!SmartDashboard.containsKey("Hatch Eject Delay")) {
-      SmartDashboard.putNumber("Hatch Eject Delay", 0.5);
-    }
   }
 
   @Override
@@ -36,32 +26,9 @@ public class EjectHatch extends Command {
     // If the pistons are currently extend them, retract them back, otherwise release and then eject
     if (hp.state == HatchPanel.State.EJECTING) {
       hp.reset();
-      ejecting = false;
     } else {
       hp.reset();
-      ejecting = true;
-
-      timey.reset();
-      timey.start();
-    }
-  }
-
-  @Override
-  protected boolean isFinished() {
-    // if it's ejecting, wait until end of delay to extend pistons after release
-    return !ejecting || (timey.get() > SmartDashboard.getNumber("Hatch Eject Delay", 0.5));
-  }
-
-  @Override
-  protected void end() {
-    if (ejecting) {
       hp.eject();
     }
   }
-
-  @Override
-  protected void execute() {}
-
-  @Override
-  protected void interrupted() {}
 }
