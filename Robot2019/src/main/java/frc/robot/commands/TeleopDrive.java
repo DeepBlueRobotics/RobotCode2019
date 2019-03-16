@@ -84,7 +84,7 @@ public class TeleopDrive extends Command {
       }
     }
 
-    if (SmartDashboard.getBoolean("Characterized Drive", true)) {
+    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
       charDrive(left, right);
     } else {
       dt.drive(left, right);
@@ -107,7 +107,7 @@ public class TeleopDrive extends Command {
       right *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
     }
 
-    if (SmartDashboard.getBoolean("Characterized Drive", true)) {
+    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
       charDrive(left, right);
     } else {
       dt.drive(left, right);

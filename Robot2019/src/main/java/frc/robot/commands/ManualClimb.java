@@ -19,7 +19,7 @@ public class ManualClimb extends Command {
   final private double retractDist = 0;
   final private double climbDist = 24.46; // In inches
 
-  final private int climbJoyAxis = 1;
+  final private int climbJoyAxis = 3;
 
   public ManualClimb(Climber climber, Joystick manip) {
     // Use requires() here to declare subsystem dependencies

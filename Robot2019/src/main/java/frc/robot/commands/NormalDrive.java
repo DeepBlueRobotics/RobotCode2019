@@ -7,26 +7,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class NormalDrive extends Command {
+public class NormalDrive extends InstantCommand {
   protected void initialize() {
-    SmartDashboard.putBoolean("Characterized Drive", false);
-  }
-
-  @Override
-  protected boolean isFinished() {
-    return false;
-  }
-
-  @Override
-  protected void end() {
-    SmartDashboard.putBoolean("Characterized Drive", true);
-  }
-
-  @Override
-  protected void interrupted() {
-    end();
+    SmartDashboard.putBoolean("Characterized Drive", SmartDashboard.getBoolean("Characterized Drive", true));
   }
 }
