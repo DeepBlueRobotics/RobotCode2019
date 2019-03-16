@@ -34,18 +34,21 @@ public class HatchPanel extends Subsystem {
     grabPiston.set(DoubleSolenoid.Value.kReverse);
     ejectPistons.set(DoubleSolenoid.Value.kReverse);
     state = State.DEFAULT;
+    SmartDashboard.putString("Hatch Piston State", state.name());
   }
 
   public void grab() {
     grabPiston.set(DoubleSolenoid.Value.kForward);
     ejectPistons.set(DoubleSolenoid.Value.kReverse);
     state = State.GRABBING;
+    SmartDashboard.putString("Hatch Piston State", state.name());
   }
 
   public void eject() {
     grabPiston.set(DoubleSolenoid.Value.kReverse);
     ejectPistons.set(DoubleSolenoid.Value.kForward);
     state = State.EJECTING;
+    SmartDashboard.putString("Hatch Piston State", state.name());
   }
 
   @Override
