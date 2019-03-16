@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.ActuateClimberRails;
 import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
-import frc.robot.commands.EjectHatch;
+import frc.robot.commands.ToggleHatchEject;
 import frc.robot.commands.IntakeCargo;
-import frc.robot.commands.IntakeHatch;
+import frc.robot.commands.ToggleHatchIntake;
 import frc.robot.commands.ManualClimb;
 import frc.robot.commands.NormalDrive;
 import frc.robot.commands.ResetWobble;
@@ -70,9 +70,9 @@ public class OI {
     normDriveBtn.whileHeld(new NormalDrive());
 
     hatchIntakeBtn = new JoystickButton(manipulator, Manip.X);
-    hatchIntakeBtn.whenPressed(new IntakeHatch(hp));
+    hatchIntakeBtn.whenPressed(new ToggleHatchIntake(hp));
     hatchEjectBtn = new JoystickButton(manipulator, Manip.Y);
-    hatchEjectBtn.whenPressed(new EjectHatch(hp));
+    hatchEjectBtn.whenPressed(new ToggleHatchEject(hp));
 
     cargoIntakeBtn = new JoystickButton(manipulator, Manip.A); // TODO: set ports to correct values
     cargoIntakeBtn.whenPressed(new IntakeCargo(cargo));
