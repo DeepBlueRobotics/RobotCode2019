@@ -12,6 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class NormalDrive extends InstantCommand {
   protected void initialize() {
-    SmartDashboard.putBoolean("Characterized Drive", SmartDashboard.getBoolean("Characterized Drive", true));
+    SmartDashboard.putBoolean("Characterized Drive", !SmartDashboard.getBoolean("Characterized Drive", true));
   }
 }
