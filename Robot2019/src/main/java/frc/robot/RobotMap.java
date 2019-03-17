@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
 
@@ -41,7 +42,7 @@ public class RobotMap {
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
-  static VictorSP lights;
+  static Relay lights;
   static AHRS ahrs;
   static PowerDistributionPanel pdp;
   static UsbCamera driveCamera, hatchCamera;

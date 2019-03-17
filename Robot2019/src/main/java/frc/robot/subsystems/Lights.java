@@ -7,7 +7,7 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.SetLight;
@@ -16,20 +16,30 @@ import frc.robot.commands.SetLight;
  * Add your docs here.
  */
 public class Lights extends Subsystem {
+
+  public enum LightState {
+    OFF,
+    CARGO,
+    HATCH,
+  }
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private VictorSP lights;
-  private double lightsValue = 0;
+  private Relay lights;
+  private LightState lightsState = LightState.OFF;
 
   /**
    * 0 is off 0.5 is orange 1 is yellow
    */
 
-  public Lights(VictorSP lights) {
+  public Lights(Relay lights) {
     this.lights = lights;
   }
 
-  public void setLights() {
+  public void setLights(LightState newState) {
+    switch (newState) {
+      case LightState.OFF:
+      lights.
+    }
     lights.set(lightsValue);
     String color;
     if (lightsValue == 0) {
