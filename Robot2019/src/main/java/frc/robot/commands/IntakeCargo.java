@@ -11,15 +11,18 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Cargo;
-
+import frc.robot.subsystems.Lights;
+import frc.robot.commands.SetLight;
 public class IntakeCargo extends Command {
   Timer timer;
   Cargo cargo;
+  Lights lights;
   boolean overdraw;
 
-  public IntakeCargo(Cargo cargo) {
+  public IntakeCargo(Cargo cargo, Lights lights) {
     requires(cargo);
     this.cargo = cargo;
+    this.lights = lights;
     timer = new Timer();
     overdraw = false;
   }
@@ -27,6 +30,7 @@ public class IntakeCargo extends Command {
   @Override
   protected void initialize() {
     timer.reset();
+    SetLight signalCargo = new SetLight(lights, Lights.LightState.CARGO);
   }
 
   @Override

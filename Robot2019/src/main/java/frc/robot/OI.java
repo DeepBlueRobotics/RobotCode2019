@@ -75,9 +75,9 @@ public class OI {
     hatchEjectBtn.whenPressed(new ToggleHatchEject(hp));
 
     cargoIntakeBtn = new JoystickButton(manipulator, Manip.A); // TODO: set ports to correct values
-    cargoIntakeBtn.whenPressed(new IntakeCargo(cargo));
+    cargoIntakeBtn.whenPressed(new IntakeCargo(cargo, lights));
     cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
-    cargoEjectBtn.whenPressed(new EjectCargo(cargo));
+    cargoEjectBtn.whenPressed(new EjectCargo(cargo, lights));
 
     climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder);
     climberRailBtn.whenPressed(new ToggleClimberRails(climber));
