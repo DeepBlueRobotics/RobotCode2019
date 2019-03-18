@@ -21,6 +21,7 @@ public class IntakeCargo extends Command {
 
   public IntakeCargo(Cargo cargo, Lights lights) {
     requires(cargo);
+    requires(lights);
     this.cargo = cargo;
     this.lights = lights;
     timer = new Timer();
@@ -30,7 +31,7 @@ public class IntakeCargo extends Command {
   @Override
   protected void initialize() {
     timer.reset();
-    SetLight signalCargo = new SetLight(lights, Lights.LightState.CARGO);
+    lights.setLights(Lights.LightState.CARGO);
   }
 
   @Override

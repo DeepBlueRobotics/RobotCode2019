@@ -69,6 +69,6 @@ public class Lights extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new SetLight(this, lightsState));
+    setDefaultCommand(new SetLight(this, LightState.HATCH));
   }
 }

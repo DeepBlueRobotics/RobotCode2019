@@ -78,7 +78,7 @@ public class RobotMap {
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
 
     // Initialize lights
-    lights = new Relay(3); // TODO: Set this to correct port
+    lights = new Relay(0); // TODO: Set this to correct port
 
     ahrs = new AHRS(SPI.Port.kMXP);
     pdp = new PowerDistributionPanel();

@@ -11,20 +11,16 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Cargo;
-import frc.robot.subsystems.Lights;
-import frc.robot.commands.SetLight;
 public class EjectCargo extends Command {
 
   final double ejectDuration = 0.5; // seconds
 
   Timer timer;
   Cargo cargo;
-  Lights lights;
 
-  public EjectCargo(Cargo cargo, Lights lights) {
+  public EjectCargo(Cargo cargo) {
     requires(cargo);
     this.cargo = cargo;
-    this.lights = lights;
     timer = new Timer();
   }
 
@@ -49,7 +45,6 @@ public class EjectCargo extends Command {
     cargo.stopIntake();
     if (isFinished()) {
       SmartDashboard.putBoolean("Has cargo", false);
-      SetLight signalHatch = new SetLight(lights, Lights.LightState.HATCH);
     }
   }
 
