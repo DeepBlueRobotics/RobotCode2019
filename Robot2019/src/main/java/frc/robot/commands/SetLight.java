@@ -7,45 +7,25 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.subsystems.Lights;
 
-public class SetLight extends Command {
+public class SetLight extends InstantCommand {
   private Lights lights;
+  private Lights.LightState state;
 
-  public SetLight(Lights lights) {
+  public SetLight(Lights lights, Lights.LightState state) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     this.lights = lights;
     requires(lights);
+    this.state = state;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    lights.setLights(state);
   }
 
-  // Called repeatedly when this Command is scheduled to run
-  @Override
-  protected void execute() {
-    lights.setLights();
-  }
-
-  // Make this return true when this Command no longer needs to run execute()
-  @Override
-  protected boolean isFinished() {
-    return false;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
 }

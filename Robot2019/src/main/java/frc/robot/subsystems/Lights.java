@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.SetLight;
@@ -25,7 +26,7 @@ public class Lights extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private Relay lights;
-  private LightState lightsState = LightState.OFF;
+  private LightState lightsState;
 
   /**
    * 0 is off 0.5 is orange 1 is yellow
@@ -33,37 +34,41 @@ public class Lights extends Subsystem {
 
   public Lights(Relay lights) {
     this.lights = lights;
+    lightsState = LightState.OFF;
   }
 
   public void setLights(LightState newState) {
+    String color = "";
     switch (newState) {
-      case LightState.OFF:
-      lights.
-    }
-    lights.set(lightsValue);
-    String color;
-    if (lightsValue == 0) {
+      case OFF:
+      lights.set(Relay.Value.kOff);
       color = "None";
-    } else if (lightsValue == 0.5) {
+      break;
+      case CARGO:
+      lights.set(Relay.Value.kForward);
       color = "Yellow";
-    } else {
+      break;
+      case HATCH:
+      lights.set(Relay.Value.kReverse);
       color = "Orange";
+      break;
     }
+    lightsState = newState;
     SmartDashboard.putString("Lights Current Color", color);
   }
 
   public void toggleLights() {
-    if (lightsValue == 0) {
-      lightsValue = 0.5;
-    } else if (lightsValue == 0.5) {
-      lightsValue = 1;
+    if (lightsState == LightState.OFF) {
+      lightsState = LightState.CARGO;
+    } else if (lightsState == LightState.CARGO) {
+      lightsState = LightState.HATCH;
     } else {
-      lightsValue = 0;
+      lightsState = LightState.OFF;
     }
   }
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new SetLight(this));
+    setDefaultCommand(new SetLight(this, lightsState));
   }
 }
