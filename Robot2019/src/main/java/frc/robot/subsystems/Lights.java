@@ -34,7 +34,7 @@ public class Lights extends Subsystem {
 
   public Lights(Relay lights) {
     this.lights = lights;
-    lightsState = LightState.OFF;
+    lightsState = LightState.HATCH;
   }
 
   public void setLights(LightState newState) {
@@ -46,11 +46,11 @@ public class Lights extends Subsystem {
       break;
       case CARGO:
       lights.set(Relay.Value.kForward);
-      color = "Yellow";
+      color = "Orange";
       break;
       case HATCH:
       lights.set(Relay.Value.kReverse);
-      color = "Orange";
+      color = "Yellow";
       break;
     }
     lightsState = newState;
