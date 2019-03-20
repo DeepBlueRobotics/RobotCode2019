@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.ToggleClimberRails;
 import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
+import frc.robot.commands.GradualDrive;
 import frc.robot.commands.ToggleHatchEject;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.ToggleHatchIntake;
@@ -41,6 +42,7 @@ public class OI {
   JoystickButton leftSlowBtn, rightSlowBtn;
   JoystickButton arcadeOrTankBtn;
   JoystickButton normDriveBtn;
+  JoystickButton gradDriveBtn;
   JoystickButton hatchIntakeBtn, hatchEjectBtn;
   JoystickButton cargoIntakeBtn, cargoEjectBtn;
   JoystickButton climberRailBtn;
@@ -68,6 +70,8 @@ public class OI {
     arcadeOrTankBtn.whenPressed(new SetArcadeOrTank());
     normDriveBtn = new JoystickButton(leftJoy, 3);
     normDriveBtn.whileHeld(new NormalDrive());
+    gradDriveBtn = new JoystickButton(leftJoy, 4); // TODO: confirm button with drivers
+    gradDriveBtn.whenPressed(new GradualDrive());
 
     hatchIntakeBtn = new JoystickButton(manipulator, Manip.X);
     hatchIntakeBtn.whenPressed(new ToggleHatchIntake(hp));
