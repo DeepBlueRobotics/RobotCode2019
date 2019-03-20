@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Lights;
-import frc.robot.commands.SetLight;
+
 public class IntakeCargo extends Command {
   Timer timer;
   Cargo cargo;

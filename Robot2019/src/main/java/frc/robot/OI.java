@@ -83,7 +83,7 @@ public class OI {
     climberRailBtn.whenPressed(new ToggleClimberRails(climber));
 
     autoClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
-    autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy));
+    autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy, lights));
 
     manualClimbBtn = new JoystickButton(manipulator, Manip.LT_lTrigger);
     manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, manipulator));

@@ -22,6 +22,7 @@ public class Lights extends Subsystem {
     OFF,
     CARGO,
     HATCH,
+    CLIMBER
   }
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
@@ -49,8 +50,12 @@ public class Lights extends Subsystem {
       color = "Orange";
       break;
       case HATCH:
-      lights.set(Relay.Value.kReverse);
-      color = "Yellow";
+      lights.set(Relay.Value.kOn);
+      color = "Blue";
+      break;
+      case CLIMBER:
+      lights.set(Relay.Value.kOn);
+      color = "Rainbow";
       break;
     }
     lightsState = newState;
@@ -62,7 +67,10 @@ public class Lights extends Subsystem {
       lightsState = LightState.CARGO;
     } else if (lightsState == LightState.CARGO) {
       lightsState = LightState.HATCH;
-    } else {
+    } else if (lightsState == LightState.HATCH) {
+      lightsState = LightState.CLIMBER;
+    }
+    else {
       lightsState = LightState.OFF;
     }
   }
