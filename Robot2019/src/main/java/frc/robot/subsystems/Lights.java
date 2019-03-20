@@ -50,7 +50,7 @@ public class Lights extends Subsystem {
       color = "Orange";
       break;
       case HATCH:
-      lights.set(Relay.Value.kOn);
+      lights.set(Relay.Value.kReverse);
       color = "Blue";
       break;
       case CLIMBER:
