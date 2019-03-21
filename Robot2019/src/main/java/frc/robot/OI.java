@@ -70,7 +70,7 @@ public class OI {
     arcadeOrTankBtn.whenPressed(new SetArcadeOrTank());
     normDriveBtn = new JoystickButton(leftJoy, 3);
     normDriveBtn.whenPressed(new NormalDrive());
-    gradDriveBtn = new JoystickButton(leftJoy, 4); // TODO: confirm button with drivers
+    gradDriveBtn = new JoystickButton(leftJoy, 5);
     gradDriveBtn.whenPressed(new GradualDrive());
 
     hatchIntakeBtn = new JoystickButton(manipulator, Manip.X);
