@@ -19,6 +19,7 @@ import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.ToggleHatchIntake;
 import frc.robot.commands.ManualClimb;
 import frc.robot.commands.NormalDrive;
+import frc.robot.commands.SlowClimb;
 import frc.robot.commands.ResetWobble;
 import frc.robot.commands.SetArcadeOrTank;
 import frc.robot.commands.SlowDrive;
@@ -46,6 +47,7 @@ public class OI {
   JoystickButton climberRailBtn;
   JoystickButton autoClimbBtn;
   JoystickButton manualClimbBtn;
+  JoystickButton slowClimbBtn;
   JoystickButton toggleCameraBtn;
   JoystickButton wobbleDriveBtn;
   JoystickButton cycleLightBtn;
@@ -87,6 +89,10 @@ public class OI {
 
     manualClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
     manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, manipulator));
+
+
+    slowClimbBtn = new JoystickButton(manipulator, Manip.LB_lShoulder);
+    slowClimbBtn.whileHeld(new SlowClimb());
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));

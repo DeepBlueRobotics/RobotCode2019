@@ -28,6 +28,10 @@ public class ManualClimb extends Command {
 
     this.climber = climber;
     this.manip = manip;
+
+    if (!SmartDashboard.containsKey("Slow Climb Minimum")) {
+      SmartDashboard.putNumber("Slow CLimb Minimum", 0);
+    }
   }
 
   // Called just before this Command runs the first time
@@ -42,6 +46,10 @@ public class ManualClimb extends Command {
   @Override
   protected void execute() {
     double climbSpeed = manip.getRawAxis(climbJoyAxis);
+
+    if (SmartDashboard.getBoolean("Slow Climb", false)) {
+      climbSpeed = (climbSpeed - 1) / 2;
+    }
 
     // if (climbSpeed > 0 && climber.getEncDistance() >= climbDist) {
     //   climbSpeed = 0;
