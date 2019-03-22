@@ -11,9 +11,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Lights;
 
 public class ManualClimb extends Command {
   private Climber climber;
+  private Lights lights;
   private Joystick manip;
   
   final private double retractDist = 0;
@@ -21,12 +23,14 @@ public class ManualClimb extends Command {
 
   final private int climbJoyAxis = 1;
 
-  public ManualClimb(Climber climber, Joystick manip) {
+  public ManualClimb(Climber climber, Joystick manip, Lights lights) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(climber);
+    requires(lights);
 
     this.climber = climber;
+    this.lights = lights;
     this.manip = manip;
   }
 
@@ -36,6 +40,7 @@ public class ManualClimb extends Command {
     SmartDashboard.putNumber("Current Angle", 0);
     SmartDashboard.putNumber("Max Angle", 0);
     SmartDashboard.putNumber("Min Angle", 0);
+    lights.setLights(Lights.LightState.CLIMBER);
   }
 
   // Called repeatedly when this Command is scheduled to run

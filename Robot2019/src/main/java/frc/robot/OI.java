@@ -75,7 +75,7 @@ public class OI {
     hatchEjectBtn.whenPressed(new ToggleHatchEject(hp));
 
     cargoIntakeBtn = new JoystickButton(manipulator, Manip.A); // TODO: set ports to correct values
-    cargoIntakeBtn.whenPressed(new IntakeCargo(cargo));
+    cargoIntakeBtn.whenPressed(new IntakeCargo(cargo, lights));
     cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
@@ -83,10 +83,10 @@ public class OI {
     climberRailBtn.whenPressed(new ToggleClimberRails(climber));
 
     autoClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
-    autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy));
+    autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy, lights));
 
     manualClimbBtn = new JoystickButton(manipulator, Manip.LT_lTrigger);
-    manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, manipulator));
+    manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, manipulator, lights));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
