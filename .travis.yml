@@ -1,0 +1,8 @@
+language: java
+script:
+  - cd Robot2019/
+  - ./gradlew check
+jdk:
+  - oraclejdk11
+env:
+  - TERM=dumb

@@ -7,36 +7,101 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.commands.ToggleClimberRails;
+import frc.robot.commands.Climb;
+import frc.robot.commands.EjectCargo;
+import frc.robot.commands.ToggleHatchEject;
+import frc.robot.commands.IntakeCargo;
+import frc.robot.commands.ToggleHatchIntake;
+import frc.robot.commands.ManualClimb;
+import frc.robot.commands.NormalDrive;
+import frc.robot.commands.ResetWobble;
+import frc.robot.commands.SetArcadeOrTank;
+import frc.robot.commands.SlowDrive;
+import frc.robot.commands.ToggleCamera;
+import frc.robot.commands.ToggleLight;
+import frc.robot.commands.WobbleDrive;
+import frc.robot.subsystems.Cargo;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.HatchPanel;
+import frc.robot.subsystems.Lights;
+
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-  //// CREATING BUTTONS
-  // One type of button is a joystick button which is any button on a
-  //// joystick.
-  // You create one by telling it which joystick it's on and which button
-  // number it is.
-  // Joystick stick = new Joystick(port);
-  // Button button = new JoystickButton(stick, buttonNumber);
+  Joystick leftJoy, rightJoy, manipulator;
 
-  // There are a few additional built in buttons you can use. Additionally,
-  // by subclassing Button you can create custom triggers and bind those to
-  // commands the same as any other Button.
+  JoystickButton leftSlowBtn, rightSlowBtn;
+  JoystickButton arcadeOrTankBtn;
+  JoystickButton normDriveBtn;
+  JoystickButton hatchIntakeBtn, hatchEjectBtn;
+  JoystickButton cargoIntakeBtn, cargoEjectBtn;
+  JoystickButton climberRailBtn;
+  JoystickButton autoClimbBtn;
+  JoystickButton manualClimbBtn;
+  JoystickButton toggleCameraBtn;
+  JoystickButton wobbleDriveBtn;
+  JoystickButton cycleLightBtn;
 
-  //// TRIGGERING COMMANDS WITH BUTTONS
-  // Once you have a button, it's trivial to bind it to a button in one of
-  // three ways:
+  OI(Drivetrain dt, HatchPanel hp, Cargo cargo, Climber climber, Lights lights, UsbCamera driveCamera,
+      UsbCamera hatchCamera, VideoSink cameraServer) {
+    leftJoy = new Joystick(0);
+    rightJoy = new Joystick(1);
+    manipulator = new Joystick(2);
 
-  // Start the command when the button is pressed and let it run the command
-  // until it is finished as determined by it's isFinished method.
-  // button.whenPressed(new ExampleCommand());
+    leftSlowBtn = new JoystickButton(leftJoy, 1);
+    leftSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
+    rightSlowBtn = new JoystickButton(rightJoy, 1);
+    rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
+    wobbleDriveBtn = new JoystickButton(rightJoy, 4); // TODO: confirm button with drivers
+    wobbleDriveBtn.whenPressed(new WobbleDrive(dt));
+    wobbleDriveBtn.whenReleased(new ResetWobble(dt));
 
-  // Run the command while the button is being held down and interrupt it once
-  // the button is released.
-  // button.whileHeld(new ExampleCommand());
+    arcadeOrTankBtn = new JoystickButton(leftJoy, 4);
+    arcadeOrTankBtn.whenPressed(new SetArcadeOrTank());
+    normDriveBtn = new JoystickButton(leftJoy, 3);
+    normDriveBtn.whileHeld(new NormalDrive());
 
-  // Start the command when the button is released and let it run the command
-  // until it is finished as determined by it's isFinished method.
-  // button.whenReleased(new ExampleCommand());
+    hatchIntakeBtn = new JoystickButton(manipulator, Manip.X);
+    hatchIntakeBtn.whenPressed(new ToggleHatchIntake(hp));
+    hatchEjectBtn = new JoystickButton(manipulator, Manip.Y);
+    hatchEjectBtn.whenPressed(new ToggleHatchEject(hp));
+
+    cargoIntakeBtn = new JoystickButton(manipulator, Manip.A); // TODO: set ports to correct values
+    cargoIntakeBtn.whenPressed(new IntakeCargo(cargo));
+    cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
+    cargoEjectBtn.whenPressed(new EjectCargo(cargo));
+
+    climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder);
+    climberRailBtn.whenPressed(new ToggleClimberRails(climber));
+
+    autoClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
+    autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy));
+
+    manualClimbBtn = new JoystickButton(manipulator, Manip.LT_lTrigger);
+    manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, manipulator));
+
+    toggleCameraBtn = new JoystickButton(leftJoy, 2);
+    toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
+
+    cycleLightBtn = new JoystickButton(manipulator, Manip.START);
+    cycleLightBtn.whenPressed(new ToggleLight(lights));
+  }
+
+  private class Manip {
+    static final int X = 1, A = 2, B = 3, Y = 4, LB_lShoulder = 5, RB_rShoulder = 6, LT_lTrigger = 7, RT_rTrigger = 8,
+        BACK = 9, START = 10;
+
+    // Front four buttons look like:
+    // Y
+    // X B
+    // A
+  }
 }

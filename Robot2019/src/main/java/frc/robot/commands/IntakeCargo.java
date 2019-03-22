@@ -7,42 +7,60 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Cargo;
 
-/**
- * An example command.  You can replace me with your own command.
- */
-public class ExampleCommand extends Command {
-  public ExampleCommand() {
-    // Use requires() here to declare subsystem dependencies
-    requires(Robot.m_subsystem);
+public class IntakeCargo extends Command {
+  Timer timer;
+  Cargo cargo;
+  boolean overdraw;
+
+  public IntakeCargo(Cargo cargo) {
+    requires(cargo);
+    this.cargo = cargo;
+    timer = new Timer();
+    overdraw = false;
   }
 
-  // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    timer.reset();
   }
 
-  // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    cargo.runIntake();
+    if (cargo.hasCargo()) {
+      if (!overdraw) {
+        overdraw = true;
+        timer.start();
+      }
+    } else {
+      overdraw = false;
+      timer.stop();
+      timer.reset();
+    }
   }
 
-  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return (timer.get() > 0.5);
   }
 
-  // Called once after isFinished returns true
   @Override
   protected void end() {
+    if (isFinished()) {
+      cargo.keepIntake();
+      SmartDashboard.putBoolean("Has cargo", true);
+    } else {
+      cargo.stopIntake();
+    }
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }
