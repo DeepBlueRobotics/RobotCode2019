@@ -29,8 +29,8 @@ public class ManualClimb extends Command {
     this.climber = climber;
     this.manip = manip;
 
-    if (!SmartDashboard.containsKey("Slow Climb Minimum")) {
-      SmartDashboard.putNumber("Slow CLimb Minimum", 0);
+    if (!SmartDashboard.containsKey("Slow Climb Neutral")) {
+      SmartDashboard.putNumber("Slow Climb Neutral", -0.5);
     }
   }
 
@@ -48,7 +48,9 @@ public class ManualClimb extends Command {
     double climbSpeed = manip.getRawAxis(climbJoyAxis);
 
     if (SmartDashboard.getBoolean("Slow Climb", false)) {
-      climbSpeed = (climbSpeed - 1) / 2;
+      double neutral = SmartDashboard.getNumber("Slow Climb Neutral", -0.5);
+      // this part doesn't make any immediate intuitive sense but trust me it is the correct formula
+      climbSpeed = climbSpeed * (1 + neutral) + neutral; 
     }
 
     // if (climbSpeed > 0 && climber.getEncDistance() >= climbDist) {
