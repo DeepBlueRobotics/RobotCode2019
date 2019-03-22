@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Add your docs here.
  */
-public class NormalDrive extends InstantCommand {
+public class GradualDrive extends InstantCommand {
   /**
    * Add your docs here.
    */
-  public NormalDrive() {
+  public GradualDrive() {
     super();
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -26,7 +26,7 @@ public class NormalDrive extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
-    SmartDashboard.putBoolean("Characterized Drive", !SmartDashboard.getBoolean("Characterized Drive", false));
+    SmartDashboard.putBoolean("Gradual Drive", !SmartDashboard.getBoolean("Gradual Drive", false));
   }
 
 }

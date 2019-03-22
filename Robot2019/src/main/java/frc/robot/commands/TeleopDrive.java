@@ -16,6 +16,8 @@ public class TeleopDrive extends Command {
   Drivetrain dt;
   Joystick leftJoy, rightJoy;
 
+  double prevSpeed = 0, prevLeft = 0, prevRight = 0;
+
   /**
    * Handles all the teleoperated driving functionality
    * 
@@ -27,6 +29,10 @@ public class TeleopDrive extends Command {
     this.dt = dt;
     this.leftJoy = leftJoy;
     this.rightJoy = rightJoy;
+
+    if (!SmartDashboard.containsKey("Gradual Drive Max dV")) {
+      SmartDashboard.putNumber("Gradual Drive Max dV", 0.5); // between zero (no movement) to 2 (any movement)
+    }
   }
 
   @Override
@@ -55,6 +61,14 @@ public class TeleopDrive extends Command {
     if (SmartDashboard.getBoolean("Slow Right", false)) {
       rot *= SmartDashboard.getNumber("Rotation Slow Ratio", 0.35);
     }
+
+    if (SmartDashboard.getBoolean("Gradual Drive", false)) {
+      double dV = SmartDashboard.getNumber("Gradual Drive Max dV", 0.5);
+      if (Math.abs(speed - prevSpeed) > dV) {
+        speed = prevSpeed + dV * Math.signum(speed - prevSpeed);
+      }
+    }
+    prevSpeed = speed;
 
     double left, right;
 
@@ -106,6 +120,18 @@ public class TeleopDrive extends Command {
     if (SmartDashboard.getBoolean("Slow Right", false)) {
       right *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
     }
+
+    if (SmartDashboard.getBoolean("Gradual Drive", false)) {
+      double dV = SmartDashboard.getNumber("Gradual Drive Max dV", 0.5);
+      if (Math.abs(left - prevLeft) > dV) {
+        left = prevLeft + dV * Math.signum(left - prevLeft);
+      }
+      if (Math.abs(right - prevRight) > dV) {
+        right = prevRight + dV * Math.signum(right - prevRight);
+      }
+    }
+    prevLeft = left;
+    prevRight = right;
 
     if (SmartDashboard.getBoolean("Characterized Drive", true)) {
       charDrive(left, right);
