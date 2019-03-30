@@ -16,7 +16,7 @@ public class Cargo extends Subsystem {
   // here. Call these from Commands.
 
   private final double intakeCurrentThreshold = 8.0; // Amps
-  private final double rollerIntakeSpeed = 4.0 / 12;
+  private final double rollerIntakeSpeed = 6.0 / 12;
   private final double rollerStallSpeed = 3.0 / 12;
   private final double rollerEjectSpeed = 12.0 / 12;
 

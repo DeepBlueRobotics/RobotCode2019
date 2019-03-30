@@ -83,13 +83,13 @@ public class OI {
     cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
-    climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder);
+    climberRailBtn = new JoystickButton(manipulator, Manip.RB_rShoulder);
     climberRailBtn.whenPressed(new ToggleClimberRails(climber));
 
-    autoClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
+    autoClimbBtn = new JoystickButton(manipulator, Manip.LT_lTrigger);
     autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy, lights));
 
-    manualClimbBtn = new JoystickButton(manipulator, Manip.LT_lTrigger);
+    manualClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
     manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, manipulator, lights));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);

@@ -13,7 +13,7 @@ import frc.robot.subsystems.Climber;
 public class KeepClimber extends Command {
   private Climber climber;
 
-  private final double retractSpeed = -1;
+  private final double retractSpeed = 0.25;
 
   public KeepClimber(Climber climber) {
     // Use requires() here to declare subsystem dependencies

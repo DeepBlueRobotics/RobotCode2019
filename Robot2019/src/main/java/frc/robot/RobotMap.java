@@ -121,7 +121,7 @@ public class RobotMap {
     catchError(tsrx.configPeakCurrentLimit(0, 0));
     catchError(tsrx.configPeakCurrentDuration(0, 0));
     // 40 Amps is the amp limit of a CIM. lThe PDP has 40 amp circuit breakers,
-    catchError(tsrx.configContinuousCurrentLimit(40, 0));
+    catchError(tsrx.configContinuousCurrentLimit(30, 0));
     tsrx.enableCurrentLimit(true);
     catchError(tsrx.configNeutralDeadband(0.001, 10));
     tsrx.setNeutralMode(NeutralMode.Brake);

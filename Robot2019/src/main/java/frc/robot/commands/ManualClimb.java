@@ -21,7 +21,7 @@ public class ManualClimb extends Command {
   final private double retractDist = 0;
   final private double climbDist = 24.46; // In inches
 
-  final private int climbJoyAxis = 1;
+  final private int climbJoyAxis = 3;
 
   public ManualClimb(Climber climber, Joystick manip, Lights lights) {
     // Use requires() here to declare subsystem dependencies
@@ -32,6 +32,13 @@ public class ManualClimb extends Command {
     this.climber = climber;
     this.lights = lights;
     this.manip = manip;
+
+    if (!SmartDashboard.containsKey("Climber Max Height")) {
+      SmartDashboard.putNumber("Climber Max Height", 25);
+    }
+    if (!SmartDashboard.containsKey("Climber Drive Limit")) {
+      SmartDashboard.putNumber("Climber Drive Limit", 0);
+    }
   }
 
   // Called just before this Command runs the first time
@@ -53,6 +60,12 @@ public class ManualClimb extends Command {
     // } else if (climbSpeed < 0 && climber.getEncDistance() <= retractDist) {
     //   climbSpeed = 0;
     // }
+    
+    // climber soft stop to prevent bindinng
+    if (climber.getEncDistance() > SmartDashboard.getNumber("Climber Max Height", 25) && (-climbSpeed) > SmartDashboard.getNumber("Climber Drive Limit", 0)) {
+      climbSpeed = -SmartDashboard.getNumber("Climber Drive Limit", 0);
+    }
+
     climber.runClimber(climbSpeed);
 
     double angle = climber.getAngle();
