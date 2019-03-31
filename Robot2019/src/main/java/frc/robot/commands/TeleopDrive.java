@@ -108,7 +108,7 @@ public class TeleopDrive extends Command {
       }
     }
 
-    if (SmartDashboard.getBoolean("Characterized Drive", true)) {
+    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
       SmartDashboard.putBoolean("is in char drive", true);
       charDrive(left, right);
     } else {
@@ -145,7 +145,7 @@ public class TeleopDrive extends Command {
     prevLeft = left;
     prevRight = right;
 
-    if (SmartDashboard.getBoolean("Characterized Drive", true)) {
+    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
       charDrive(left, right);
     } else {
       dt.drive(left, right);
