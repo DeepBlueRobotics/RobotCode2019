@@ -89,6 +89,10 @@ public class Drivetrain extends Subsystem {
     SmartDashboard.putNumber("left Input", left);
     SmartDashboard.putNumber("right Input", right);
 
+    if (SmartDashboard.getBoolean("Outreach Mode", false)) {
+      left /= 3; // Arbitrary Number
+      right /= 3; // Same here
+    }
     leftMaster.set(left);
     rightMaster.set(right);
     SmartDashboard.putNumber("Encoder Distance Left:", leftEnc.getDistance());
