@@ -26,7 +26,7 @@ public class NormalDrive extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
-    SmartDashboard.putBoolean("Characterized Drive", !SmartDashboard.getBoolean("Characterized Drive", false));
+    SmartDashboard.putBoolean("Characterized Drive", false); // !SmartDashboard.getBoolean("Characterized Drive", false));
   }
 
 }

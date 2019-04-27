@@ -86,6 +86,9 @@ public class Drivetrain extends Subsystem {
   }
 
   public void drive(double left, double right) {
+    SmartDashboard.putNumber("left Input", left);
+    SmartDashboard.putNumber("right Input", right);
+
     leftMaster.set(left);
     rightMaster.set(right);
     SmartDashboard.putNumber("Encoder Distance Left:", leftEnc.getDistance());

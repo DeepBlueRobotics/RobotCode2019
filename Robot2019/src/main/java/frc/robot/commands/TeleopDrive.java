@@ -31,7 +31,15 @@ public class TeleopDrive extends Command {
     this.rightJoy = rightJoy;
 
     if (!SmartDashboard.containsKey("Gradual Drive Max dV")) {
-      SmartDashboard.putNumber("Gradual Drive Max dV", 0.5); // between zero (no movement) to 2 (any movement)
+      SmartDashboard.putNumber("Gradual Drive Max dV", 0.04); // between zero (no movement) to 2 (any movement)
+    }
+
+    if (!SmartDashboard.containsKey("Characterized Drive")) {
+      SmartDashboard.putBoolean("Characterized Drive", false);
+    }
+
+    if (!SmartDashboard.containsKey("Gradual Drive")) {
+      SmartDashboard.putBoolean("Gradual Drive", true);
     }
   }
 
@@ -49,6 +57,8 @@ public class TeleopDrive extends Command {
     double rot = rightJoy.getX();
 
     // System.out.println("Speed: " + speed + ", Rotation: " + rot);
+    SmartDashboard.putNumber("input speed", speed);
+    SmartDashboard.putNumber("input rot", rot);
 
     if (SmartDashboard.getBoolean("Square Joysticks", true)) {
       speed = Math.copySign(speed * speed, speed);
@@ -62,8 +72,8 @@ public class TeleopDrive extends Command {
       rot *= SmartDashboard.getNumber("Rotation Slow Ratio", 0.35);
     }
 
-    if (SmartDashboard.getBoolean("Gradual Drive", false)) {
-      double dV = SmartDashboard.getNumber("Gradual Drive Max dV", 0.5);
+    if (SmartDashboard.getBoolean("Gradual Drive", true)) {
+      double dV = SmartDashboard.getNumber("Gradual Drive Max dV", 0.04);
       if (Math.abs(speed - prevSpeed) > dV) {
         speed = prevSpeed + dV * Math.signum(speed - prevSpeed);
       }
@@ -98,9 +108,11 @@ public class TeleopDrive extends Command {
       }
     }
 
-    if (SmartDashboard.getBoolean("Characterized Drive", true)) {
+    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
+      SmartDashboard.putBoolean("is in char drive", true);
       charDrive(left, right);
     } else {
+      SmartDashboard.putBoolean("is in char drive", false);
       dt.drive(left, right);
     }
   }
@@ -121,8 +133,8 @@ public class TeleopDrive extends Command {
       right *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
     }
 
-    if (SmartDashboard.getBoolean("Gradual Drive", false)) {
-      double dV = SmartDashboard.getNumber("Gradual Drive Max dV", 0.5);
+    if (SmartDashboard.getBoolean("Gradual Drive", true)) {
+      double dV = SmartDashboard.getNumber("Gradual Drive Max dV", 0.04);
       if (Math.abs(left - prevLeft) > dV) {
         left = prevLeft + dV * Math.signum(left - prevLeft);
       }
@@ -133,7 +145,7 @@ public class TeleopDrive extends Command {
     prevLeft = left;
     prevRight = right;
 
-    if (SmartDashboard.getBoolean("Characterized Drive", true)) {
+    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
       charDrive(left, right);
     } else {
       dt.drive(left, right);

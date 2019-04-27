@@ -26,7 +26,7 @@ public class GradualDrive extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
-    SmartDashboard.putBoolean("Gradual Drive", !SmartDashboard.getBoolean("Gradual Drive", false));
+    SmartDashboard.putBoolean("Gradual Drive", !SmartDashboard.getBoolean("Gradual Drive", true));
   }
 
 }

@@ -11,19 +11,19 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.commands.ToggleClimberRails;
 import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
 import frc.robot.commands.GradualDrive;
-import frc.robot.commands.ToggleHatchEject;
 import frc.robot.commands.IntakeCargo;
-import frc.robot.commands.ToggleHatchIntake;
+import frc.robot.commands.IntakeHatch;
 import frc.robot.commands.ManualClimb;
 import frc.robot.commands.NormalDrive;
 import frc.robot.commands.ResetWobble;
 import frc.robot.commands.SetArcadeOrTank;
 import frc.robot.commands.SlowDrive;
 import frc.robot.commands.ToggleCamera;
+import frc.robot.commands.ToggleClimberRails;
+import frc.robot.commands.ToggleHatchEject;
 import frc.robot.commands.ToggleLight;
 import frc.robot.commands.WobbleDrive;
 import frc.robot.subsystems.Cargo;
@@ -74,7 +74,7 @@ public class OI {
     gradDriveBtn.whenPressed(new GradualDrive());
 
     hatchIntakeBtn = new JoystickButton(manipulator, Manip.X);
-    hatchIntakeBtn.whenPressed(new ToggleHatchIntake(hp));
+    hatchIntakeBtn.whenPressed(new IntakeHatch(hp, dt));
     hatchEjectBtn = new JoystickButton(manipulator, Manip.Y);
     hatchEjectBtn.whenPressed(new ToggleHatchEject(hp));
 
@@ -83,13 +83,13 @@ public class OI {
     cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
-    climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder);
+    climberRailBtn = new JoystickButton(manipulator, Manip.RB_rShoulder);
     climberRailBtn.whenPressed(new ToggleClimberRails(climber));
 
-    autoClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
+    autoClimbBtn = new JoystickButton(manipulator, Manip.LT_lTrigger);
     autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy, lights));
 
-    manualClimbBtn = new JoystickButton(manipulator, Manip.LT_lTrigger);
+    manualClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
     manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, manipulator, lights));
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);

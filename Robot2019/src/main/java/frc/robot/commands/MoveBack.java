@@ -7,52 +7,50 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Drivetrain;
 
-public class KeepClimber extends Command {
-  private Climber climber;
-
-  private final double retractSpeed = 0.25;
-
-  public KeepClimber(Climber climber) {
+public class MoveBack extends Command {
+  Timer tim;
+  Drivetrain dt;
+  double time;
+  public MoveBack(Drivetrain dt, double time) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this.climber = climber;
-    requires(climber);
+    requires(dt);
+    this.dt = dt;
+    this.time = time;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    tim = new Timer();
+    tim.reset();
+    tim.start();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (climber.slipping()) {
-      climber.runClimber(retractSpeed);
-    } else {
-      climber.stopClimber();
-    }
+    dt.drive(-1, -1);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return tim.get() >= time;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    climber.stopClimber();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    end();
   }
 }
