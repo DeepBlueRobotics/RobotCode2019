@@ -59,6 +59,7 @@ public class Robot extends TimedRobot {
     dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
     SmartDashboard.putNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);
 
+    SmartDashboard.putBoolean("Outreach Mode", false);
     timey = new Timer();
   }
 

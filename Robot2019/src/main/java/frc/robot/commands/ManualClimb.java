@@ -56,7 +56,8 @@ public class ManualClimb extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double climbSpeed = manip.getRawAxis(climbJoyAxis);
+    if (!SmartDashboard.getBoolean("Outreach Mode", false)) {
+      double climbSpeed = manip.getRawAxis(climbJoyAxis);
 
     if (SmartDashboard.getBoolean("Slow Climb", false)) {
       double neutral = SmartDashboard.getNumber("Slow Climb Neutral", -0.5);
@@ -75,15 +76,16 @@ public class ManualClimb extends Command {
       climbSpeed = -SmartDashboard.getNumber("Climber Drive Limit", 0);
     }
 
-    climber.runClimber(climbSpeed);
+      climber.runClimber(climbSpeed);
 
-    double angle = climber.getAngle();
-    SmartDashboard.putNumber("Current Angle", angle);
-    if (angle > SmartDashboard.getNumber("Max Angle", 0)) {
-      SmartDashboard.putNumber("Max Angle", angle);
-    }
-    if (angle < SmartDashboard.getNumber("Min Angle", 0)) {
-      SmartDashboard.putNumber("Min Angle", angle);
+      double angle = climber.getAngle();
+      SmartDashboard.putNumber("Current Angle", angle);
+      if (angle > SmartDashboard.getNumber("Max Angle", 0)) {
+        SmartDashboard.putNumber("Max Angle", angle);
+      }
+      if (angle < SmartDashboard.getNumber("Min Angle", 0)) {
+        SmartDashboard.putNumber("Min Angle", angle);
+      }
     }
   }
 
