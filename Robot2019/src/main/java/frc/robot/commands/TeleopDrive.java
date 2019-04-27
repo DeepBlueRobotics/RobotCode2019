@@ -18,6 +18,8 @@ public class TeleopDrive extends Command {
 
   double prevSpeed = 0, prevLeft = 0, prevRight = 0;
 
+  double outreachSpeed = 0.3;
+
   /**
    * Handles all the teleoperated driving functionality
    * 
@@ -113,7 +115,11 @@ public class TeleopDrive extends Command {
       charDrive(left, right);
     } else {
       SmartDashboard.putBoolean("is in char drive", false);
-      dt.drive(left, right);
+      if (SmartDashboard.getBoolean("Outreach Mode", false)) {
+        dt.drive(left * outreachSpeed, right * outreachSpeed);
+      } else {
+        dt.drive(left, right);
+      }
     }
   }
 
@@ -148,7 +154,11 @@ public class TeleopDrive extends Command {
     if (SmartDashboard.getBoolean("Characterized Drive", false)) {
       charDrive(left, right);
     } else {
-      dt.drive(left, right);
+      if (SmartDashboard.getBoolean("Outreach Mode", false)) {
+        dt.drive(left * outreachSpeed, right * outreachSpeed);
+      } else {
+        dt.drive(left, right);
+      }
     }
   }
 
@@ -212,7 +222,11 @@ public class TeleopDrive extends Command {
     SmartDashboard.putNumber("Right Volts", rightV);
     //System.out.println("LeftV: " + leftV + ", RightV: " + rightV);
 
-    dt.drive(leftV / maxV, rightV / maxV);
+    if (SmartDashboard.getBoolean("Outreach Mode", false)) {
+      dt.drive(leftV / maxV * outreachSpeed, rightV / maxV * outreachSpeed);
+    } else {
+      dt.drive(leftV / maxV, rightV / maxV);
+    }
     dt.disableVoltageCompensation();
   }
 

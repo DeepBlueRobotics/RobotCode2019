@@ -53,28 +53,30 @@ public class ManualClimb extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double climbSpeed = manip.getRawAxis(climbJoyAxis);
+    if (!SmartDashboard.getBoolean("Outreach Mode", false)) {
+      double climbSpeed = manip.getRawAxis(climbJoyAxis);
 
-    // if (climbSpeed > 0 && climber.getEncDistance() >= climbDist) {
-    //   climbSpeed = 0;
-    // } else if (climbSpeed < 0 && climber.getEncDistance() <= retractDist) {
-    //   climbSpeed = 0;
-    // }
-    
-    // climber soft stop to prevent bindinng
-    if (climber.getEncDistance() > SmartDashboard.getNumber("Climber Max Height", 25) && (-climbSpeed) > SmartDashboard.getNumber("Climber Drive Limit", 0)) {
-      climbSpeed = -SmartDashboard.getNumber("Climber Drive Limit", 0);
-    }
+      // if (climbSpeed > 0 && climber.getEncDistance() >= climbDist) {
+      //   climbSpeed = 0;
+      // } else if (climbSpeed < 0 && climber.getEncDistance() <= retractDist) {
+      //   climbSpeed = 0;
+      // }
+      
+      // climber soft stop to prevent bindinng
+      if (climber.getEncDistance() > SmartDashboard.getNumber("Climber Max Height", 25) && (-climbSpeed) > SmartDashboard.getNumber("Climber Drive Limit", 0)) {
+        climbSpeed = -SmartDashboard.getNumber("Climber Drive Limit", 0);
+      }
 
-    climber.runClimber(climbSpeed);
+      climber.runClimber(climbSpeed);
 
-    double angle = climber.getAngle();
-    SmartDashboard.putNumber("Current Angle", angle);
-    if (angle > SmartDashboard.getNumber("Max Angle", 0)) {
-      SmartDashboard.putNumber("Max Angle", angle);
-    }
-    if (angle < SmartDashboard.getNumber("Min Angle", 0)) {
-      SmartDashboard.putNumber("Min Angle", angle);
+      double angle = climber.getAngle();
+      SmartDashboard.putNumber("Current Angle", angle);
+      if (angle > SmartDashboard.getNumber("Max Angle", 0)) {
+        SmartDashboard.putNumber("Max Angle", angle);
+      }
+      if (angle < SmartDashboard.getNumber("Min Angle", 0)) {
+        SmartDashboard.putNumber("Min Angle", angle);
+      }
     }
   }
 

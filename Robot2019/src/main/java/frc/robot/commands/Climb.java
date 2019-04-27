@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Drivetrain;
@@ -50,33 +51,35 @@ public class Climb extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    switch (state) {
-    case CLIMBING:
-      dt.drive(backDrive, backDrive);
-      climber.runClimber(climbUp);
-      if (!climber.needToClimb()) {
-        state = State.LEVELING;
+    if (!SmartDashboard.getBoolean("Outreach Mode", false)) {
+      switch (state) {
+      case CLIMBING:
+        dt.drive(backDrive, backDrive);
+        climber.runClimber(climbUp);
+        if (!climber.needToClimb()) {
+          state = State.LEVELING;
+        }
+        if (robotOnPlatform())
+          state = State.RETRACTING;
+        break;
+      case LEVELING:
+        dt.drive(backDrive, backDrive);
+        climber.runClimber(climbDown);
+        if (!climber.canDrop()) {
+          state = State.CLIMBING;
+        }
+        if (robotOnPlatform())
+          state = State.RETRACTING;
+        break;
+      case RETRACTING:
+        climber.runClimber(retract);
+        if (climber.getEncDistance() <= retractGoal) {
+          state = State.FINISHED;
+        }
+        break;
+      case FINISHED:
+        end();
       }
-      if (robotOnPlatform())
-        state = State.RETRACTING;
-      break;
-    case LEVELING:
-      dt.drive(backDrive, backDrive);
-      climber.runClimber(climbDown);
-      if (!climber.canDrop()) {
-        state = State.CLIMBING;
-      }
-      if (robotOnPlatform())
-        state = State.RETRACTING;
-      break;
-    case RETRACTING:
-      climber.runClimber(retract);
-      if (climber.getEncDistance() <= retractGoal) {
-        state = State.FINISHED;
-      }
-      break;
-    case FINISHED:
-      end();
     }
   }
 
