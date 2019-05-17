@@ -39,6 +39,9 @@ public class ManualClimb extends Command {
     if (!SmartDashboard.containsKey("Climber Drive Limit")) {
       SmartDashboard.putNumber("Climber Drive Limit", 0);
     }
+    if (!SmartDashboard.containsKey("Slow Climb Neutral")) {
+      SmartDashboard.putNumber("Slow Climb Neutral", -0.5);
+    }
   }
 
   // Called just before this Command runs the first time
@@ -56,16 +59,22 @@ public class ManualClimb extends Command {
     if (!SmartDashboard.getBoolean("Outreach Mode", false)) {
       double climbSpeed = manip.getRawAxis(climbJoyAxis);
 
-      // if (climbSpeed > 0 && climber.getEncDistance() >= climbDist) {
-      //   climbSpeed = 0;
-      // } else if (climbSpeed < 0 && climber.getEncDistance() <= retractDist) {
-      //   climbSpeed = 0;
-      // }
-      
-      // climber soft stop to prevent bindinng
-      if (climber.getEncDistance() > SmartDashboard.getNumber("Climber Max Height", 25) && (-climbSpeed) > SmartDashboard.getNumber("Climber Drive Limit", 0)) {
-        climbSpeed = -SmartDashboard.getNumber("Climber Drive Limit", 0);
-      }
+    if (SmartDashboard.getBoolean("Slow Climb", false)) {
+      double neutral = SmartDashboard.getNumber("Slow Climb Neutral", -0.5);
+      // this part doesn't make any immediate intuitive sense but trust me it is the correct formula
+      climbSpeed = climbSpeed * (1 + neutral) + neutral; 
+    }
+
+    // if (climbSpeed > 0 && climber.getEncDistance() >= climbDist) {
+    //   climbSpeed = 0;
+    // } else if (climbSpeed < 0 && climber.getEncDistance() <= retractDist) {
+    //   climbSpeed = 0;
+    // }
+    
+    // climber soft stop to prevent bindinng
+    if (climber.getEncDistance() > SmartDashboard.getNumber("Climber Max Height", 25) && (-climbSpeed) > SmartDashboard.getNumber("Climber Drive Limit", 0)) {
+      climbSpeed = -SmartDashboard.getNumber("Climber Drive Limit", 0);
+    }
 
       climber.runClimber(climbSpeed);
 
