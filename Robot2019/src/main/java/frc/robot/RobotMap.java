@@ -12,6 +12,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.cscore.UsbCamera;
@@ -34,6 +36,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 public class RobotMap {
   static WPI_TalonSRX leftMaster, rightMaster;
   static BaseMotorController leftSlave1, leftSlave2, rightSlave1, rightSlave2;
+  static CANSparkMax liftMotor;
   static VictorSP climberMotor;
   static Encoder climberEncoder;
   static DoubleSolenoid climberPistons;
@@ -60,6 +63,9 @@ public class RobotMap {
     rightMaster = createConfiguredTalon(5);
     rightSlave1 = createConfiguredMotorController(6);
     rightSlave2 = createConfiguredMotorController(7);
+
+    // Initialize motor on the lift 
+    liftMotor = new CANSparkMax(0, CANSparkMaxLowLevel.MotorType.kBrushless); // TODO: Set ID to correct value 
 
     // Initialize motors on the climbing mech
     climberMotor = new VictorSP(1);
