@@ -8,24 +8,25 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import frc.robot.subsystems.Lights;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class SetLight extends InstantCommand {
-  private Lights lights;
-  private Lights.LightState state;
-
-  public SetLight(Lights lights, Lights.LightState state) {
+/**
+ * Add your docs here.
+ */
+public class GradualDrive extends InstantCommand {
+  /**
+   * Add your docs here.
+   */
+  public GradualDrive() {
+    super();
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this.lights = lights;
-    requires(lights);
-    this.state = state;
   }
 
-  // Called just before this Command runs the first time
+  // Called once when the command executes
   @Override
   protected void initialize() {
-    lights.setLights(state);
+    SmartDashboard.putBoolean("Gradual Drive", !SmartDashboard.getBoolean("Gradual Drive", true));
   }
 
 }

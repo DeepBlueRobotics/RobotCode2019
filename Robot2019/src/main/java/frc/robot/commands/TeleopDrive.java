@@ -16,6 +16,10 @@ public class TeleopDrive extends Command {
   Drivetrain dt;
   Joystick leftJoy, rightJoy;
 
+  double prevSpeed = 0, prevLeft = 0, prevRight = 0;
+
+  double outreachSpeed = 0.3;
+
   /**
    * Handles all the teleoperated driving functionality
    * 
@@ -27,6 +31,18 @@ public class TeleopDrive extends Command {
     this.dt = dt;
     this.leftJoy = leftJoy;
     this.rightJoy = rightJoy;
+
+    if (!SmartDashboard.containsKey("Gradual Drive Max dV")) {
+      SmartDashboard.putNumber("Gradual Drive Max dV", 0.04); // between zero (no movement) to 2 (any movement)
+    }
+
+    if (!SmartDashboard.containsKey("Characterized Drive")) {
+      SmartDashboard.putBoolean("Characterized Drive", false);
+    }
+
+    if (!SmartDashboard.containsKey("Gradual Drive")) {
+      SmartDashboard.putBoolean("Gradual Drive", true);
+    }
   }
 
   @Override
@@ -43,6 +59,8 @@ public class TeleopDrive extends Command {
     double rot = rightJoy.getX();
 
     // System.out.println("Speed: " + speed + ", Rotation: " + rot);
+    SmartDashboard.putNumber("input speed", speed);
+    SmartDashboard.putNumber("input rot", rot);
 
     if (SmartDashboard.getBoolean("Square Joysticks", true)) {
       speed = Math.copySign(speed * speed, speed);
@@ -55,6 +73,14 @@ public class TeleopDrive extends Command {
     if (SmartDashboard.getBoolean("Slow Right", false)) {
       rot *= SmartDashboard.getNumber("Rotation Slow Ratio", 0.35);
     }
+
+    if (SmartDashboard.getBoolean("Gradual Drive", true)) {
+      double dV = SmartDashboard.getNumber("Gradual Drive Max dV", 0.04);
+      if (Math.abs(speed - prevSpeed) > dV) {
+        speed = prevSpeed + dV * Math.signum(speed - prevSpeed);
+      }
+    }
+    prevSpeed = speed;
 
     double left, right;
 
@@ -84,10 +110,16 @@ public class TeleopDrive extends Command {
       }
     }
 
-    if (SmartDashboard.getBoolean("Characterized Drive", true)) {
+    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
+      SmartDashboard.putBoolean("is in char drive", true);
       charDrive(left, right);
     } else {
-      dt.drive(left, right);
+      SmartDashboard.putBoolean("is in char drive", false);
+      if (SmartDashboard.getBoolean("Outreach Mode", false)) {
+        dt.drive(left * outreachSpeed, right * outreachSpeed);
+      } else {
+        dt.drive(left, right);
+      }
     }
   }
 
@@ -107,10 +139,26 @@ public class TeleopDrive extends Command {
       right *= SmartDashboard.getNumber("Speed Slow Ratio", 0.5);
     }
 
-    if (SmartDashboard.getBoolean("Characterized Drive", true)) {
+    if (SmartDashboard.getBoolean("Gradual Drive", true)) {
+      double dV = SmartDashboard.getNumber("Gradual Drive Max dV", 0.04);
+      if (Math.abs(left - prevLeft) > dV) {
+        left = prevLeft + dV * Math.signum(left - prevLeft);
+      }
+      if (Math.abs(right - prevRight) > dV) {
+        right = prevRight + dV * Math.signum(right - prevRight);
+      }
+    }
+    prevLeft = left;
+    prevRight = right;
+
+    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
       charDrive(left, right);
     } else {
-      dt.drive(left, right);
+      if (SmartDashboard.getBoolean("Outreach Mode", false)) {
+        dt.drive(left * outreachSpeed, right * outreachSpeed);
+      } else {
+        dt.drive(left, right);
+      }
     }
   }
 
@@ -174,7 +222,11 @@ public class TeleopDrive extends Command {
     SmartDashboard.putNumber("Right Volts", rightV);
     //System.out.println("LeftV: " + leftV + ", RightV: " + rightV);
 
-    dt.drive(leftV / maxV, rightV / maxV);
+    if (SmartDashboard.getBoolean("Outreach Mode", false)) {
+      dt.drive(leftV / maxV * outreachSpeed, rightV / maxV * outreachSpeed);
+    } else {
+      dt.drive(leftV / maxV, rightV / maxV);
+    }
     dt.disableVoltageCompensation();
   }
 

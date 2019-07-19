@@ -7,26 +7,26 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class NormalDrive extends Command {
+/**
+ * Add your docs here.
+ */
+public class NormalDrive extends InstantCommand {
+  /**
+   * Add your docs here.
+   */
+  public NormalDrive() {
+    super();
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
+  }
+
+  // Called once when the command executes
+  @Override
   protected void initialize() {
-    SmartDashboard.putBoolean("Characterized Drive", false);
+    SmartDashboard.putBoolean("Characterized Drive", false); // !SmartDashboard.getBoolean("Characterized Drive", false));
   }
 
-  @Override
-  protected boolean isFinished() {
-    return false;
-  }
-
-  @Override
-  protected void end() {
-    SmartDashboard.putBoolean("Characterized Drive", true);
-  }
-
-  @Override
-  protected void interrupted() {
-    end();
-  }
 }
