@@ -1,9 +1,10 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.subsystems.Lift;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class MoveLift extends Command {
+public class MoveLift extends InstantCommand {
     private Lift lift;
     private double goal;
 
@@ -14,10 +15,7 @@ public class MoveLift extends Command {
     }
     
     protected void initialize() {
-
-    }
-
-    protected boolean isFinished() {
-        return false;
+        lift.setGoalPosition(goal);
+        SmartDashboard.putNumber("Lift Goal (in)", goal);
     }
 }
