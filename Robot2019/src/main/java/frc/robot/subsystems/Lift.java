@@ -13,7 +13,7 @@ public class Lift extends Subsystem {
     private CANPIDController controller;
     private final double ARB_FF = 0; // TODO: set to correct value 
     private static final double BOTTOM_HEIGHT = 0; // TODO: set to correct value 
-    private double lastGoal;
+    private double currentGoal;
     
     public Lift(CANSparkMax motor) {
         this.motor = motor;
@@ -25,7 +25,7 @@ public class Lift extends Subsystem {
 
     public void setGoalPosition(double position) {
         controller.setReference(position, ControlType.kPosition, 0, ARB_FF);
-        lastGoal = position;
+        currentGoal = position;
     }
 
     public void setSpeed(double speed) {
@@ -36,8 +36,8 @@ public class Lift extends Subsystem {
         return enc.getPosition();
     }
 
-    public double getLastGoal() {
-        return lastGoal;
+    public double getCurrentGoal() {
+        return currentGoal;
     }
 
     @Override
