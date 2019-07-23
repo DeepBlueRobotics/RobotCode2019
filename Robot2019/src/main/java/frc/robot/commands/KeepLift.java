@@ -4,19 +4,19 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.subsystems.Lift;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class MoveLift extends InstantCommand {
+public class KeepLift extends InstantCommand {
     private Lift lift;
-    private double goal;
+    private double position;
 
-    public MoveLift(Lift lift, double goal) {
+    public KeepLift(Lift lift) {
         this.lift = lift;
         requires(lift);
-        this.goal = goal;
+        this.position = lift.getLastGoal();
     }
-    
+
+    @Override
     protected void initialize() {
-        lift.setGoalPosition(goal);
-        SmartDashboard.putNumber("Lift Goal (in)", goal);
+        lift.setGoalPosition(position);
         SmartDashboard.putNumber("Lift Height (in)", lift.getPosition());
     }
 }

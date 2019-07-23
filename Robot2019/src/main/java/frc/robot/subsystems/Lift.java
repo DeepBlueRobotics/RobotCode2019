@@ -5,7 +5,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.KeepLift;
 
 public class Lift extends Subsystem {
     private CANSparkMax motor;
@@ -36,10 +36,13 @@ public class Lift extends Subsystem {
         return enc.getPosition();
     }
 
+    public double getLastGoal() {
+        return lastGoal;
+    }
+
     @Override
     public void initDefaultCommand() {
-        setGoalPosition(lastGoal);
-        SmartDashboard.putNumber("Lift Height (in)", getPosition());
+        setDefaultCommand(new KeepLift(this));
     }
 
     public class Position {
