@@ -15,6 +15,7 @@ import frc.robot.commands.IncreaseVoltageLinear;
 import frc.robot.commands.IncreaseVoltageStepwise;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Cargo;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchPanel;
@@ -26,6 +27,7 @@ public class Robot extends TimedRobot {
   private static HatchPanel hp;
   private static OI oi;
   private static Cargo cargo;
+  private static Intake intake;
   private static Climber climber;
   private static Lights lights;
   private static String fname1, fname2, fname3, fname4;
@@ -37,9 +39,10 @@ public class Robot extends TimedRobot {
         RobotMap.rightSlave1, RobotMap.rightSlave2, RobotMap.leftEnc, RobotMap.rightEnc, RobotMap.ahrs);
     hp = new HatchPanel(RobotMap.hatchGrabberPiston, RobotMap.hatchEjectPistons);
     cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
+    intake = new Intake(RobotMap.intakeWristMotor, RobotMap.intakeTopMotor, RobotMap.intakeSideMotor, RobotMap.intakePiston);
     climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
     lights = new Lights(RobotMap.lights);
-    oi = new OI(dt, hp, cargo, climber, lights, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
+    oi = new OI(dt, hp, intake, climber, lights, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
     fname1 = "/home/lvuser/drive_char_linear_for.csv";
     fname2 = "/home/lvuser/drive_char_stepwise_for.csv";

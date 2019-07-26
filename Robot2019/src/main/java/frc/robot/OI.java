@@ -27,7 +27,7 @@ import frc.robot.commands.ToggleClimberRails;
 import frc.robot.commands.ToggleHatchEject;
 import frc.robot.commands.ToggleLight;
 import frc.robot.commands.WobbleDrive;
-import frc.robot.subsystems.Cargo;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchPanel;
@@ -54,7 +54,7 @@ public class OI {
   JoystickButton wobbleDriveBtn;
   JoystickButton cycleLightBtn;
 
-  OI(Drivetrain dt, HatchPanel hp, Cargo cargo, Climber climber, Lights lights, UsbCamera driveCamera,
+  OI(Drivetrain dt, HatchPanel hp, Intake intake, Climber climber, Lights lights, UsbCamera driveCamera,
       UsbCamera hatchCamera, VideoSink cameraServer) {
     leftJoy = new Joystick(0);
     rightJoy = new Joystick(1);
@@ -76,14 +76,14 @@ public class OI {
     gradDriveBtn.whenPressed(new GradualDrive());
 
     hatchIntakeBtn = new JoystickButton(manipulator, Manip.X);
-    hatchIntakeBtn.whenPressed(new IntakeHatch(hp, dt));
+    hatchIntakeBtn.whenPressed(new IntakeHatch(intake, dt));
     hatchEjectBtn = new JoystickButton(manipulator, Manip.Y);
     hatchEjectBtn.whenPressed(new ToggleHatchEject(hp));
 
     cargoIntakeBtn = new JoystickButton(manipulator, Manip.A); // TODO: set ports to correct values
-    cargoIntakeBtn.whenPressed(new IntakeCargo(cargo, lights));
+    cargoIntakeBtn.whenPressed(new IntakeCargo(intake, lights));
     cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
-    cargoEjectBtn.whenPressed(new EjectCargo(cargo));
+    cargoEjectBtn.whenPressed(new EjectCargo(intake));
 
     climberRailBtn = new JoystickButton(manipulator, Manip.RB_rShoulder);
     climberRailBtn.whenPressed(new ToggleClimberRails(climber));

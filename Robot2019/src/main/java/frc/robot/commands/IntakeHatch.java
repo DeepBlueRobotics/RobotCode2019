@@ -9,13 +9,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.HatchPanel;
+import frc.robot.subsystems.Intake;
 
 public class IntakeHatch extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public IntakeHatch(HatchPanel hp, Drivetrain dt) {
+  public IntakeHatch(Intake intake, Drivetrain dt) {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -32,7 +32,7 @@ public class IntakeHatch extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new ToggleHatchIntake(hp));
+    addSequential(new IntakeHatch2(intake));
     addSequential(new WaitTime(dt, 0.25));
     addSequential(new MoveBack(dt, 0.25));
   }

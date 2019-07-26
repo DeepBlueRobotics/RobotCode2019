@@ -38,10 +38,12 @@ public class RobotMap {
   static WPI_TalonSRX leftMaster, rightMaster;
   static BaseMotorController leftSlave1, leftSlave2, rightSlave1, rightSlave2;
   static CANSparkMax liftMotor;
+  static CANSparkMax intakeWristMotor, intakeTopMotor, intakeSideMotor;
   static VictorSP climberMotor;
   static Encoder climberEncoder;
   static DoubleSolenoid climberPistons;
   static DoubleSolenoid hatchGrabberPiston, hatchEjectPistons;
+  static DoubleSolenoid intakePiston;
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
@@ -67,6 +69,13 @@ public class RobotMap {
 
     // Initialize motor on the lift 
     liftMotor = new CANSparkMax(0, CANSparkMaxLowLevel.MotorType.kBrushless); // TODO: Set ID to correct value 
+    
+    // Initialize motors and solenoid on the intake mech 
+    intakeWristMotor = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
+    intakeTopMotor = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
+    intakeSideMotor = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
+    // TODO: Set all IDs to correct values 
+    intakePiston = new DoubleSolenoid(4, 3); // TODO: Set channel numbers to correct values 
 
     // Initialize motors on the climbing mech
     climberMotor = new VictorSP(1);

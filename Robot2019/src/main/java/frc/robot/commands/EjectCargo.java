@@ -10,17 +10,18 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.Cargo;
+import frc.robot.subsystems.Intake;
+
 public class EjectCargo extends Command {
 
   final double ejectDuration = 0.5; // seconds
 
   Timer timer;
-  Cargo cargo;
+  Intake intake;
 
-  public EjectCargo(Cargo cargo) {
-    requires(cargo);
-    this.cargo = cargo;
+  public EjectCargo(Intake intake) {
+    requires(intake);
+    this.intake = intake;
     timer = new Timer();
   }
 
@@ -32,7 +33,7 @@ public class EjectCargo extends Command {
 
   @Override
   protected void execute() {
-    cargo.runEject();
+    intake.ejectCargo();
   }
 
   @Override
@@ -42,7 +43,7 @@ public class EjectCargo extends Command {
 
   @Override
   protected void end() {
-    cargo.stopIntake();
+    intake.stopRollers();
     if (isFinished()) {
       SmartDashboard.putBoolean("Has cargo", false);
     }

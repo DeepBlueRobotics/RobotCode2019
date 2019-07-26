@@ -20,7 +20,7 @@ public class Lift extends Subsystem {
         enc = motor.getEncoder();
         enc.setPositionConversionFactor(0.4 * Math.PI); // inches 
         enc.setPosition(BOTTOM_HEIGHT);
-        controller = new CANPIDController(motor);
+        controller = motor.getPIDController();
     }
 
     public void setGoalPosition(double position) {

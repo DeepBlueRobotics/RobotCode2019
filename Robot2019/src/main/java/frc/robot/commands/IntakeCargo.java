@@ -10,19 +10,19 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.Cargo;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lights;
 
 public class IntakeCargo extends Command {
   Timer timer;
-  Cargo cargo;
+  Intake intake;
   Lights lights;
   boolean overdraw;
 
-  public IntakeCargo(Cargo cargo, Lights lights) {
-    requires(cargo);
+  public IntakeCargo(Intake intake, Lights lights) {
+    requires(intake);
     requires(lights);
-    this.cargo = cargo;
+    this.intake = intake;
     this.lights = lights;
     timer = new Timer();
     overdraw = false;
@@ -36,8 +36,8 @@ public class IntakeCargo extends Command {
 
   @Override
   protected void execute() {
-    cargo.runIntake();
-    if (cargo.hasCargo()) {
+    intake.intakeCargo();
+    if (intake.hasCargo()) {
       if (!overdraw) {
         overdraw = true;
         timer.start();
@@ -57,10 +57,10 @@ public class IntakeCargo extends Command {
   @Override
   protected void end() {
     if (isFinished()) {
-      cargo.keepIntake();
+      intake.keepCargo();
       SmartDashboard.putBoolean("Has cargo", true);
     } else {
-      cargo.stopIntake();
+      intake.stopRollers();
     }
   }
 
