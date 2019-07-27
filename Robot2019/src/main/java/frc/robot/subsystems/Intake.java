@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Intake extends Subsystem {
@@ -17,12 +16,14 @@ public class Intake extends Subsystem {
     private final double HATCH_IN_SPEED = 0.5;
     private final double CARGO_CURRENT_THRESHOLD = 6.0;
     private final double HATCH_CURRENT_THRESHOLD = 6.0;
+    private State state;
 
     public Intake(CANSparkMax wrist, CANSparkMax topRoller, CANSparkMax sideRollers, DoubleSolenoid piston) {
         this.wrist = wrist;
         this.topRoller = topRoller;
         this.sideRollers = sideRollers;
         this.piston = piston;
+        state = State.NONE;
     }
 
     public void intakeCargo() {
@@ -71,10 +72,22 @@ public class Intake extends Subsystem {
 
     public void prepareCargo() {
         piston.set(DoubleSolenoid.Value.kForward);
+        setWristPosition(WristPosition.GROUND);
+        state = State.CARGO;
     }
 
     public void prepareHatch() {
         piston.set(DoubleSolenoid.Value.kReverse);
+        setWristPosition(WristPosition.DEFAULT);
+        state = State.HATCH;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     @Override
@@ -83,5 +96,11 @@ public class Intake extends Subsystem {
 
     public class WristPosition {
         static final double START = 0.75, GROUND = -0.2, DEFAULT = 0, TOP = 0.2; // TODO: set to correct values (rotations)
+    }
+
+    public enum State {
+        CARGO, 
+        HATCH, 
+        NONE
     }
 }

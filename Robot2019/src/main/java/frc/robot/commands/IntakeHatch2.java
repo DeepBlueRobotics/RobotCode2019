@@ -4,15 +4,19 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lift;
 
 public class IntakeHatch2 extends Command {
     Timer timer;
     Intake intake;
+    Lift lift;
     boolean overdraw;
 
-    public IntakeHatch2(Intake intake) {
+    public IntakeHatch2(Intake intake, Lift lift) {
         requires(intake);
+        requires(lift);
         this.intake = intake;
+        this.lift = lift;
         timer = new Timer();
         overdraw = false;
     }
@@ -20,6 +24,7 @@ public class IntakeHatch2 extends Command {
     @Override
     protected void initialize() {
         timer.reset();
+        lift.setGoalPosition(Lift.Position.HATCH_1);
         intake.prepareHatch();
     }
 

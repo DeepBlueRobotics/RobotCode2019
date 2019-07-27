@@ -44,6 +44,7 @@ public class EjectCargo extends Command {
   @Override
   protected void end() {
     intake.stopRollers();
+    intake.setState(Intake.State.NONE);
     if (isFinished()) {
       SmartDashboard.putBoolean("Has cargo", false);
     }
