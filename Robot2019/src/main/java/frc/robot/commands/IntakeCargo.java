@@ -32,6 +32,7 @@ public class IntakeCargo extends Command {
   protected void initialize() {
     timer.reset();
     lights.setLights(Lights.LightState.CARGO);
+    intake.prepareCargo();
   }
 
   @Override

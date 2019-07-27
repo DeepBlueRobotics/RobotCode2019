@@ -20,6 +20,7 @@ public class IntakeHatch2 extends Command {
     @Override
     protected void initialize() {
         timer.reset();
+        intake.prepareHatch();
     }
 
     @Override
