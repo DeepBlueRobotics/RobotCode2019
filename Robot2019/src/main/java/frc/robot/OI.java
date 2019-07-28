@@ -111,8 +111,8 @@ public class OI {
         BACK = 9, START = 10;
 
     // Front four buttons look like:
-    // Y
+    //  Y
     // X B
-    // A
+    //  A
   }
 }

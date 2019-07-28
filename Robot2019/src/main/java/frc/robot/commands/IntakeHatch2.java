@@ -18,7 +18,6 @@ public class IntakeHatch2 extends Command {
         this.intake = intake;
         this.lift = lift;
         timer = new Timer();
-        overdraw = false;
     }
 
     @Override
@@ -26,6 +25,7 @@ public class IntakeHatch2 extends Command {
         timer.reset();
         lift.setGoalPosition(Lift.Position.HATCH_1);
         intake.prepareHatch();
+        overdraw = false;
     }
 
     @Override

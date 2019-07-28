@@ -45,8 +45,7 @@ public class Lift extends Subsystem {
 
     @Override
     public void initDefaultCommand() {
-        setDefaultCommand(new KeepLift(this));
-    }
+    } // default command set to KeepLift in Robot.java 
 
     public class Position {
         public static final double HATCH_1 = 19, HATCH_2 = 47, HATCH_3 = 75, CARGO_GROUND = BOTTOM_HEIGHT, 

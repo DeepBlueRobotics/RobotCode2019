@@ -14,6 +14,7 @@ import frc.robot.commands.DrivetrainAnalysis;
 import frc.robot.commands.IncreaseVoltageLinear;
 import frc.robot.commands.IncreaseVoltageStepwise;
 import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.KeepLift;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
@@ -64,6 +65,8 @@ public class Robot extends TimedRobot {
 
     dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
     SmartDashboard.putNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);
+
+    lift.setDefaultCommand(new KeepLift(lift, intake, oi.manipulator));
 
     SmartDashboard.putBoolean("Outreach Mode", false);
     timey = new Timer();

@@ -34,7 +34,6 @@ public class IntakeHatch extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
     addSequential(new IntakeHatch2(intake, lift));
-    addSequential(new WaitTime(dt, 0.25));
     addSequential(new MoveBack(dt, 0.25));
   }
 }

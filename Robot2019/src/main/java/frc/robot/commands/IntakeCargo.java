@@ -29,7 +29,6 @@ public class IntakeCargo extends Command {
     this.lift = lift;
     this.lights = lights;
     timer = new Timer();
-    overdraw = false;
   }
 
   @Override
@@ -38,6 +37,7 @@ public class IntakeCargo extends Command {
     lift.setGoalPosition(Lift.Position.CARGO_GROUND);
     lights.setLights(Lights.LightState.CARGO);
     intake.prepareCargo();
+    overdraw = false;
   }
 
   @Override
