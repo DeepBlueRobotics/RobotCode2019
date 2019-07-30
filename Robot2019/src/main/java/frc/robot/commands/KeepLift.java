@@ -41,6 +41,7 @@ public class KeepLift extends Command {
             case 90: // right (3)
                 if (cargo) {
                     Scheduler.getInstance().add(new MoveLift(lift, Lift.Position.CARGO_3));
+                    intake.setWristPosition(Intake.WristPosition.TOP);
                 } else {
                     Scheduler.getInstance().add(new MoveLift(lift, Lift.Position.HATCH_3));
                 }

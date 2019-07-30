@@ -13,7 +13,7 @@ public class Lift extends Subsystem {
     private CANEncoder enc;
     private CANPIDController controller;
     private final double ARB_FF = 0; // TODO: set to correct value 
-    private static final double BOTTOM_HEIGHT = 0; // TODO: set to correct value 
+    private static final double BOTTOM_HEIGHT = 14; // TODO: set to correct value 
     private double currentGoal;
     
     public Lift(CANSparkMax motor, CANSparkMax motor2) {
@@ -48,7 +48,8 @@ public class Lift extends Subsystem {
     } // default command set to KeepLift in Robot.java 
 
     public class Position {
-        public static final double HATCH_1 = 19, HATCH_2 = 47, HATCH_3 = 75, CARGO_GROUND = BOTTOM_HEIGHT, 
-                CARGO_1 = 27.5, CARGO_2 = 55.5, CARGO_3 = 83.5, CARGO_SHIP = 39;
+        public static final double HATCH_1 = 19, HATCH_2 = 47, HATCH_3 = 73.25, CARGO_GROUND = BOTTOM_HEIGHT, 
+                CARGO_1 = 27.5, CARGO_2 = 55.5, CARGO_3 = 73.25, CARGO_SHIP = 39;
+        // hatch 3 is actually 75; cargo 3 is actually 83.5 
     }
 }
