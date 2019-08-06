@@ -28,6 +28,7 @@ public class KeepLift extends Command {
         boolean cargo = intake.getState() == State.CARGO;
         switch (pov) {
             case -1:
+                lift.setPIDF(SmartDashboard.getNumberArray("Lift Keep PIDF", Lift.PIDF.KEEP));
                 lift.setGoalPosition(position);
                 SmartDashboard.putNumber("Lift Height (in)", lift.getPosition());
                 break;

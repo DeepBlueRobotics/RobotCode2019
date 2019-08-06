@@ -15,6 +15,11 @@ public class MoveLift extends InstantCommand {
     }
     
     protected void initialize() {
+        if (goal > lift.getPosition()) {
+            lift.setPIDF(SmartDashboard.getNumberArray("Lift Up PIDF", Lift.PIDF.UP));
+        } else {
+            lift.setPIDF(SmartDashboard.getNumberArray("Lift Down PIDF", Lift.PIDF.DOWN));
+        }
         lift.setGoalPosition(goal);
         SmartDashboard.putNumber("Lift Goal (in)", goal);
         SmartDashboard.putNumber("Lift Height (in)", lift.getPosition());

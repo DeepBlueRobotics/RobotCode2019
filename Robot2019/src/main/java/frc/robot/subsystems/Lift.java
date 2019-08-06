@@ -12,7 +12,8 @@ public class Lift extends Subsystem {
     private CANSparkMax motor2;
     private CANEncoder enc;
     private CANPIDController controller;
-    private final double ARB_FF = 0; // TODO: set to correct value 
+    private final double ARB_FF_UP = 0; // TODO: set to correct value 
+    private final double ARB_FF_DOWN = 0; // TODO: set to correct value 
     private static final double BOTTOM_HEIGHT = 14; // TODO: set to correct value 
     private double currentGoal;
     
@@ -26,8 +27,19 @@ public class Lift extends Subsystem {
         controller = motor.getPIDController();
     }
 
+    public void setPIDF(double[] pidf) {
+        motor.getPIDController().setP(pidf[0]);
+        motor.getPIDController().setI(pidf[1]);
+        motor.getPIDController().setD(pidf[2]);
+        motor.getPIDController().setFF(pidf[3]);
+    }
+
     public void setGoalPosition(double position) {
-        controller.setReference(position, ControlType.kPosition, 0, ARB_FF);
+        if (position > getPosition()) {
+            controller.setReference(position, ControlType.kPosition, 0, ARB_FF_UP);
+        } else {
+            controller.setReference(position, ControlType.kPosition, 0, ARB_FF_DOWN);
+        }
         currentGoal = position;
     }
 
@@ -51,5 +63,11 @@ public class Lift extends Subsystem {
         public static final double HATCH_1 = 19, HATCH_2 = 47, HATCH_3 = 73.25, CARGO_GROUND = BOTTOM_HEIGHT, 
                 CARGO_1 = 27.5, CARGO_2 = 55.5, CARGO_3 = 73.25, CARGO_SHIP = 39;
         // hatch 3 is actually 75; cargo 3 is actually 83.5 
+    }
+
+    public static class PIDF {
+        public static final double[] UP = {0, 0, 0, 0};
+        public static final double[] DOWN = {0, 0, 0, 0};
+        public static final double[] KEEP = {0, 0, 0, 0};
     }
 }

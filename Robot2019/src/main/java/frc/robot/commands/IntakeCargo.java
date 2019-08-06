@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
@@ -34,7 +35,7 @@ public class IntakeCargo extends Command {
   @Override
   protected void initialize() {
     timer.reset();
-    lift.setGoalPosition(Lift.Position.CARGO_GROUND);
+    Scheduler.getInstance().add(new MoveLift(lift, Lift.Position.CARGO_GROUND));
     lights.setLights(Lights.LightState.CARGO);
     intake.prepareCargo();
     overdraw = false;
@@ -63,6 +64,8 @@ public class IntakeCargo extends Command {
   @Override
   protected void end() {
     if (isFinished()) {
+      intake.setSidePIDF(SmartDashboard.getNumberArray("Cargo Side Roller PIDF", Intake.PIDF.HATCH_SIDE));
+      intake.setTopPIDF(SmartDashboard.getNumberArray("Cargo Top Roller PIDF", Intake.PIDF.HATCH_TOP));
       intake.keepCargo();
       SmartDashboard.putBoolean("Has cargo", true);
     } else {
