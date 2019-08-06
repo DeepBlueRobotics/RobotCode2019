@@ -27,6 +27,7 @@ public class Intake extends Subsystem {
         this.piston = piston;
         setWristArbFF();
         state = State.NONE;
+        prepareSmartDashboard();
     }
 
     public void setTopPIDF(double[] pidf) {
@@ -91,12 +92,15 @@ public class Intake extends Subsystem {
 
     public void setWristPosition(double pos) {
         setWristArbFF();
+        if (pos > 0.25) {
+            wristArbFF *= -1; // always pointing up 
+        }
         wrist.getPIDController().setReference(pos, ControlType.kPosition, 2, wristArbFF); // TODO: Set pidSlot to correct value 
     }
 
     public void setWristArbFF() {
         double angle = wrist.getEncoder().getPosition() * 2 * Math.PI;
-        wristArbFF = Math.cos(angle) * SmartDashboard.getNumber("Wrist Arbitrary FF", PIDF.WRIST_FF);
+        wristArbFF = Math.abs(Math.cos(angle)) * SmartDashboard.getNumber("Wrist Arbitrary FF", PIDF.WRIST_FF);
     }
 
     public void prepareCargo() {
@@ -117,6 +121,24 @@ public class Intake extends Subsystem {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public void prepareSmartDashboard() {
+        if (!SmartDashboard.containsKey("Hatch Side Roller PIDF")) {
+            SmartDashboard.putNumberArray("Hatch Side Roller PIDF", PIDF.HATCH_SIDE);
+        }
+        if (!SmartDashboard.containsKey("Hatch Top Roller PIDF")) {
+            SmartDashboard.putNumberArray("Hatch Top Roller PIDF", PIDF.HATCH_TOP);
+        }
+        if (!SmartDashboard.containsKey("Cargo Side Roller PIDF")) {
+            SmartDashboard.putNumberArray("Cargo Side Roller PIDF", PIDF.CARGO_SIDE);
+        }
+        if (!SmartDashboard.containsKey("Cargo Top Roller PIDF")) {
+            SmartDashboard.putNumberArray("Cargo Top Roller PIDF", PIDF.CARGO_TOP);
+        }
+        if (!SmartDashboard.containsKey("Wrist Arbitrary FF")) {
+            SmartDashboard.putNumber("Wrist Arbitrary FF", PIDF.WRIST_FF);
+        }
     }
 
     @Override

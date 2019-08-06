@@ -5,6 +5,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.KeepLift;
 
 public class Lift extends Subsystem {
@@ -25,6 +26,7 @@ public class Lift extends Subsystem {
         enc.setPositionConversionFactor(0.4 * Math.PI); // inches 
         enc.setPosition(BOTTOM_HEIGHT);
         controller = motor.getPIDController();
+        prepareSmartDashboard();
     }
 
     public void setPIDF(double[] pidf) {
@@ -53,6 +55,18 @@ public class Lift extends Subsystem {
 
     public double getCurrentGoal() {
         return currentGoal;
+    }
+
+    public void prepareSmartDashboard() {
+        if (!SmartDashboard.containsKey("Lift Up PIDF")) {
+            SmartDashboard.putNumberArray("Lift Up PIDF", PIDF.UP);
+        }
+        if (!SmartDashboard.containsKey("Lift Down PIDF")) {
+            SmartDashboard.putNumberArray("Lift Down PIDF", PIDF.DOWN);
+        }
+        if (!SmartDashboard.containsKey("Lift Keep PIDF")) {
+            SmartDashboard.putNumberArray("Lift Keep PIDF", PIDF.KEEP);
+        }
     }
 
     @Override
