@@ -25,6 +25,8 @@ public class IntakeHatch2 extends Command {
     protected void initialize() {
         timer.reset();
         Scheduler.getInstance().add(new MoveLift(lift, Lift.Position.HATCH_1));
+        intake.setSidePIDF(SmartDashboard.getNumberArray("Hatch Side Roller PIDF", Intake.PIDF.HATCH_SIDE));
+        intake.setTopPIDF(SmartDashboard.getNumberArray("Hatch Top Roller PIDF", Intake.PIDF.HATCH_TOP));
         intake.prepareHatch();
         overdraw = false;
     }
@@ -52,8 +54,6 @@ public class IntakeHatch2 extends Command {
     @Override
     protected void end() {
         if (isFinished()) {
-            intake.setSidePIDF(SmartDashboard.getNumberArray("Hatch Side Roller PIDF", Intake.PIDF.HATCH_SIDE));
-            intake.setTopPIDF(SmartDashboard.getNumberArray("Hatch Top Roller PIDF", Intake.PIDF.HATCH_TOP));
             intake.keepHatch();
             SmartDashboard.putBoolean("Has Hatch", true);
         } else {

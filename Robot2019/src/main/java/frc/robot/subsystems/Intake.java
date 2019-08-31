@@ -19,6 +19,7 @@ public class Intake extends Subsystem {
     private final double HATCH_CURRENT_THRESHOLD = 6.0;
     private double wristArbFF;
     private State state;
+    private double wristGoal;
 
     public Intake(CANSparkMax wrist, CANSparkMax topRoller, CANSparkMax sideRollers, DoubleSolenoid piston) {
         this.wrist = wrist;
@@ -26,6 +27,7 @@ public class Intake extends Subsystem {
         this.sideRollers = sideRollers;
         this.piston = piston;
         setWristArbFF();
+        wrist.getEncoder().setPosition(WristPosition.START);
         state = State.NONE;
         prepareSmartDashboard();
     }
@@ -92,15 +94,21 @@ public class Intake extends Subsystem {
 
     public void setWristPosition(double pos) {
         setWristArbFF();
-        if (pos > 0.25) {
-            wristArbFF *= -1; // always pointing up 
-        }
         wrist.getPIDController().setReference(pos, ControlType.kPosition, 2, wristArbFF); // TODO: Set pidSlot to correct value 
+        wristGoal = pos;
+    }
+
+    public double getWristGoal() {
+        return wristGoal;
     }
 
     public void setWristArbFF() {
-        double angle = wrist.getEncoder().getPosition() * 2 * Math.PI;
-        wristArbFF = Math.abs(Math.cos(angle)) * SmartDashboard.getNumber("Wrist Arbitrary FF", PIDF.WRIST_FF);
+        double angle = getWristPosition() * 2 * Math.PI;
+        wristArbFF = Math.cos(angle) * SmartDashboard.getNumber("Wrist Arbitrary FF", PIDF.WRIST_FF);
+    }
+
+    public double getWristPosition() {
+        return wrist.getEncoder().getPosition();
     }
 
     public void prepareCargo() {
@@ -155,6 +163,7 @@ public class Intake extends Subsystem {
         public static final double[] CARGO_SIDE = {0, 0, 0, 0};
         public static final double[] CARGO_TOP = {0, 0, 0, 0};
         public static final double WRIST_FF = 0;
+        // TODO: Set all to reasonable/correct numbers
     }
 
     public enum State {

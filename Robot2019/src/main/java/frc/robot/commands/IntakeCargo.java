@@ -37,6 +37,8 @@ public class IntakeCargo extends Command {
     timer.reset();
     Scheduler.getInstance().add(new MoveLift(lift, Lift.Position.CARGO_GROUND));
     lights.setLights(Lights.LightState.CARGO);
+    intake.setSidePIDF(SmartDashboard.getNumberArray("Cargo Side Roller PIDF", Intake.PIDF.CARGO_SIDE));
+    intake.setTopPIDF(SmartDashboard.getNumberArray("Cargo Top Roller PIDF", Intake.PIDF.CARGO_TOP));
     intake.prepareCargo();
     overdraw = false;
   }
@@ -64,8 +66,6 @@ public class IntakeCargo extends Command {
   @Override
   protected void end() {
     if (isFinished()) {
-      intake.setSidePIDF(SmartDashboard.getNumberArray("Cargo Side Roller PIDF", Intake.PIDF.HATCH_SIDE));
-      intake.setTopPIDF(SmartDashboard.getNumberArray("Cargo Top Roller PIDF", Intake.PIDF.HATCH_TOP));
       intake.keepCargo();
       SmartDashboard.putBoolean("Has cargo", true);
     } else {

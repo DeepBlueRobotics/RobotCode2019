@@ -17,6 +17,7 @@ public class Lift extends Subsystem {
     private final double ARB_FF_DOWN = 0; // TODO: set to correct value 
     private static final double BOTTOM_HEIGHT = 14; // TODO: set to correct value 
     private double currentGoal;
+    private final double ERROR = 1; // TODO: set to correct value 
     
     public Lift(CANSparkMax motor, CANSparkMax motor2) {
         this.motor = motor;
@@ -57,6 +58,10 @@ public class Lift extends Subsystem {
         return currentGoal;
     }
 
+    public boolean liftInUse() {
+        return Math.abs(getPosition() - currentGoal) > ERROR;
+    }
+
     public void prepareSmartDashboard() {
         if (!SmartDashboard.containsKey("Lift Up PIDF")) {
             SmartDashboard.putNumberArray("Lift Up PIDF", PIDF.UP);
@@ -83,5 +88,6 @@ public class Lift extends Subsystem {
         public static final double[] UP = {0, 0, 0, 0};
         public static final double[] DOWN = {0, 0, 0, 0};
         public static final double[] KEEP = {0, 0, 0, 0};
+        // TODO: Set all to reasonable/correct numbers
     }
 }
