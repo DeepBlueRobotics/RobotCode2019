@@ -12,7 +12,7 @@ public class Intake extends Subsystem {
     private CANSparkMax topRoller;
     private CANSparkMax sideRollers;
     private DoubleSolenoid piston;
-    private final double TOP_IN_SPEED = 0.5; // TODO: set all to correct values 
+    private final double TOP_IN_SPEED = 0.5; // TODO: set all to correct values
     private final double SIDE_IN_SPEED = 0.5;
     private final double HATCH_IN_SPEED = 0.5;
     private final double CARGO_CURRENT_THRESHOLD = 6.0;
@@ -94,7 +94,8 @@ public class Intake extends Subsystem {
 
     public void setWristPosition(double pos) {
         setWristArbFF();
-        wrist.getPIDController().setReference(pos, ControlType.kPosition, 2, wristArbFF); // TODO: Set pidSlot to correct value 
+        wrist.getPIDController().setReference(pos, ControlType.kPosition, 2, wristArbFF); // TODO: Set pidSlot to
+                                                                                          // correct value
         wristGoal = pos;
     }
 
@@ -132,21 +133,12 @@ public class Intake extends Subsystem {
     }
 
     public void prepareSmartDashboard() {
-        if (!SmartDashboard.containsKey("Hatch Side Roller PIDF")) {
-            SmartDashboard.putNumberArray("Hatch Side Roller PIDF", PIDF.HATCH_SIDE);
-        }
-        if (!SmartDashboard.containsKey("Hatch Top Roller PIDF")) {
-            SmartDashboard.putNumberArray("Hatch Top Roller PIDF", PIDF.HATCH_TOP);
-        }
-        if (!SmartDashboard.containsKey("Cargo Side Roller PIDF")) {
-            SmartDashboard.putNumberArray("Cargo Side Roller PIDF", PIDF.CARGO_SIDE);
-        }
-        if (!SmartDashboard.containsKey("Cargo Top Roller PIDF")) {
-            SmartDashboard.putNumberArray("Cargo Top Roller PIDF", PIDF.CARGO_TOP);
-        }
-        if (!SmartDashboard.containsKey("Wrist Arbitrary FF")) {
-            SmartDashboard.putNumber("Wrist Arbitrary FF", PIDF.WRIST_FF);
-        }
+        SmartDashboard.putNumberArray("Hatch Side Roller PIDF", PIDF.HATCH_SIDE);
+        SmartDashboard.putNumberArray("Hatch Top Roller PIDF", PIDF.HATCH_TOP);
+        SmartDashboard.putNumberArray("Cargo Side Roller PIDF", PIDF.CARGO_SIDE);
+        SmartDashboard.putNumberArray("Cargo Top Roller PIDF", PIDF.CARGO_TOP);
+        SmartDashboard.putNumber("Wrist Arbitrary FF", PIDF.WRIST_FF);
+        // only called when robot code starts up
     }
 
     @Override
@@ -154,21 +146,20 @@ public class Intake extends Subsystem {
     }
 
     public class WristPosition {
-        public static final double START = 0.75, GROUND = -0.2, DEFAULT = 0, TOP = 0.2; // TODO: set to correct values (rotations)
+        public static final double START = 0.75, GROUND = -0.2, DEFAULT = 0, TOP = 0.2; // TODO: set to correct values
+                                                                                        // (rotations)
     }
 
     public static class PIDF {
-        public static final double[] HATCH_SIDE = {0, 0, 0, 0};
-        public static final double[] HATCH_TOP = {0, 0, 0, 0};
-        public static final double[] CARGO_SIDE = {0, 0, 0, 0};
-        public static final double[] CARGO_TOP = {0, 0, 0, 0};
+        public static final double[] HATCH_SIDE = { 0.5, 0, 0, 0 };
+        public static final double[] HATCH_TOP = { 0.5, 0, 0, 0 };
+        public static final double[] CARGO_SIDE = { 0.5, 0, 0, 0 };
+        public static final double[] CARGO_TOP = { 0.5, 0, 0, 0 };
         public static final double WRIST_FF = 0;
         // TODO: Set all to reasonable/correct numbers
     }
 
     public enum State {
-        CARGO, 
-        HATCH, 
-        NONE
+        CARGO, HATCH, NONE
     }
 }

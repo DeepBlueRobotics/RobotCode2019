@@ -13,18 +13,18 @@ public class Lift extends Subsystem {
     private CANSparkMax motor2;
     private CANEncoder enc;
     private CANPIDController controller;
-    private final double ARB_FF_UP = 0; // TODO: set to correct value 
-    private final double ARB_FF_DOWN = 0; // TODO: set to correct value 
-    private static final double BOTTOM_HEIGHT = 14; // TODO: set to correct value 
+    private final double ARB_FF_UP = 0; // TODO: set to correct value
+    private final double ARB_FF_DOWN = 0; // TODO: set to correct value
+    private static final double BOTTOM_HEIGHT = 14; // TODO: set to correct value
     private double currentGoal;
-    private final double ERROR = 1; // TODO: set to correct value 
-    
+    private final double ERROR = 1; // TODO: set to correct value
+
     public Lift(CANSparkMax motor, CANSparkMax motor2) {
         this.motor = motor;
         this.motor2 = motor2;
         motor2.follow(motor);
         enc = motor.getEncoder();
-        enc.setPositionConversionFactor(0.4 * Math.PI); // inches 
+        enc.setPositionConversionFactor(0.4 * Math.PI); // inches
         enc.setPosition(BOTTOM_HEIGHT);
         controller = motor.getPIDController();
         prepareSmartDashboard();
@@ -63,31 +63,26 @@ public class Lift extends Subsystem {
     }
 
     public void prepareSmartDashboard() {
-        if (!SmartDashboard.containsKey("Lift Up PIDF")) {
-            SmartDashboard.putNumberArray("Lift Up PIDF", PIDF.UP);
-        }
-        if (!SmartDashboard.containsKey("Lift Down PIDF")) {
-            SmartDashboard.putNumberArray("Lift Down PIDF", PIDF.DOWN);
-        }
-        if (!SmartDashboard.containsKey("Lift Keep PIDF")) {
-            SmartDashboard.putNumberArray("Lift Keep PIDF", PIDF.KEEP);
-        }
+        SmartDashboard.putNumberArray("Lift Up PIDF", PIDF.UP);
+        SmartDashboard.putNumberArray("Lift Down PIDF", PIDF.DOWN);
+        SmartDashboard.putNumberArray("Lift Keep PIDF", PIDF.KEEP);
+        // only called when robot code starts up
     }
 
     @Override
     public void initDefaultCommand() {
-    } // default command set to KeepLift in Robot.java 
+    } // default command set to KeepLift in Robot.java
 
     public class Position {
-        public static final double HATCH_1 = 19, HATCH_2 = 47, HATCH_3 = 73.25, CARGO_GROUND = BOTTOM_HEIGHT, 
+        public static final double HATCH_1 = 19, HATCH_2 = 47, HATCH_3 = 73.25, CARGO_GROUND = BOTTOM_HEIGHT,
                 CARGO_1 = 27.5, CARGO_2 = 55.5, CARGO_3 = 73.25, CARGO_SHIP = 39;
-        // hatch 3 is actually 75; cargo 3 is actually 83.5 
+        // hatch 3 is actually 75; cargo 3 is actually 83.5
     }
 
     public static class PIDF {
-        public static final double[] UP = {0, 0, 0, 0};
-        public static final double[] DOWN = {0, 0, 0, 0};
-        public static final double[] KEEP = {0, 0, 0, 0};
+        public static final double[] UP = { 0.5, 0, 0, 0 };
+        public static final double[] DOWN = { 0.5, 0, 0, 0 };
+        public static final double[] KEEP = { 0.5, 0, 0, 0 };
         // TODO: Set all to reasonable/correct numbers
     }
 }
