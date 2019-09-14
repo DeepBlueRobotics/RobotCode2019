@@ -25,32 +25,34 @@ public class Robot extends TimedRobot {
   private static OI oi;
   private static Cargo cargo;
   private static Climber climber;
-  private static String fname1, fname2, fname3, fname4;
 
   @Override
   public void robotInit() {
+    String[] in_files = {"/home/lvuser/drive_char_linear_for.csv", "/home/lvuser/drive_char_stepwise_for.csv",
+                       "/home/lvuser/drive_char_linear_back.csv", "/home/lvuser/drive_char_stepwise_back.csv"};
+    String outfile = "/home/lvuser/drive_char_params.csv";
+
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
-        RobotMap.rightSlave1, RobotMap.rightSlave2, RobotMap.leftEnc, RobotMap.rightEnc, RobotMap.ahrs);
+        RobotMap.rightSlave1, RobotMap.rightSlave2, RobotMap.leftEnc, RobotMap.rightEnc, RobotMap.ahrs, outfile);
     hp = new HatchPanel(RobotMap.hatchPistons);
     cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
     climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
 
     oi = new OI(dt, hp, cargo, climber, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
-    fname1 = "/home/lvuser/drive_char_linear_for.csv";
-    fname2 = "/home/lvuser/drive_char_stepwise_for.csv";
-    fname3 = "/home/lvuser/drive_char_linear_back.csv";
-    fname4 = "/home/lvuser/drive_char_stepwise_back.csv";
-    IncreaseVoltageLinear ivlf = new IncreaseVoltageLinear(dt, 0.25 / 50, 6.0, fname1, "forward");
-    IncreaseVoltageStepwise ivsf = new IncreaseVoltageStepwise(dt, 0.25 / 50, 6.0, fname2, "forward");
-    IncreaseVoltageLinear ivlb = new IncreaseVoltageLinear(dt, 0.25 / 50, 6.0, fname3, "backward");
-    IncreaseVoltageStepwise ivsb = new IncreaseVoltageStepwise(dt, 0.25 / 50, 6.0, fname4, "backward");
-    DrivetrainAnalysis dca = new DrivetrainAnalysis(dt);
+    double step = 0.25 / 50;
+    double voltageStep = 6.0;
+
+    IncreaseVoltageLinear ivlf = new IncreaseVoltageLinear(dt, step, voltageStep, in_files[0], "forward");
+    IncreaseVoltageStepwise ivsf = new IncreaseVoltageStepwise(dt, step, voltageStep, in_files[1], "forward");
+    IncreaseVoltageLinear ivlb = new IncreaseVoltageLinear(dt, step, voltageStep, in_files[2], "backward");
+    IncreaseVoltageStepwise ivsb = new IncreaseVoltageStepwise(dt, step, voltageStep, in_files[3], "backward");
+    DrivetrainAnalysis da = new DrivetrainAnalysis(dt, in_files, outfile);
     SmartDashboard.putData("Increase Voltage Linearly Forward", ivlf);
     SmartDashboard.putData("Increase Voltage Stepwise Forward", ivsf);
     SmartDashboard.putData("Increase Voltage Linearly Backward", ivlb);
     SmartDashboard.putData("Increase Voltage Stepwise Backward", ivsb);
-    SmartDashboard.putData("Drivetrain Characterization Analysis", dca);
+    SmartDashboard.putData("Drivetrain Characterization Analysis", da);
 
     dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
     SmartDashboard.putNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);

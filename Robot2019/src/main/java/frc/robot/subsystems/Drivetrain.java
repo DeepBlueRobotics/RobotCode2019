@@ -42,7 +42,7 @@ public class Drivetrain extends Subsystem {
 
   public Drivetrain(WPI_TalonSRX leftMaster, BaseMotorController leftSlave1, BaseMotorController leftSlave2,
       WPI_TalonSRX rightMaster, BaseMotorController rightSlave1, BaseMotorController rightSlave2, Encoder leftEnc,
-      Encoder rightEnc, AHRS ahrs) {
+      Encoder rightEnc, AHRS ahrs, String filename) {
 
     leftSlave1.follow(leftMaster);
     leftSlave2.follow(leftMaster);
@@ -67,7 +67,7 @@ public class Drivetrain extends Subsystem {
     rightEnc.reset();
 
     this.ahrs = ahrs;
-    updateDrivetrainParameters();
+    updateDrivetrainParameters(filename);
 
     maxVoltage = 12.0;
   }
@@ -158,9 +158,9 @@ public class Drivetrain extends Subsystem {
     rightMaster.enableVoltageCompensation(false);
   }
 
-  public void updateDrivetrainParameters() {
+  public void updateDrivetrainParameters(String filename) {
     try {
-      Scanner filereader = new Scanner(new File("/home/lvuser/drive_char_params.csv"));
+      Scanner filereader = new Scanner(new File(filename));
       String line = filereader.next();
       // Forward-Left
       flKV = Double.valueOf(line.split(",")[0]);

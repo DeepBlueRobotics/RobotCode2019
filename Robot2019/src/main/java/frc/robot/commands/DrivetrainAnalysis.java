@@ -11,25 +11,23 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.DrivetrainCharAnalysis;
+import frc.robot.lib.CharacterizationAnalysis;
 import frc.robot.subsystems.Drivetrain;
 
 public class DrivetrainAnalysis extends Command {
     Drivetrain dt;
-    String file1, file2, file3, file4, outfile;
+    String[] in_files;
+    String outfile;
   /**
    * Handles all the teleoperated driving functionality
    * 
    * @param dt the Drivetrain object to use, passing it in is useful for testing
    *           purposes
    */
-  public DrivetrainAnalysis(Drivetrain dt) {
+  public DrivetrainAnalysis(Drivetrain dt, String[] in_files, String outfile) {
     this.dt = dt;
-    file1 = "/home/lvuser/drive_char_linear_for.csv";
-    file2 = "/home/lvuser/drive_char_stepwise_for.csv";
-    file3 = "/home/lvuser/drive_char_linear_back.csv";
-    file4 = "/home/lvuser/drive_char_stepwise_back.csv";
-    outfile = "/home/lvuser/drive_char_params.csv";
+    this.in_files = in_files;
+    this.outfile = outfile;
   }
 
   @Override
@@ -40,10 +38,9 @@ public class DrivetrainAnalysis extends Command {
     } catch (FileNotFoundException f) {
         f.printStackTrace();
     }
-    DrivetrainCharAnalysis.ordinaryLeastSquares(file1, file2, outfile);
-    DrivetrainCharAnalysis.ordinaryLeastSquares(file3, file4, outfile);
+    CharacterizationAnalysis.characterize(in_files, outfile);
     System.out.println("Drivetrain Characterization Analysis Successful. All data has been dumped into " + outfile);
-    dt.updateDrivetrainParameters();
+    dt.updateDrivetrainParameters(outfile);
   }
 
   @Override

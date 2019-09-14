@@ -1,11 +1,11 @@
 package frc.robot.commands;
 
-import frc.robot.commands.DrivetrainCharacterization;
+import frc.robot.commands.DrivetrainCharCommand;
 import frc.robot.subsystems.Drivetrain;
 
 /* Command which supplies the motors with a desired voltage that increases linearly.
 */
-public class IncreaseVoltageStepwise extends DrivetrainCharacterization {
+public class IncreaseVoltageStepwise extends DrivetrainCharCommand {
     String direction;
 
     public IncreaseVoltageStepwise(Drivetrain dt, double voltStep, double stepwiseVoltage, String filename, String dir) {
