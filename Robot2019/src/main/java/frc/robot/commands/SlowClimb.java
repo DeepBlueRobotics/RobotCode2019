@@ -7,32 +7,39 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
-import frc.robot.subsystems.HatchPanel;
+import edu.wpi.first.wpilibj.command.Command;
 
-public class SetHatch extends InstantCommand {
-  private HatchPanel hp;
-  private String state;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-  public SetHatch(HatchPanel hp, String state) {
+/**
+ * Add your docs here.
+ */
+public class SlowClimb extends Command {
+  /**
+   * Add your docs here.
+   */
+  public SlowClimb() {
     super();
-    requires(hp);
-    this.state = state;
-    this.hp = hp;
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
   }
 
   // Called once when the command executes
   @Override
   protected void initialize() {
-    if ("IN".equals(state)) {
-      hp.setIn();
-      return;
-    }
-    if ("OUT".equals(state)) {
-      hp.setOut();
-      return;
-    }
-    System.out.println("Failed: bug in SetHatch");
+    SmartDashboard.putBoolean("Slow Climb", true);
   }
 
+  @Override
+  protected void end() {
+    SmartDashboard.putBoolean("Slow Climb", false);
+  }
+
+  @Override
+  protected void interrupted() {
+    end();
+  }
+  
+  @Override
+  protected boolean isFinished() { return false; }
 }

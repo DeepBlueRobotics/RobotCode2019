@@ -11,18 +11,27 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.commands.ActuateClimberRails;
-import frc.robot.commands.NormalDrive;
 import frc.robot.commands.Climb;
 import frc.robot.commands.EjectCargo;
-import frc.robot.commands.IntakeOnlyCargo;
+import frc.robot.commands.GradualDrive;
+import frc.robot.commands.IntakeCargo;
+import frc.robot.commands.IntakeHatch;
+import frc.robot.commands.ManualClimb;
+import frc.robot.commands.NormalDrive;
+import frc.robot.commands.SlowClimb;
+import frc.robot.commands.ResetWobble;
+import frc.robot.commands.SetArcadeOrTank;
 import frc.robot.commands.SlowDrive;
 import frc.robot.commands.ToggleCamera;
-import frc.robot.commands.ToggleHatch;
+import frc.robot.commands.ToggleClimberRails;
+import frc.robot.commands.ToggleHatchEject;
+import frc.robot.commands.ToggleLight;
+import frc.robot.commands.WobbleDrive;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchPanel;
+import frc.robot.subsystems.Lights;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -32,15 +41,21 @@ public class OI {
   Joystick leftJoy, rightJoy, manipulator;
 
   JoystickButton leftSlowBtn, rightSlowBtn;
+  JoystickButton arcadeOrTankBtn;
   JoystickButton normDriveBtn;
-  JoystickButton toggleHatchBtn;
+  JoystickButton gradDriveBtn;
+  JoystickButton hatchIntakeBtn, hatchEjectBtn;
   JoystickButton cargoIntakeBtn, cargoEjectBtn;
   JoystickButton climberRailBtn;
-  JoystickButton climbBtn;
+  JoystickButton autoClimbBtn;
+  JoystickButton manualClimbBtn;
+  JoystickButton slowClimbBtn;
   JoystickButton toggleCameraBtn;
+  JoystickButton wobbleDriveBtn;
+  JoystickButton cycleLightBtn;
 
-  OI(Drivetrain dt, HatchPanel hp, Cargo cargo, Climber climber, UsbCamera driveCamera, UsbCamera hatchCamera,
-      VideoSink cameraServer) {
+  OI(Drivetrain dt, HatchPanel hp, Cargo cargo, Climber climber, Lights lights, UsbCamera driveCamera,
+      UsbCamera hatchCamera, VideoSink cameraServer) {
     leftJoy = new Joystick(0);
     rightJoy = new Joystick(1);
     manipulator = new Joystick(2);
@@ -49,26 +64,45 @@ public class OI {
     leftSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.LEFT));
     rightSlowBtn = new JoystickButton(rightJoy, 1);
     rightSlowBtn.whileHeld(new SlowDrive(SlowDrive.Side.RIGHT));
+    wobbleDriveBtn = new JoystickButton(rightJoy, 4); // TODO: confirm button with drivers
+    wobbleDriveBtn.whenPressed(new WobbleDrive(dt));
+    wobbleDriveBtn.whenReleased(new ResetWobble(dt));
 
+    arcadeOrTankBtn = new JoystickButton(leftJoy, 4);
+    arcadeOrTankBtn.whenPressed(new SetArcadeOrTank());
     normDriveBtn = new JoystickButton(leftJoy, 3);
-    normDriveBtn.whileHeld(new NormalDrive());
+    normDriveBtn.whenPressed(new NormalDrive());
+    gradDriveBtn = new JoystickButton(leftJoy, 5);
+    gradDriveBtn.whenPressed(new GradualDrive());
 
-    toggleHatchBtn = new JoystickButton(manipulator, Manip.X); // TODO: set ports to correct values
-    toggleHatchBtn.whenPressed(new ToggleHatch(hp));
+    hatchIntakeBtn = new JoystickButton(manipulator, Manip.X);
+    hatchIntakeBtn.whenPressed(new IntakeHatch(hp, dt));
+    hatchEjectBtn = new JoystickButton(manipulator, Manip.Y);
+    hatchEjectBtn.whenPressed(new ToggleHatchEject(hp));
 
     cargoIntakeBtn = new JoystickButton(manipulator, Manip.A); // TODO: set ports to correct values
-    cargoIntakeBtn.whenPressed(new IntakeOnlyCargo(cargo, hp, dt));
+    cargoIntakeBtn.whenPressed(new IntakeCargo(cargo, lights));
     cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
     cargoEjectBtn.whenPressed(new EjectCargo(cargo));
 
-    climberRailBtn = new JoystickButton(manipulator, Manip.LB_lShoulder); // TODO: confirm button number
-    climberRailBtn.whenPressed(new ActuateClimberRails(climber));
+    climberRailBtn = new JoystickButton(manipulator, Manip.RB_rShoulder);
+    climberRailBtn.whenPressed(new ToggleClimberRails(climber));
 
-    climbBtn = new JoystickButton(manipulator, Manip.Y); // TODO: confirm button number
-    climbBtn.whenPressed(new Climb(climber, dt, leftJoy));
+    autoClimbBtn = new JoystickButton(manipulator, Manip.LT_lTrigger);
+    autoClimbBtn.toggleWhenPressed(new Climb(climber, dt, leftJoy, lights));
+
+    manualClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
+    manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, manipulator, lights));
+
+
+    slowClimbBtn = new JoystickButton(manipulator, Manip.LB_lShoulder);
+    slowClimbBtn.whileHeld(new SlowClimb());
 
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
+
+    cycleLightBtn = new JoystickButton(manipulator, Manip.START);
+    cycleLightBtn.whenPressed(new ToggleLight(lights));
   }
 
   private class Manip {

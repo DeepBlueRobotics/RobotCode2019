@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.KeepClimber;
 
 public class Climber extends Subsystem {
@@ -22,9 +23,9 @@ public class Climber extends Subsystem {
   private DoubleSolenoid pistons;
 
   final private double minTilt = 0; // In degrees // TODO: Update wtih actual number
-  final private double minDist = 13; // In inches // TODO: Update with actual number
+  final private double minDist = 20; // In inches // TODO: Update with actual number
   final private double maxTilt = 30; // In degrees // TODO: Update with actual number
-  final private double maxDist = 15; // In inches // TODO: Update with actual number
+  final private double maxDist = 24; // In inches // TODO: Update with actual number
   final private double slipTolerance = 0.5; // In inches // TODO: Update with actual number;
 
   public Climber(VictorSP motor, Encoder enc, AHRS ahrs, DoubleSolenoid pistons) {
@@ -33,14 +34,21 @@ public class Climber extends Subsystem {
     this.ahrs = ahrs;
     this.pistons = pistons;
 
-    double pulseFraction = 1.0/256;
+    double pulseFraction = 1.0 / 256;
     double pitchDiameter = 1.790; // https://www.vexrobotics.com/35-sprockets.html#Drawing
     enc.setDistancePerPulse(pulseFraction * Math.PI * pitchDiameter);
+    enc.setReverseDirection(true);
     enc.reset();
   }
 
-  public void actuateRails() {
-    pistons.set(DoubleSolenoid.Value.kForward);
+  public void toggleRails() {
+    if (!SmartDashboard.getBoolean("Outreach Mode", false)) {
+      if (pistons.get() == DoubleSolenoid.Value.kForward) {
+        pistons.set(DoubleSolenoid.Value.kReverse);
+      } else {
+        pistons.set(DoubleSolenoid.Value.kForward);
+      }
+    }
   }
 
   public void runClimber(double speed) {
@@ -51,17 +59,17 @@ public class Climber extends Subsystem {
     motor.stopMotor();
   }
 
+  public double getAngle() {
+    return ahrs.getPitch();
+  }
+
   //We are erring on the side of changing directions too much
   public boolean needToClimb() {
-    double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
-    angle *= 180 / Math.PI;
-    return angle < maxTilt && enc.getDistance() < maxDist;
+    return getAngle() < maxTilt && enc.getDistance() < maxDist;
   }
 
   public boolean canDrop() {
-    double angle = Math.atan2(ahrs.getRawAccelZ(), ahrs.getRawAccelX());
-    angle *= 180 / Math.PI;
-    return angle > minTilt && enc.getDistance() > minDist;
+    return getAngle() > minTilt && enc.getDistance() > minDist;
   }
 
   public double getEncDistance() {

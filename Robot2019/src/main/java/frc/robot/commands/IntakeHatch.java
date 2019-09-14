@@ -8,15 +8,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchPanel;
 
-public class IntakeOnlyCargo extends CommandGroup {
+public class IntakeHatch extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public IntakeOnlyCargo(Cargo cg, HatchPanel hp, Drivetrain dt) {
+  public IntakeHatch(HatchPanel hp, Drivetrain dt) {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -33,9 +32,8 @@ public class IntakeOnlyCargo extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addParallel(new SetHatch(hp, "OUT"));
-    addSequential(new IntakeCargo(cg));
-    addSequential(new WaitMove(dt));
-    addSequential(new SetHatch(hp, "IN"));
+    addSequential(new ToggleHatchIntake(hp));
+    addSequential(new WaitTime(dt, 0.25));
+    addSequential(new MoveBack(dt, 0.25));
   }
 }

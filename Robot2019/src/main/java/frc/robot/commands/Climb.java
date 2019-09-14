@@ -8,30 +8,36 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Climb extends Command {
   private Climber climber;
   private Drivetrain dt;
+  private Lights lights;
   private Joystick dtJoy;
   private State state;
 
   private final double backDrive = -0.5; // TODO: Set this to reasonable/tested value;
-  private final double climbUp = 0.5; // TODO: Set this to reasonable/tested value;
-  private final double climbDown = -0.5; // TODO: Set this to reasonable/tested value;
-  private final double retract = -0.5; // TODO: Set this to reasonable/tested value;
+  private final double climbUp = 1;
+  private final double climbDown = -1;
+  private final double retract = 0.25;
   private final double overrideThreshold = 0.1; // TODO: Set this to reasonable/tested value;
-  private final double retractGoal = 0; // TODO: Set this to reasonable/tested value;
+  private final double retractGoal = 15; // This only needs to be off the ground. Climb is 19 inches.
+  private final double offGroundHeight = 10;
 
-  public Climb(Climber climber, Drivetrain dt, Joystick joy) {
+  public Climb(Climber climber, Drivetrain dt, Joystick joy, Lights lights) {
     // Use requires() here to declare subsystem dependencies
     this.climber = climber;
     this.dt = dt;
+    this.lights = lights;
     dtJoy = joy;
     requires(climber);
     requires(dt);
+    requires(lights);
   }
 
   // Called just before this Command runs the first time
@@ -39,38 +45,41 @@ public class Climb extends Command {
   protected void initialize() {
     state = State.CLIMBING;
     climber.resetEncoder();
+    lights.setLights(Lights.LightState.HATCH);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    switch (state) {
-    case CLIMBING:
-      dt.drive(backDrive, backDrive);
-      climber.runClimber(climbUp);
-      if (!climber.needToClimb()) {
-        state = State.LEVELING;
+    if (!SmartDashboard.getBoolean("Outreach Mode", false)) {
+      switch (state) {
+      case CLIMBING:
+        dt.drive(backDrive, backDrive);
+        climber.runClimber(climbUp);
+        if (!climber.needToClimb()) {
+          state = State.LEVELING;
+        }
+        if (robotOnPlatform())
+          state = State.RETRACTING;
+        break;
+      case LEVELING:
+        dt.drive(backDrive, backDrive);
+        climber.runClimber(climbDown);
+        if (!climber.canDrop()) {
+          state = State.CLIMBING;
+        }
+        if (robotOnPlatform())
+          state = State.RETRACTING;
+        break;
+      case RETRACTING:
+        climber.runClimber(retract);
+        if (climber.getEncDistance() <= retractGoal) {
+          state = State.FINISHED;
+        }
+        break;
+      case FINISHED:
+        end();
       }
-      if (robotOnPlatform())
-        state = State.RETRACTING;
-      break;
-    case LEVELING:
-      dt.drive(backDrive, backDrive);
-      climber.runClimber(climbDown);
-      if (!climber.canDrop()) {
-        state = State.CLIMBING;
-      }
-      if (robotOnPlatform())
-        state = State.RETRACTING;
-      break;
-    case RETRACTING:
-      climber.runClimber(retract);
-      if (climber.getEncDistance() <= retractGoal) {
-        state = State.FINISHED;
-      }
-      break;
-    case FINISHED:
-      end();
     }
   }
 
@@ -102,7 +111,7 @@ public class Climb extends Command {
    *         overriding the climb
    */
   private boolean robotOnPlatform() {
-    return dt.isStalled() || Math.abs(dtJoy.getY()) > overrideThreshold;
+    return (dt.isStalled() && climber.getEncDistance() > offGroundHeight) || Math.abs(dtJoy.getY()) > overrideThreshold;
   }
 
   private enum State {

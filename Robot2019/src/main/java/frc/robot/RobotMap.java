@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
 
@@ -37,10 +38,11 @@ public class RobotMap {
   static VictorSP climberMotor;
   static Encoder climberEncoder;
   static DoubleSolenoid climberPistons;
-  static DoubleSolenoid hatchPistons;
+  static DoubleSolenoid hatchGrabberPiston, hatchEjectPistons;
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
+  static Relay lights;
   static AHRS ahrs;
   static PowerDistributionPanel pdp;
   static UsbCamera driveCamera, hatchCamera;
@@ -63,16 +65,20 @@ public class RobotMap {
     // Initialize motors on the climbing mech
     climberMotor = new VictorSP(1);
     climberEncoder = new Encoder(new DigitalInput(4), new DigitalInput(5));
-    climberPistons = new DoubleSolenoid(6, 1);
+    climberPistons = new DoubleSolenoid(5, 2);
 
     // Initialize motors on the cargo mech
     cargoRoller = new VictorSP(0);
 
     // Initialize solenoid on hatch panel mech
-    hatchPistons = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse
+    hatchGrabberPiston = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse
+    hatchEjectPistons = new DoubleSolenoid(6, 1);
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
+
+    // Initialize lights
+    lights = new Relay(0); // TODO: Set this to correct port
 
     ahrs = new AHRS(SPI.Port.kMXP);
     pdp = new PowerDistributionPanel();
@@ -83,7 +89,7 @@ public class RobotMap {
     cameraServer = CameraServer.getInstance().getServer();
     cameraServer.setSource(driveCamera);
 
-    cargoPDPPort = 5; // TODO: set ports to actual cargo motor port in pdp
+    cargoPDPPort = 11;
     climberPDPPort = 3;
   }
 
@@ -115,7 +121,7 @@ public class RobotMap {
     catchError(tsrx.configPeakCurrentLimit(0, 0));
     catchError(tsrx.configPeakCurrentDuration(0, 0));
     // 40 Amps is the amp limit of a CIM. lThe PDP has 40 amp circuit breakers,
-    catchError(tsrx.configContinuousCurrentLimit(40, 0));
+    catchError(tsrx.configContinuousCurrentLimit(30, 0));
     tsrx.enableCurrentLimit(true);
     catchError(tsrx.configNeutralDeadband(0.001, 10));
     tsrx.setNeutralMode(NeutralMode.Brake);
@@ -156,9 +162,13 @@ public class RobotMap {
 
   /**
    * Checks an error code and prints it to standard out if it is not ok
+   * 
    * @param ec The error code to check
    */
-  private static void catchError(ErrorCode ec) {
-    if(ec != ErrorCode.OK) System.out.println("Error configuring in RobotMap.java at line: " + new Throwable().getStackTrace()[1].getLineNumber());
+  public static void catchError(ErrorCode ec) {
+    if(ec != ErrorCode.OK) {
+      System.out.println("Error configuring in RobotMap.java at line: " + new Throwable().getStackTrace()[1].getLineNumber());
+      System.out.println(ec.toString());
+    }  
   }
 }

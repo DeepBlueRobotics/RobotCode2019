@@ -18,6 +18,8 @@ import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchPanel;
+import frc.robot.subsystems.Lights;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends TimedRobot {
   private static Drivetrain dt;
@@ -25,6 +27,8 @@ public class Robot extends TimedRobot {
   private static OI oi;
   private static Cargo cargo;
   private static Climber climber;
+  private static Lights lights;
+  private static Timer timey;
 
   @Override
   public void robotInit() {
@@ -34,11 +38,11 @@ public class Robot extends TimedRobot {
 
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
         RobotMap.rightSlave1, RobotMap.rightSlave2, RobotMap.leftEnc, RobotMap.rightEnc, RobotMap.ahrs, outfile);
-    hp = new HatchPanel(RobotMap.hatchPistons);
+    hp = new HatchPanel(RobotMap.hatchGrabberPiston, RobotMap.hatchEjectPistons);
     cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
     climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
-
-    oi = new OI(dt, hp, cargo, climber, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
+    lights = new Lights(RobotMap.lights);
+    oi = new OI(dt, hp, cargo, climber, lights, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
 
     double step = 0.25 / 50;
     double voltageStep = 6.0;
@@ -56,6 +60,9 @@ public class Robot extends TimedRobot {
 
     dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
     SmartDashboard.putNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);
+
+    SmartDashboard.putBoolean("Outreach Mode", false);
+    timey = new Timer();
   }
 
   /**
@@ -83,15 +90,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    timey.reset();
+    timey.start();
+    hp.grab();
   }
 
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
+
+    SmartDashboard.putNumber("Time left", (int) (15 - timey.get() + 1));
   }
 
   @Override
   public void teleopInit() {
+    timey.reset();
+    timey.start();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -101,6 +115,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+
+    SmartDashboard.putNumber("Time left", (int) (135 - timey.get() + 1));
   }
 
   @Override

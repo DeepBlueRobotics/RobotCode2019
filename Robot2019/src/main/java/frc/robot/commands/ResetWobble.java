@@ -8,25 +8,27 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  * Add your docs here.
  */
-public class NormalDrive extends InstantCommand {
+public class ResetWobble extends InstantCommand {
   /**
    * Add your docs here.
    */
-  public NormalDrive() {
+  Drivetrain dt;
+  public ResetWobble(Drivetrain dt) {
     super();
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    this.dt = dt;
   }
 
   // Called once when the command executes
   @Override
   protected void initialize() {
-    SmartDashboard.putBoolean("Characterized Drive", false); // !SmartDashboard.getBoolean("Characterized Drive", false));
+    dt.setWobbleDone(true);
   }
 
 }

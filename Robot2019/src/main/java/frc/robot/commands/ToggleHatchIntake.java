@@ -8,25 +8,29 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.HatchPanel;
 
-/**
- * Add your docs here.
- */
-public class NormalDrive extends InstantCommand {
+public class ToggleHatchIntake extends InstantCommand {
+  private HatchPanel hp;
+
   /**
-   * Add your docs here.
+   * Toggles the grabbing piston of the hatch mechanism
    */
-  public NormalDrive() {
-    super();
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+  public ToggleHatchIntake(HatchPanel hp) {
+    requires(hp);
+    this.hp = hp;
   }
 
-  // Called once when the command executes
   @Override
   protected void initialize() {
-    SmartDashboard.putBoolean("Characterized Drive", false); // !SmartDashboard.getBoolean("Characterized Drive", false));
+    switch(hp.state) {
+      case EJECTING:
+      case DEFAULT:
+        hp.grab();
+        break;
+      case GRABBING:
+        hp.reset();
+        break;
+    }
   }
-
 }

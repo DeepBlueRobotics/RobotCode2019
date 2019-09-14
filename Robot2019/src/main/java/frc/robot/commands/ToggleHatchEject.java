@@ -10,20 +10,27 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.subsystems.HatchPanel;
 
-public class ToggleHatch extends InstantCommand {
+public class ToggleHatchEject extends InstantCommand {
   private HatchPanel hp;
 
-  public ToggleHatch(HatchPanel hp) {
-    super();
+  /**
+   * Toggles the eject pistons of the hatch panel mechanism, also closes the
+   * grabbing piston when ejecting
+   */
+  public ToggleHatchEject(HatchPanel hp) {
     requires(hp);
-
     this.hp = hp;
   }
 
-  // Called once when the command executes
   @Override
   protected void initialize() {
-    hp.toggle();
+    // If the pistons are currently extend them, retract them back, otherwise
+    // release and then eject
+    if (hp.state == HatchPanel.State.EJECTING) {
+      hp.reset();
+    } else {
+      hp.reset();
+      hp.eject();
+    }
   }
-
 }
