@@ -19,6 +19,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchPanel;
 import frc.robot.subsystems.Lights;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends TimedRobot {
   private static Drivetrain dt;
@@ -28,6 +29,7 @@ public class Robot extends TimedRobot {
   private static Climber climber;
   private static Lights lights;
   private static String fname1, fname2, fname3, fname4;
+  private static Timer timey;
 
   @Override
   public void robotInit() {
@@ -56,6 +58,9 @@ public class Robot extends TimedRobot {
 
     dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
     SmartDashboard.putNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);
+
+    SmartDashboard.putBoolean("Outreach Mode", false);
+    timey = new Timer();
   }
 
   /**
@@ -83,15 +88,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    timey.reset();
+    timey.start();
+    hp.grab();
   }
 
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
+
+    SmartDashboard.putNumber("Time left", (int) (15 - timey.get() + 1));
   }
 
   @Override
   public void teleopInit() {
+    timey.reset();
+    timey.start();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -101,6 +113,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+
+    SmartDashboard.putNumber("Time left", (int) (135 - timey.get() + 1));
   }
 
   @Override

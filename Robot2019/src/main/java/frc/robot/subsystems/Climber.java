@@ -42,10 +42,12 @@ public class Climber extends Subsystem {
   }
 
   public void toggleRails() {
-    if (pistons.get() == DoubleSolenoid.Value.kForward) {
-      pistons.set(DoubleSolenoid.Value.kReverse);
-    } else {
-      pistons.set(DoubleSolenoid.Value.kForward);
+    if (!SmartDashboard.getBoolean("Outreach Mode", false)) {
+      if (pistons.get() == DoubleSolenoid.Value.kForward) {
+        pistons.set(DoubleSolenoid.Value.kReverse);
+      } else {
+        pistons.set(DoubleSolenoid.Value.kForward);
+      }
     }
   }
 

@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
 
@@ -41,7 +42,7 @@ public class RobotMap {
   static VictorSP cargoRoller;
   static Encoder leftEnc, rightEnc;
   static String driveMode;
-  static VictorSP lights;
+  static Relay lights;
   static AHRS ahrs;
   static PowerDistributionPanel pdp;
   static UsbCamera driveCamera, hatchCamera;
@@ -77,7 +78,7 @@ public class RobotMap {
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
 
     // Initialize lights
-    lights = new VictorSP(3); // TODO: Set this to correct port
+    lights = new Relay(0); // TODO: Set this to correct port
 
     ahrs = new AHRS(SPI.Port.kMXP);
     pdp = new PowerDistributionPanel();
@@ -120,7 +121,7 @@ public class RobotMap {
     catchError(tsrx.configPeakCurrentLimit(0, 0));
     catchError(tsrx.configPeakCurrentDuration(0, 0));
     // 40 Amps is the amp limit of a CIM. lThe PDP has 40 amp circuit breakers,
-    catchError(tsrx.configContinuousCurrentLimit(40, 0));
+    catchError(tsrx.configContinuousCurrentLimit(30, 0));
     tsrx.enableCurrentLimit(true);
     catchError(tsrx.configNeutralDeadband(0.001, 10));
     tsrx.setNeutralMode(NeutralMode.Brake);

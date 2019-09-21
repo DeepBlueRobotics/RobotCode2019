@@ -7,7 +7,7 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.SetLight;
@@ -16,44 +16,66 @@ import frc.robot.commands.SetLight;
  * Add your docs here.
  */
 public class Lights extends Subsystem {
+
+  public enum LightState {
+    OFF,
+    CARGO,
+    HATCH,
+    CLIMBER
+  }
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private VictorSP lights;
-  private double lightsValue = 0;
+  private Relay lights;
+  private LightState lightsState;
 
   /**
    * 0 is off 0.5 is orange 1 is yellow
    */
 
-  public Lights(VictorSP lights) {
+  public Lights(Relay lights) {
     this.lights = lights;
+    lightsState = LightState.HATCH;
   }
 
-  public void setLights() {
-    lights.set(lightsValue);
-    String color;
-    if (lightsValue == 0) {
+  public void setLights(LightState newState) {
+    String color = "";
+    switch (newState) {
+      case OFF:
+      lights.set(Relay.Value.kOff);
       color = "None";
-    } else if (lightsValue == 0.5) {
-      color = "Yellow";
-    } else {
+      break;
+      case CARGO:
+      lights.set(Relay.Value.kForward);
       color = "Orange";
+      break;
+      case HATCH:
+      lights.set(Relay.Value.kReverse);
+      color = "Blue";
+      break;
+      case CLIMBER:
+      lights.set(Relay.Value.kOn);
+      color = "Rainbow";
+      break;
     }
+    lightsState = newState;
     SmartDashboard.putString("Lights Current Color", color);
   }
 
   public void toggleLights() {
-    if (lightsValue == 0) {
-      lightsValue = 0.5;
-    } else if (lightsValue == 0.5) {
-      lightsValue = 1;
-    } else {
-      lightsValue = 0;
+    if (lightsState == LightState.OFF) {
+      lightsState = LightState.CARGO;
+    } else if (lightsState == LightState.CARGO) {
+      lightsState = LightState.HATCH;
+    } else if (lightsState == LightState.HATCH) {
+      lightsState = LightState.CLIMBER;
+    }
+    else {
+      lightsState = LightState.OFF;
     }
   }
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new SetLight(this));
+    setDefaultCommand(new SetLight(this, LightState.HATCH));
   }
 }

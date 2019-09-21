@@ -7,25 +7,39 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
-import frc.robot.subsystems.Lights;
+import edu.wpi.first.wpilibj.command.Command;
 
-public class SetLight extends InstantCommand {
-  private Lights lights;
-  private Lights.LightState state;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-  public SetLight(Lights lights, Lights.LightState state) {
+/**
+ * Add your docs here.
+ */
+public class SlowClimb extends Command {
+  /**
+   * Add your docs here.
+   */
+  public SlowClimb() {
+    super();
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this.lights = lights;
-    requires(lights);
-    this.state = state;
   }
 
-  // Called just before this Command runs the first time
+  // Called once when the command executes
   @Override
   protected void initialize() {
-    lights.setLights(state);
+    SmartDashboard.putBoolean("Slow Climb", true);
   }
 
+  @Override
+  protected void end() {
+    SmartDashboard.putBoolean("Slow Climb", false);
+  }
+
+  @Override
+  protected void interrupted() {
+    end();
+  }
+  
+  @Override
+  protected boolean isFinished() { return false; }
 }
