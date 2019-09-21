@@ -23,6 +23,7 @@ public class Limelight {
 
   // Adjusts the distance between a vision target and the robot. Uses basic PID with the ty value from the network table.
   public double distanceAssist() {
+    tv = table.getEntry("tv").getDouble(0.0);
     ty = table.getEntry("ty").getDouble(0.0);
     SmartDashboard.putNumber("Crosshair Vertical Offset", ty);
     ta = table.getEntry("ta").getDouble(0.0);
@@ -30,8 +31,10 @@ public class Limelight {
     double area_threshold = 0.5;  // TODO: Set the desired area.
     double Kp = 0.2;   // TODO: Set PID K value.
 
-    if (ta < area_threshold) {
-      adjustment += Kp * ty;
+    if (tv == 1.0) {
+      if (ta < area_threshold) {
+        adjustment += Kp * ty;
+      }
     }
     return adjustment;
   }
