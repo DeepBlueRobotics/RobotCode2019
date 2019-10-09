@@ -27,6 +27,7 @@ import frc.robot.commands.ToggleClimberRails;
 import frc.robot.commands.ToggleHatchEject;
 import frc.robot.commands.ToggleLight;
 import frc.robot.commands.WobbleDrive;
+import frc.robot.commands.LiftTest;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Climber;
@@ -54,6 +55,7 @@ public class OI {
   JoystickButton toggleCameraBtn;
   JoystickButton wobbleDriveBtn;
   JoystickButton cycleLightBtn;
+  JoystickButton liftTestBtn;
 
   OI(Drivetrain dt, HatchPanel hp, Intake intake, Lift lift, Climber climber, Lights lights, UsbCamera driveCamera,
       UsbCamera hatchCamera, VideoSink cameraServer) {
@@ -104,6 +106,9 @@ public class OI {
 
     cycleLightBtn = new JoystickButton(manipulator, Manip.START);
     cycleLightBtn.whenPressed(new ToggleLight(lights));
+
+    liftTestBtn = new JoystickButton(manipulator, Manip.BACK);
+    liftTestBtn.whenPressed(new LiftTest(lift, leftJoy));
   }
 
   private class Manip {

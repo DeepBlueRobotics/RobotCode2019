@@ -48,6 +48,7 @@ public class Lift extends Subsystem {
 
     public void setSpeed(double speed) {
         motor.set(speed);
+        SmartDashboard.putNumber("Lift Voltage", motor.getBusVoltage());
     }
 
     public double getPosition() {
