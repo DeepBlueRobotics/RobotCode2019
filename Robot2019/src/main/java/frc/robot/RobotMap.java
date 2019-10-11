@@ -68,13 +68,13 @@ public class RobotMap {
     rightSlave2 = createConfiguredMotorController(7);
 
     // Initialize motor on the lift 
-    liftMotor = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless); // TODO: Set ID to correct value 
-    liftMotor2 = new CANSparkMax(11, CANSparkMaxLowLevel.MotorType.kBrushless); // TODO: Set ID to correct value 
+    liftMotor = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless); // TODO: Set ID to correct value 
+    liftMotor2 = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless); // TODO: Set ID to correct value 
     
     // Initialize motors and solenoid on the intake mech 
-    intakeWristMotor = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
-    intakeTopMotor = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
-    intakeSideMotor = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
+    intakeWristMotor = new CANSparkMax(12, CANSparkMaxLowLevel.MotorType.kBrushless);
+    intakeTopMotor = new CANSparkMax(13, CANSparkMaxLowLevel.MotorType.kBrushless);
+    intakeSideMotor = new CANSparkMax(14, CANSparkMaxLowLevel.MotorType.kBrushless);
     // TODO: Set all IDs to correct values 
     intakePiston = new DoubleSolenoid(4, 3); // TODO: Set channel numbers to correct values 
 

@@ -18,13 +18,14 @@ public class LiftTest extends Command {
 
     protected void initialize() {
         SmartDashboard.putBoolean("Lift Testing", true);
+        SmartDashboard.putNumber("Lift Test Speed", 0.0);
     }
 
     protected void execute() {
         //lift.setSpeed(joy.getY() * 0.1);
         SmartDashboard.putNumber("Lift Position", lift.getPosition());
-        double liftVoltage = SmartDashboard.getNumber("Lift Test Speed", 0);
-        lift.setSpeed(liftVoltage);
+        double liftSpeed = SmartDashboard.getNumber("Lift Test Speed", 0);
+        lift.setSpeed(liftSpeed);
     }
 
     protected boolean isFinished() {

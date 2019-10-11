@@ -4,6 +4,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.KeepLift;
@@ -25,7 +27,11 @@ public class Lift extends Subsystem {
         motor2.follow(motor);
         enc = motor.getEncoder();
         enc.setPositionConversionFactor(0.4 * Math.PI); // inches 
-        enc.setPosition(BOTTOM_HEIGHT);
+        enc.setPosition(0);
+        motor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        motor.setSoftLimit(SoftLimitDirection.kForward, 1);
+        motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        motor.setSoftLimit(SoftLimitDirection.kReverse, -58);
         controller = motor.getPIDController();
         prepareSmartDashboard();
     }
