@@ -26,17 +26,16 @@ public class Lift extends Subsystem {
         this.motor2 = motor2;
         motor.restoreFactoryDefaults();
         motor2.restoreFactoryDefaults();
-        //motor.setInverted(true);
+        motor.setInverted(true);
         motor2.follow(motor);
-        //motor2.setInverted(true);
         enc = motor.getEncoder();
         enc.setPositionConversionFactor(0.4 * Math.PI); // inches 
         enc.setPosition(0);
-        /*motor.enableSoftLimit(SoftLimitDirection.kForward, true);
-        motor.setSoftLimit(SoftLimitDirection.kForward, 1);
+        motor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        motor.setSoftLimit(SoftLimitDirection.kForward, 58);
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        motor.setSoftLimit(SoftLimitDirection.kReverse, -58);*/
-        //motor.enableVoltageCompensation(12);
+        motor.setSoftLimit(SoftLimitDirection.kReverse, 1);
+        motor.enableVoltageCompensation(12);
         controller = motor.getPIDController();
         prepareSmartDashboard();
     }
