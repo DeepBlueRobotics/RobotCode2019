@@ -72,11 +72,11 @@ public class RobotMap {
     liftMotor2 = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless); // TODO: Set ID to correct value 
     
     // Initialize motors and solenoid on the intake mech 
-    intakeWristMotor = new CANSparkMax(12, CANSparkMaxLowLevel.MotorType.kBrushless);
-    intakeTopMotor = new CANSparkMax(13, CANSparkMaxLowLevel.MotorType.kBrushless);
-    intakeSideMotor = new CANSparkMax(14, CANSparkMaxLowLevel.MotorType.kBrushless);
+    intakeWristMotor = new CANSparkMax(11, CANSparkMaxLowLevel.MotorType.kBrushless);
+    intakeTopMotor = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
+    intakeSideMotor = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
     // TODO: Set all IDs to correct values 
-    intakePiston = new DoubleSolenoid(4, 3); // TODO: Set channel numbers to correct values 
+    intakePiston = new DoubleSolenoid(0, 7); // TODO: Set channel numbers to correct values 
 
     // Initialize motors on the climbing mech
     climberMotor = new VictorSP(1);
@@ -84,11 +84,11 @@ public class RobotMap {
     climberPistons = new DoubleSolenoid(5, 2);
 
     // Initialize motors on the cargo mech
-    cargoRoller = new VictorSP(0);
+    // cargoRoller = new VictorSP(0);
 
     // Initialize solenoid on hatch panel mech
-    hatchGrabberPiston = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse
-    hatchEjectPistons = new DoubleSolenoid(6, 1);
+    // hatchGrabberPiston = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse
+    // hatchEjectPistons = new DoubleSolenoid(6, 1);
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));

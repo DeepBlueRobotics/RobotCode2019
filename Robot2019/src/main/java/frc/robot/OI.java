@@ -78,15 +78,15 @@ public class OI {
     gradDriveBtn = new JoystickButton(leftJoy, 5);
     gradDriveBtn.whenPressed(new GradualDrive());
 
-    hatchIntakeBtn = new JoystickButton(manipulator, Manip.X);
-    hatchIntakeBtn.whenPressed(new IntakeHatch(intake, lift, dt));
-    hatchEjectBtn = new JoystickButton(manipulator, Manip.Y);
-    hatchEjectBtn.whenPressed(new ToggleHatchEject(hp));
+    // hatchIntakeBtn = new JoystickButton(manipulator, Manip.X);
+    // hatchIntakeBtn.whenPressed(new IntakeHatch(intake, lift, dt));
+    // hatchEjectBtn = new JoystickButton(manipulator, Manip.Y);
+    // hatchEjectBtn.whenPressed(new ToggleHatchEject(hp));
 
-    cargoIntakeBtn = new JoystickButton(manipulator, Manip.A); // TODO: set ports to correct values
-    cargoIntakeBtn.whenPressed(new IntakeCargo(intake, lift, lights));
-    cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
-    cargoEjectBtn.whenPressed(new EjectCargo(intake));
+    // cargoIntakeBtn = new JoystickButton(manipulator, Manip.A); // TODO: set ports to correct values
+    // cargoIntakeBtn.whenPressed(new IntakeCargo(intake, lift, lights));
+    // cargoEjectBtn = new JoystickButton(manipulator, Manip.B); // TODO: set ports to correct values
+    // cargoEjectBtn.whenPressed(new EjectCargo(intake));
 
     climberRailBtn = new JoystickButton(manipulator, Manip.RB_rShoulder);
     climberRailBtn.whenPressed(new ToggleClimberRails(climber));

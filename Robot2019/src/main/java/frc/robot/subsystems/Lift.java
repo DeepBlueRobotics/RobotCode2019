@@ -15,8 +15,8 @@ public class Lift extends Subsystem {
     private CANSparkMax motor2;
     private CANEncoder enc;
     private CANPIDController controller;
-    private final double ARB_FF_UP = 0; // TODO: set to correct value 
-    private final double ARB_FF_DOWN = 0; // TODO: set to correct value 
+    private final double ARB_FF_UP = 0.12*12;
+    private final double ARB_FF_DOWN = 0.12*12;
     private static final double BOTTOM_HEIGHT = 14; // TODO: set to correct value 
     private double currentGoal;
     private final double ERROR = 1; // TODO: set to correct value 
@@ -24,14 +24,19 @@ public class Lift extends Subsystem {
     public Lift(CANSparkMax motor, CANSparkMax motor2) {
         this.motor = motor;
         this.motor2 = motor2;
+        motor.restoreFactoryDefaults();
+        motor2.restoreFactoryDefaults();
+        //motor.setInverted(true);
         motor2.follow(motor);
+        //motor2.setInverted(true);
         enc = motor.getEncoder();
         enc.setPositionConversionFactor(0.4 * Math.PI); // inches 
         enc.setPosition(0);
-        motor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        /*motor.enableSoftLimit(SoftLimitDirection.kForward, true);
         motor.setSoftLimit(SoftLimitDirection.kForward, 1);
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        motor.setSoftLimit(SoftLimitDirection.kReverse, -58);
+        motor.setSoftLimit(SoftLimitDirection.kReverse, -58);*/
+        //motor.enableVoltageCompensation(12);
         controller = motor.getPIDController();
         prepareSmartDashboard();
     }
