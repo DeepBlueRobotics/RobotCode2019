@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.cscore.UsbCamera;
@@ -68,13 +69,13 @@ public class RobotMap {
     rightSlave2 = createConfiguredMotorController(7);
 
     // Initialize motor on the lift 
-    liftMotor = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless); // TODO: Set ID to correct value 
-    liftMotor2 = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless); // TODO: Set ID to correct value 
+    liftMotor = createConfiguredSparkMax(2); // TODO: Set ID to correct value 
+    liftMotor2 = createConfiguredSparkMax(4); // TODO: Set ID to correct value 
     
     // Initialize motors and solenoid on the intake mech 
-    intakeWristMotor = new CANSparkMax(11, CANSparkMaxLowLevel.MotorType.kBrushless);
-    intakeTopMotor = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
-    intakeSideMotor = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
+    intakeWristMotor = createConfiguredSparkMax(11);
+    intakeTopMotor = createConfiguredSparkMax(1);
+    intakeSideMotor = createConfiguredSparkMax(3);
     // TODO: Set all IDs to correct values 
     intakePiston = new DoubleSolenoid(0, 7); // TODO: Set channel numbers to correct values 
 
@@ -158,6 +159,14 @@ public class RobotMap {
     vspx.setNeutralMode(NeutralMode.Brake);
 
     return vspx;
+  }
+
+  private static CANSparkMax createConfiguredSparkMax(int port) {
+    CANSparkMax spark = new CANSparkMax(port, CANSparkMaxLowLevel.MotorType.kBrushless);
+    spark.restoreFactoryDefaults();
+    spark.setIdleMode(IdleMode.kBrake);
+    spark.enableVoltageCompensation(12);
+    return spark;
   }
 
   private static UsbCamera configureCamera(int port) {

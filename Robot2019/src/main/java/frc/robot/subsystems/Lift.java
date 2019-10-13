@@ -25,10 +25,6 @@ public class Lift extends Subsystem {
     public Lift(CANSparkMax motor, CANSparkMax motor2) {
         this.motor = motor;
         this.motor2 = motor2;
-        motor.restoreFactoryDefaults();
-        motor2.restoreFactoryDefaults();
-        motor.setIdleMode(IdleMode.kBrake);
-        motor2.setIdleMode(IdleMode.kBrake);
         motor.setInverted(true);
         motor2.follow(motor);
         enc = motor.getEncoder();
@@ -38,7 +34,6 @@ public class Lift extends Subsystem {
         motor.setSoftLimit(SoftLimitDirection.kForward, (float) 72.5);
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         motor.setSoftLimit(SoftLimitDirection.kReverse, (float) 14);
-        motor.enableVoltageCompensation(12);
         controller = motor.getPIDController();
         controller.setOutputRange(-0.03, 0.084);
         prepareSmartDashboard();
@@ -103,9 +98,9 @@ public class Lift extends Subsystem {
     }
 
     public static class PIDF {
-        public static final double[] UP = {0.1, 0, 0, 0};
+        public static final double[] UP = {0, 0, 0, 0};
         public static final double[] DOWN = {0, 0, 0, 0};
-        public static final double[] KEEP = {0, 0, 0, 0};
+        public static final double[] KEEP = {0.1, 0, 0, 0};
         // TODO: Set all to reasonable/correct numbers
     }
 }

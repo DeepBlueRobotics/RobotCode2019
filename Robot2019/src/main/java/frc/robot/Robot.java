@@ -16,6 +16,7 @@ import frc.robot.commands.IncreaseVoltageLinear;
 import frc.robot.commands.IncreaseVoltageStepwise;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.KeepLift;
+import frc.robot.commands.KeepWrist;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
@@ -72,6 +73,7 @@ public class Robot extends TimedRobot {
     putNumberArray("Lift Keep PIDF", Lift.PIDF.KEEP);
 
     lift.setDefaultCommand(new KeepLift(lift, intake, oi.manipulator));
+    intake.setDefaultCommand(new KeepWrist(intake));
 
     SmartDashboard.putBoolean("Outreach Mode", false);
     timey = new Timer();
