@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
     putNumberArray("Lift Down PIDF", Lift.PIDF.DOWN);
     putNumberArray("Lift Keep PIDF", Lift.PIDF.KEEP);
 
-    //lift.setDefaultCommand(new KeepLift(lift, intake, oi.manipulator));
+    lift.setDefaultCommand(new KeepLift(lift, intake, oi.manipulator));
 
     SmartDashboard.putBoolean("Outreach Mode", false);
     timey = new Timer();
@@ -107,6 +107,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     // cargo.stopIntake();
+    SmartDashboard.putNumber("Lift Test Speed", 0.0);
+    RobotMap.liftMotor.set(0);
   }
 
   @Override

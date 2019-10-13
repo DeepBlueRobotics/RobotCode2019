@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -15,8 +16,8 @@ public class Lift extends Subsystem {
     private CANSparkMax motor2;
     private CANEncoder enc;
     private CANPIDController controller;
-    private final double ARB_FF_UP = 0.12*12;
-    private final double ARB_FF_DOWN = 0.12*12;
+    private final double ARB_FF_UP = 0.0305*12;
+    private final double ARB_FF_DOWN = 0.0305*12;
     private static final double BOTTOM_HEIGHT = 14; // TODO: set to correct value 
     private double currentGoal;
     private final double ERROR = 1; // TODO: set to correct value 
@@ -26,17 +27,20 @@ public class Lift extends Subsystem {
         this.motor2 = motor2;
         motor.restoreFactoryDefaults();
         motor2.restoreFactoryDefaults();
+        motor.setIdleMode(IdleMode.kBrake);
+        motor2.setIdleMode(IdleMode.kBrake);
         motor.setInverted(true);
         motor2.follow(motor);
         enc = motor.getEncoder();
         enc.setPositionConversionFactor(0.4 * Math.PI); // inches 
-        enc.setPosition(0);
+        resetPosition();
         motor.enableSoftLimit(SoftLimitDirection.kForward, true);
-        motor.setSoftLimit(SoftLimitDirection.kForward, 58);
+        motor.setSoftLimit(SoftLimitDirection.kForward, (float) 72.5);
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        motor.setSoftLimit(SoftLimitDirection.kReverse, 1);
+        motor.setSoftLimit(SoftLimitDirection.kReverse, (float) 14);
         motor.enableVoltageCompensation(12);
         controller = motor.getPIDController();
+        controller.setOutputRange(-0.03, 0.084);
         prepareSmartDashboard();
     }
 
@@ -58,7 +62,7 @@ public class Lift extends Subsystem {
 
     public void setSpeed(double speed) {
         motor.set(speed);
-        SmartDashboard.putNumber("Lift Voltage", motor.getBusVoltage());
+        SmartDashboard.putNumber("Lift Applied Output", motor.getAppliedOutput());
     }
 
     public double getPosition() {
@@ -84,19 +88,22 @@ public class Lift extends Subsystem {
             SmartDashboard.putNumberArray("Lift Keep PIDF", PIDF.KEEP);
         }
     }
+    public void resetPosition(){
+        enc.setPosition(13);
+    }
 
     @Override
     public void initDefaultCommand() {
     } // default command set to KeepLift in Robot.java 
 
     public class Position {
-        public static final double HATCH_1 = 19, HATCH_2 = 47, HATCH_3 = 73.25, CARGO_GROUND = BOTTOM_HEIGHT, 
-                CARGO_1 = 27.5, CARGO_2 = 55.5, CARGO_3 = 73.25, CARGO_SHIP = 39;
+        public static final double HATCH_1 = 19, HATCH_2 = 47, HATCH_3 = 72.25, CARGO_GROUND = BOTTOM_HEIGHT, 
+                CARGO_1 = 27.5, CARGO_2 = 55.5, CARGO_3 = 72.25, CARGO_SHIP = 39;
         // hatch 3 is actually 75; cargo 3 is actually 83.5 
     }
 
     public static class PIDF {
-        public static final double[] UP = {0, 0, 0, 0};
+        public static final double[] UP = {0.1, 0, 0, 0};
         public static final double[] DOWN = {0, 0, 0, 0};
         public static final double[] KEEP = {0, 0, 0, 0};
         // TODO: Set all to reasonable/correct numbers

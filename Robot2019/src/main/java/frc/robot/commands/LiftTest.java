@@ -19,6 +19,7 @@ public class LiftTest extends Command {
     protected void initialize() {
         SmartDashboard.putBoolean("Lift Testing", true);
         SmartDashboard.putNumber("Lift Test Speed", 0.0);
+        lift.resetPosition();
     }
 
     protected void execute() {
