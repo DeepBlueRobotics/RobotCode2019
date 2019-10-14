@@ -71,6 +71,7 @@ public class Robot extends TimedRobot {
     putNumberArray("Lift Up PIDF", Lift.PIDF.UP);
     putNumberArray("Lift Down PIDF", Lift.PIDF.DOWN);
     putNumberArray("Lift Keep PIDF", Lift.PIDF.KEEP);
+    putNumberArray("Wrist PIDF", Intake.PIDF.WRIST);
 
     lift.setDefaultCommand(new KeepLift(lift, intake, oi.manipulator));
     intake.setDefaultCommand(new KeepWrist(intake));
@@ -110,6 +111,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     // cargo.stopIntake();
     SmartDashboard.putNumber("Lift Test Speed", 0.0);
+    lift.setGoalPosition(Lift.BOTTOM_HEIGHT);
     RobotMap.liftMotor.set(0);
   }
 

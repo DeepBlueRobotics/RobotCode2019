@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.kauailabs.navx.frc.AHRS;
@@ -166,6 +167,12 @@ public class RobotMap {
     spark.restoreFactoryDefaults();
     spark.setIdleMode(IdleMode.kBrake);
     spark.enableVoltageCompensation(12);
+    CANPIDController controller = spark.getPIDController();
+    controller.setOutputRange(-1, 1);
+    controller.setP(0);
+    controller.setI(0);
+    controller.setD(0);
+    controller.setFF(0);
     return spark;
   }
 

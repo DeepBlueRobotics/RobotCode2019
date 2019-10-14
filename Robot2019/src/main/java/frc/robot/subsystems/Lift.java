@@ -18,7 +18,7 @@ public class Lift extends Subsystem {
     private CANPIDController controller;
     private final double ARB_FF_UP = 0.0305*12;
     private final double ARB_FF_DOWN = 0.0305*12;
-    private static final double BOTTOM_HEIGHT = 14; // TODO: set to correct value 
+    public static final double BOTTOM_HEIGHT = 13; // TODO: set to correct value 
     private double currentGoal;
     private final double ERROR = 1; // TODO: set to correct value 
     
@@ -33,7 +33,7 @@ public class Lift extends Subsystem {
         motor.enableSoftLimit(SoftLimitDirection.kForward, true);
         motor.setSoftLimit(SoftLimitDirection.kForward, (float) 72.5);
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        motor.setSoftLimit(SoftLimitDirection.kReverse, (float) 14);
+        motor.setSoftLimit(SoftLimitDirection.kReverse, (float) 13);
         controller = motor.getPIDController();
         controller.setOutputRange(-0.03, 0.084);
         prepareSmartDashboard();

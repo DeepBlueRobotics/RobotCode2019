@@ -16,9 +16,10 @@ public class Intake extends Subsystem {
     private DoubleSolenoid piston;
     private final double TOP_IN_SPEED = 0.5; // TODO: set all to correct values 
     private final double SIDE_IN_SPEED = 0.5;
-    private final double HATCH_IN_SPEED = 0.5;
-    private final double CARGO_CURRENT_THRESHOLD = 6.0;
-    private final double HATCH_CURRENT_THRESHOLD = 6.0;
+    private final double HATCH_IN_SPEED = -0.5;
+    private final double HATCH_OUT_SPEED = 1;
+    private final double CARGO_CURRENT_THRESHOLD = 15.0;
+    private final double HATCH_CURRENT_THRESHOLD = 15.0;
     private double wristArbFF;
     private State state;
     private double wristGoal;
@@ -29,10 +30,13 @@ public class Intake extends Subsystem {
         this.sideRollers = sideRollers;
         this.piston = piston;
 
+        sideRollers.setInverted(true);
+        sideRollers.setSmartCurrentLimit(20);
         wrist.enableSoftLimit(SoftLimitDirection.kForward, true);
         wrist.setSoftLimit(SoftLimitDirection.kForward, (float) 0.165); // not necessary at competition, only for testing
         wrist.getEncoder().setPositionConversionFactor(36.0/605.0);
-
+        setWristPIDF(PIDF.WRIST);
+        wrist.getPIDController().setOutputRange(0, 1.0/6.0);
         setWristArbFF();
         wrist.getEncoder().setPosition(WristPosition.START);
         state = State.NONE;
@@ -62,6 +66,7 @@ public class Intake extends Subsystem {
     public void intakeCargo() {
         topRoller.set(TOP_IN_SPEED);
         sideRollers.set(SIDE_IN_SPEED);
+        SmartDashboard.putNumber("Intake Current", sideRollers.getOutputCurrent());
     }
 
     public boolean hasCargo() {
@@ -80,6 +85,7 @@ public class Intake extends Subsystem {
 
     public void intakeHatch() {
         sideRollers.set(HATCH_IN_SPEED);
+        SmartDashboard.putNumber("Intake Current", sideRollers.getOutputCurrent());
     }
 
     public boolean hasHatch() {
@@ -91,7 +97,7 @@ public class Intake extends Subsystem {
     }
 
     public void ejectHatch() {
-        sideRollers.set(HATCH_IN_SPEED * -1);
+        sideRollers.set(HATCH_OUT_SPEED);
     }
 
     public void stopRollers() {
@@ -99,10 +105,11 @@ public class Intake extends Subsystem {
         sideRollers.set(0);
     }
 
-    public void setWristPosition(double pos) {
+    public void setWristGoal(double pos) {
         setWristArbFF();
-        wrist.getPIDController().setReference(pos, ControlType.kPosition, 2, wristArbFF); // TODO: Set pidSlot to correct value 
+        wrist.getPIDController().setReference(pos, ControlType.kPosition, 0, wristArbFF); // TODO: Set pidSlot to correct value 
         wristGoal = pos;
+        SmartDashboard.putNumber("Wrist Applied Output", wrist.getAppliedOutput());
     }
 
     public double getWristGoal() {
@@ -120,13 +127,13 @@ public class Intake extends Subsystem {
 
     public void prepareCargo() {
         piston.set(DoubleSolenoid.Value.kForward);
-        setWristPosition(WristPosition.GROUND);
+        setWristGoal(WristPosition.GROUND);
         state = State.CARGO;
     }
 
     public void prepareHatch() {
         piston.set(DoubleSolenoid.Value.kReverse);
-        setWristPosition(WristPosition.DEFAULT);
+        setWristGoal(WristPosition.DEFAULT);
         state = State.HATCH;
     }
 
@@ -154,6 +161,9 @@ public class Intake extends Subsystem {
         if (!SmartDashboard.containsKey("Wrist Arbitrary FF")) {
             SmartDashboard.putNumber("Wrist Arbitrary FF", PIDF.WRIST_FF);
         }
+        if (!SmartDashboard.containsKey("Wrist PIDF")) {
+            SmartDashboard.putNumberArray("Wrist PIDF", PIDF.WRIST);
+        }
     }
 
     @Override
@@ -169,6 +179,7 @@ public class Intake extends Subsystem {
         public static final double[] HATCH_TOP = {0, 0, 0, 0};
         public static final double[] CARGO_SIDE = {0, 0, 0, 0};
         public static final double[] CARGO_TOP = {0, 0, 0, 0};
+        public static final double[] WRIST = {0, 0, 0, 0};
         public static final double WRIST_FF = 1.8; // volts
         // TODO: Set all to reasonable/correct numbers
     }

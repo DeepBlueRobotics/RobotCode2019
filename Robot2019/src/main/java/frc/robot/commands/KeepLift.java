@@ -60,7 +60,7 @@ public class KeepLift extends Command {
                 }
                 if (cargo) {
                     Scheduler.getInstance().add(cargo3);
-                    intake.setWristPosition(Intake.WristPosition.TOP);
+                    intake.setWristGoal(Intake.WristPosition.TOP);
                 } else {
                     Scheduler.getInstance().add(hatch3);
                 }

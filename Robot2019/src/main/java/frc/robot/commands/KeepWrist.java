@@ -21,10 +21,10 @@ public class KeepWrist extends Command {
     @Override
     protected void execute() {
         position = intake.getWristGoal();
-        intake.setWristPosition(position);
+        //intake.setWristGoal(position);
         SmartDashboard.putNumber("Wrist Position", intake.getWristPosition());
 
-        intake.setWristPosition(SmartDashboard.getNumber("Wrist Goal (rotations)", 0));
+        intake.setWristGoal(SmartDashboard.getNumber("Wrist Goal (rotations)", 0));
     }
 
     @Override
