@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -14,9 +16,10 @@ public class Intake extends Subsystem {
     private DoubleSolenoid piston;
     private final double TOP_IN_SPEED = 0.5; // TODO: set all to correct values
     private final double SIDE_IN_SPEED = 0.5;
-    private final double HATCH_IN_SPEED = 0.5;
-    private final double CARGO_CURRENT_THRESHOLD = 6.0;
-    private final double HATCH_CURRENT_THRESHOLD = 6.0;
+    private final double HATCH_IN_SPEED = -0.5;
+    private final double HATCH_OUT_SPEED = 1;
+    private final double CARGO_CURRENT_THRESHOLD = 15.0;
+    private final double HATCH_CURRENT_THRESHOLD = 15.0;
     private double wristArbFF;
     private State state;
     private double wristGoal;
@@ -26,6 +29,14 @@ public class Intake extends Subsystem {
         this.topRoller = topRoller;
         this.sideRollers = sideRollers;
         this.piston = piston;
+
+        sideRollers.setInverted(true);
+        sideRollers.setSmartCurrentLimit(20);
+        wrist.enableSoftLimit(SoftLimitDirection.kForward, true);
+        wrist.setSoftLimit(SoftLimitDirection.kForward, (float) 0.165); // not necessary at competition, only for testing
+        wrist.getEncoder().setPositionConversionFactor(36.0/605.0);
+        setWristPIDF(PIDF.WRIST);
+        wrist.getPIDController().setOutputRange(0, 1.0/6.0);
         setWristArbFF();
         wrist.getEncoder().setPosition(WristPosition.START);
         state = State.NONE;
@@ -55,6 +66,7 @@ public class Intake extends Subsystem {
     public void intakeCargo() {
         topRoller.set(TOP_IN_SPEED);
         sideRollers.set(SIDE_IN_SPEED);
+        SmartDashboard.putNumber("Intake Current", sideRollers.getOutputCurrent());
     }
 
     public boolean hasCargo() {
@@ -73,6 +85,7 @@ public class Intake extends Subsystem {
 
     public void intakeHatch() {
         sideRollers.set(HATCH_IN_SPEED);
+        SmartDashboard.putNumber("Intake Current", sideRollers.getOutputCurrent());
     }
 
     public boolean hasHatch() {
@@ -84,7 +97,7 @@ public class Intake extends Subsystem {
     }
 
     public void ejectHatch() {
-        sideRollers.set(HATCH_IN_SPEED * -1);
+        sideRollers.set(HATCH_OUT_SPEED);
     }
 
     public void stopRollers() {
@@ -92,11 +105,11 @@ public class Intake extends Subsystem {
         sideRollers.set(0);
     }
 
-    public void setWristPosition(double pos) {
+    public void setWristGoal(double pos) {
         setWristArbFF();
-        wrist.getPIDController().setReference(pos, ControlType.kPosition, 2, wristArbFF); // TODO: Set pidSlot to
-                                                                                          // correct value
+        wrist.getPIDController().setReference(pos, ControlType.kPosition, 0, wristArbFF); // TODO: Set pidSlot to correct value 
         wristGoal = pos;
+        SmartDashboard.putNumber("Wrist Applied Output", wrist.getAppliedOutput());
     }
 
     public double getWristGoal() {
@@ -114,13 +127,13 @@ public class Intake extends Subsystem {
 
     public void prepareCargo() {
         piston.set(DoubleSolenoid.Value.kForward);
-        setWristPosition(WristPosition.GROUND);
+        setWristGoal(WristPosition.GROUND);
         state = State.CARGO;
     }
 
     public void prepareHatch() {
         piston.set(DoubleSolenoid.Value.kReverse);
-        setWristPosition(WristPosition.DEFAULT);
+        setWristGoal(WristPosition.DEFAULT);
         state = State.HATCH;
     }
 
@@ -133,12 +146,24 @@ public class Intake extends Subsystem {
     }
 
     public void prepareSmartDashboard() {
-        SmartDashboard.putNumberArray("Hatch Side Roller PIDF", PIDF.HATCH_SIDE);
-        SmartDashboard.putNumberArray("Hatch Top Roller PIDF", PIDF.HATCH_TOP);
-        SmartDashboard.putNumberArray("Cargo Side Roller PIDF", PIDF.CARGO_SIDE);
-        SmartDashboard.putNumberArray("Cargo Top Roller PIDF", PIDF.CARGO_TOP);
-        SmartDashboard.putNumber("Wrist Arbitrary FF", PIDF.WRIST_FF);
-        // only called when robot code starts up
+        if (!SmartDashboard.containsKey("Hatch Side Roller PIDF")) {
+            SmartDashboard.putNumberArray("Hatch Side Roller PIDF", PIDF.HATCH_SIDE);
+        }
+        if (!SmartDashboard.containsKey("Hatch Top Roller PIDF")) {
+            SmartDashboard.putNumberArray("Hatch Top Roller PIDF", PIDF.HATCH_TOP);
+        }
+        if (!SmartDashboard.containsKey("Cargo Side Roller PIDF")) {
+            SmartDashboard.putNumberArray("Cargo Side Roller PIDF", PIDF.CARGO_SIDE);
+        }
+        if (!SmartDashboard.containsKey("Cargo Top Roller PIDF")) {
+            SmartDashboard.putNumberArray("Cargo Top Roller PIDF", PIDF.CARGO_TOP);
+        }
+        if (!SmartDashboard.containsKey("Wrist Arbitrary FF")) {
+            SmartDashboard.putNumber("Wrist Arbitrary FF", PIDF.WRIST_FF);
+        }
+        if (!SmartDashboard.containsKey("Wrist PIDF")) {
+            SmartDashboard.putNumberArray("Wrist PIDF", PIDF.WRIST);
+        }
     }
 
     @Override
@@ -146,16 +171,16 @@ public class Intake extends Subsystem {
     }
 
     public class WristPosition {
-        public static final double START = 0.75, GROUND = -0.2, DEFAULT = 0, TOP = 0.2; // TODO: set to correct values
-                                                                                        // (rotations)
+        public static final double START = /*0.25 (need to change to actual value)*/-0.09, GROUND = -0.09, DEFAULT = 0, TOP = 0.17; // TODO: set to correct values (rotations)
     }
 
     public static class PIDF {
-        public static final double[] HATCH_SIDE = { 0.5, 0, 0, 0 };
-        public static final double[] HATCH_TOP = { 0.5, 0, 0, 0 };
-        public static final double[] CARGO_SIDE = { 0.5, 0, 0, 0 };
-        public static final double[] CARGO_TOP = { 0.5, 0, 0, 0 };
-        public static final double WRIST_FF = 0;
+        public static final double[] HATCH_SIDE = {0, 0, 0, 0};
+        public static final double[] HATCH_TOP = {0, 0, 0, 0};
+        public static final double[] CARGO_SIDE = {0, 0, 0, 0};
+        public static final double[] CARGO_TOP = {0, 0, 0, 0};
+        public static final double[] WRIST = {0, 0, 0, 0};
+        public static final double WRIST_FF = 1.8; // volts
         // TODO: Set all to reasonable/correct numbers
     }
 

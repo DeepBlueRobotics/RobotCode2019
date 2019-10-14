@@ -15,7 +15,6 @@ public class IntakeHatch2 extends Command {
 
     public IntakeHatch2(Intake intake, Lift lift) {
         requires(intake);
-        requires(lift);
         this.intake = intake;
         this.lift = lift;
         timer = new Timer();
@@ -48,7 +47,7 @@ public class IntakeHatch2 extends Command {
 
     @Override
     protected boolean isFinished() {
-        return (timer.get() > 0.5);
+        return (timer.get() > 0.1);
     }
 
     @Override

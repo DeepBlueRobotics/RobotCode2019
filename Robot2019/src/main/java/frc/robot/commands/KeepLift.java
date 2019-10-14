@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.robot.Robot;
 import frc.robot.commands.MoveLift;
 import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Intake.State;
@@ -39,7 +40,7 @@ public class KeepLift extends Command {
         switch (pov) {
             case -1: case 45: case 135: case 225: case 315:
                 if (lastPOV == 0 || lastPOV == 90 || lastPOV == 180 || lastPOV == 270)
-                    lift.setPIDF(SmartDashboard.getNumberArray("Lift Keep PIDF", Lift.PIDF.KEEP));
+                    lift.setPIDF(Robot.getNumberArray("Lift Keep PIDF", Lift.PIDF.KEEP));
                 lift.setGoalPosition(position);
                 SmartDashboard.putNumber("Lift Height (in)", lift.getPosition());
                 break;
@@ -59,7 +60,7 @@ public class KeepLift extends Command {
                 }
                 if (cargo) {
                     Scheduler.getInstance().add(cargo3);
-                    intake.setWristPosition(Intake.WristPosition.TOP);
+                    intake.setWristGoal(Intake.WristPosition.TOP);
                 } else {
                     Scheduler.getInstance().add(hatch3);
                 }

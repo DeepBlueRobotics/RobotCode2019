@@ -15,7 +15,7 @@ public class MoveWrist extends InstantCommand {
     }
 
     protected void initialize() {
-        intake.setWristPosition(goal); // arb ff included in method
+        intake.setWristGoal(goal); // arb ff included in method
         SmartDashboard.putNumber("Wrist Goal", goal);
         SmartDashboard.putNumber("Wrist Position", intake.getWristPosition());
     }

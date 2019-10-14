@@ -13,7 +13,9 @@ import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.cscore.UsbCamera;
@@ -68,15 +70,15 @@ public class RobotMap {
     rightSlave2 = createConfiguredMotorController(7);
 
     // Initialize motor on the lift 
-    liftMotor = new CANSparkMax(0, CANSparkMaxLowLevel.MotorType.kBrushless); // TODO: Set ID to correct value 
-    liftMotor2 = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless); // TODO: Set ID to correct value 
+    liftMotor = createConfiguredSparkMax(2); // TODO: Set ID to correct value 
+    liftMotor2 = createConfiguredSparkMax(4); // TODO: Set ID to correct value 
     
     // Initialize motors and solenoid on the intake mech 
-    intakeWristMotor = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
-    intakeTopMotor = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
-    intakeSideMotor = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
+    intakeWristMotor = createConfiguredSparkMax(11);
+    intakeTopMotor = createConfiguredSparkMax(1);
+    intakeSideMotor = createConfiguredSparkMax(3);
     // TODO: Set all IDs to correct values 
-    intakePiston = new DoubleSolenoid(4, 3); // TODO: Set channel numbers to correct values 
+    intakePiston = new DoubleSolenoid(0, 7); // TODO: Set channel numbers to correct values 
 
     // Initialize motors on the climbing mech
     climberMotor = new VictorSP(1);
@@ -84,11 +86,11 @@ public class RobotMap {
     climberPistons = new DoubleSolenoid(5, 2);
 
     // Initialize motors on the cargo mech
-    cargoRoller = new VictorSP(0);
+    // cargoRoller = new VictorSP(0);
 
     // Initialize solenoid on hatch panel mech
-    hatchGrabberPiston = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse
-    hatchEjectPistons = new DoubleSolenoid(6, 1);
+    // hatchGrabberPiston = new DoubleSolenoid(7, 0); // 7 is A/Forward, 0 is B/Reverse
+    // hatchEjectPistons = new DoubleSolenoid(6, 1);
 
     leftEnc = new Encoder(new DigitalInput(0), new DigitalInput(1));
     rightEnc = new Encoder(new DigitalInput(2), new DigitalInput(3));
@@ -158,6 +160,20 @@ public class RobotMap {
     vspx.setNeutralMode(NeutralMode.Brake);
 
     return vspx;
+  }
+
+  private static CANSparkMax createConfiguredSparkMax(int port) {
+    CANSparkMax spark = new CANSparkMax(port, CANSparkMaxLowLevel.MotorType.kBrushless);
+    spark.restoreFactoryDefaults();
+    spark.setIdleMode(IdleMode.kBrake);
+    spark.enableVoltageCompensation(12);
+    CANPIDController controller = spark.getPIDController();
+    controller.setOutputRange(-1, 1);
+    controller.setP(0);
+    controller.setI(0);
+    controller.setD(0);
+    controller.setFF(0);
+    return spark;
   }
 
   private static UsbCamera configureCamera(int port) {

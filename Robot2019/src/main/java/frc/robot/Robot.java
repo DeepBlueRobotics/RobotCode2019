@@ -9,12 +9,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DrivetrainAnalysis;
 import frc.robot.commands.IncreaseVoltageLinear;
 import frc.robot.commands.IncreaseVoltageStepwise;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.KeepLift;
+import frc.robot.commands.KeepWrist;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
@@ -40,8 +42,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
         RobotMap.rightSlave1, RobotMap.rightSlave2, RobotMap.leftEnc, RobotMap.rightEnc, RobotMap.ahrs);
-    hp = new HatchPanel(RobotMap.hatchGrabberPiston, RobotMap.hatchEjectPistons);
-    cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
+    // hp = new HatchPanel(RobotMap.hatchGrabberPiston, RobotMap.hatchEjectPistons);
+    // cargo = new Cargo(RobotMap.cargoRoller, RobotMap.pdp, RobotMap.cargoPDPPort);
     intake = new Intake(RobotMap.intakeWristMotor, RobotMap.intakeTopMotor, RobotMap.intakeSideMotor, RobotMap.intakePiston);
     lift = new Lift(RobotMap.liftMotor, RobotMap.liftMotor2);
     climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
@@ -66,10 +68,30 @@ public class Robot extends TimedRobot {
     dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
     SmartDashboard.putNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);
 
+    putNumberArray("Lift Up PIDF", Lift.PIDF.UP);
+    putNumberArray("Lift Down PIDF", Lift.PIDF.DOWN);
+    putNumberArray("Lift Keep PIDF", Lift.PIDF.KEEP);
+    putNumberArray("Wrist PIDF", Intake.PIDF.WRIST);
+
     lift.setDefaultCommand(new KeepLift(lift, intake, oi.manipulator));
+    intake.setDefaultCommand(new KeepWrist(intake));
 
     SmartDashboard.putBoolean("Outreach Mode", false);
     timey = new Timer();
+  }
+
+  public void putNumberArray(String keyBase, double[] value) {
+    for(int i = 0; i < value.length; i++) {
+      SmartDashboard.putNumber(keyBase + "[" + i + "]", value[i]);
+    }
+  }
+
+  public static double[] getNumberArray(String keyBase, double[] defaultValue) {
+    double[] out = new double[defaultValue.length];
+    for(int i = 0; i < defaultValue.length; i++) {
+      out[i] = SmartDashboard.getNumber(keyBase + "[" + i + "]", defaultValue[i]);
+    }
+    return out;
   }
 
   /**
@@ -87,7 +109,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    cargo.stopIntake();
+    // cargo.stopIntake();
+    SmartDashboard.putNumber("Lift Test Speed", 0.0);
+    lift.setGoalPosition(Lift.BOTTOM_HEIGHT);
+    RobotMap.liftMotor.set(0);
   }
 
   @Override
@@ -99,7 +124,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     timey.reset();
     timey.start();
-    hp.grab();
+    // hp.grab();
   }
 
   @Override

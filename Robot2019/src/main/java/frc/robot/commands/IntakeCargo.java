@@ -24,7 +24,6 @@ public class IntakeCargo extends Command {
 
   public IntakeCargo(Intake intake, Lift lift, Lights lights) {
     requires(intake);
-    requires(lift);
     requires(lights);
     this.intake = intake;
     this.lift = lift;
@@ -60,7 +59,7 @@ public class IntakeCargo extends Command {
 
   @Override
   protected boolean isFinished() {
-    return (timer.get() > 0.5);
+    return (timer.get() > 0.1);
   }
 
   @Override

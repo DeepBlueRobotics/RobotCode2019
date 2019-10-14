@@ -43,14 +43,19 @@ public class TeleopDrive extends Command {
     if (!SmartDashboard.containsKey("Gradual Drive")) {
       SmartDashboard.putBoolean("Gradual Drive", true);
     }
+    if (!SmartDashboard.containsKey("Lift Testing")) {
+      SmartDashboard.putBoolean("Lift Testing", false);
+    }
   }
 
   @Override
   protected void execute() {
-    if (SmartDashboard.getBoolean("Arcade Drive", true)) {
-      arcadeDrive();
-    } else {
-      tankDrive();
+    if (!SmartDashboard.getBoolean("Lift Testing", false)) {
+      if (SmartDashboard.getBoolean("Arcade Drive", true)) {
+        arcadeDrive();
+      } else {
+        tankDrive();
+      }
     }
   }
 
