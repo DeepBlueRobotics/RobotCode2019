@@ -35,7 +35,14 @@ public class Lift extends Subsystem {
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         motor.setSoftLimit(SoftLimitDirection.kReverse, (float) 13);
         controller = motor.getPIDController();
-        controller.setOutputRange(-0.03, 0.084);
+        double avg = (0.084-0.03)/2;
+        double hlfdiff = (0.084+0.03)/2;
+        boolean isTesting = false;
+        if(isTesting) {
+            controller.setOutputRange(-0.03, 0.084);
+        } else {
+            controller.setOutputRange(avg-(8+16.0/3.0)*hlfdiff, avg+(8+16.0/3.0)*hlfdiff); //-0.03, 0.084
+        }
         prepareSmartDashboard();
     }
 

@@ -38,7 +38,14 @@ public class Intake extends Subsystem {
         //wrist.setSoftLimit(SoftLimitDirection.kForward, (float) 0.165); // not necessary at competition, only for testing
         wrist.getEncoder().setPositionConversionFactor(36.0/605.0);
         setWristPIDF(PIDF.WRIST);
-        wrist.getPIDController().setOutputRange(-0.5, 2.25);
+        double avg = (2.25-0.5)/24;
+        double diff = (2.25+0.5)/24;
+        boolean testing = false;
+        if(testing) {
+            wrist.getPIDController().setOutputRange(-0.5/12, 2.25/12);
+        } else {
+            wrist.getPIDController().setOutputRange(avg-2*diff, avg+2*diff);
+        }
         setWristArbFF();
         wrist.getEncoder().setPosition(WristPosition.START);
         state = State.NONE;
@@ -172,7 +179,7 @@ public class Intake extends Subsystem {
     }
 
     public class WristPosition {
-        public static final double START = /*0.25 (need to change to actual value)*/-0.11, GROUND = -0.11, DEFAULT = 0, TOP = 0.17; // TODO: set to correct values (rotations)
+        public static final double START = /*0.25 (need to change to actual value)*/-0.11, GROUND = -0.11+20.0/360.0, DEFAULT = 0, TOP = 0.17; // TODO: set to correct values (rotations)
     }
 
     public static class PIDF {
