@@ -145,6 +145,10 @@ public class Intake extends Subsystem {
         state = State.HATCH;
     }
 
+    public void setTopSpeed(double speed) {
+        topRoller.set(speed);
+    }
+
     public State getState() {
         return state;
     }
