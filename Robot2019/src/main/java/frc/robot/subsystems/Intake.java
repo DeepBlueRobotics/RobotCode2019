@@ -31,12 +31,14 @@ public class Intake extends Subsystem {
         this.piston = piston;
 
         sideRollers.setInverted(true);
-        sideRollers.setSmartCurrentLimit(20);
-        wrist.enableSoftLimit(SoftLimitDirection.kForward, true);
-        wrist.setSoftLimit(SoftLimitDirection.kForward, (float) 0.165); // not necessary at competition, only for testing
+        //sideRollers.setSmartCurrentLimit(20);
+        wrist.enableSoftLimit(SoftLimitDirection.kForward, false);
+        wrist.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        //wrist.enableSoftLimit(SoftLimitDirection.kForward, true);
+        //wrist.setSoftLimit(SoftLimitDirection.kForward, (float) 0.165); // not necessary at competition, only for testing
         wrist.getEncoder().setPositionConversionFactor(36.0/605.0);
         setWristPIDF(PIDF.WRIST);
-        wrist.getPIDController().setOutputRange(0, 1.0/6.0);
+        wrist.getPIDController().setOutputRange(-0.5, 2.25);
         setWristArbFF();
         wrist.getEncoder().setPosition(WristPosition.START);
         state = State.NONE;
@@ -109,7 +111,6 @@ public class Intake extends Subsystem {
         setWristArbFF();
         wrist.getPIDController().setReference(pos, ControlType.kPosition, 0, wristArbFF); // TODO: Set pidSlot to correct value 
         wristGoal = pos;
-        SmartDashboard.putNumber("Wrist Applied Output", wrist.getAppliedOutput());
     }
 
     public double getWristGoal() {
@@ -171,7 +172,7 @@ public class Intake extends Subsystem {
     }
 
     public class WristPosition {
-        public static final double START = /*0.25 (need to change to actual value)*/-0.09, GROUND = -0.09, DEFAULT = 0, TOP = 0.17; // TODO: set to correct values (rotations)
+        public static final double START = /*0.25 (need to change to actual value)*/-0.11, GROUND = -0.11, DEFAULT = 0, TOP = 0.17; // TODO: set to correct values (rotations)
     }
 
     public static class PIDF {
@@ -179,8 +180,8 @@ public class Intake extends Subsystem {
         public static final double[] HATCH_TOP = {0, 0, 0, 0};
         public static final double[] CARGO_SIDE = {0, 0, 0, 0};
         public static final double[] CARGO_TOP = {0, 0, 0, 0};
-        public static final double[] WRIST = {0, 0, 0, 0};
-        public static final double WRIST_FF = 1.8; // volts
+        public static final double[] WRIST = {72, 0, 0, 0};
+        public static final double WRIST_FF = 1.0; // volts
         // TODO: Set all to reasonable/correct numbers
     }
 

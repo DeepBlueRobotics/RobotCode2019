@@ -14,17 +14,16 @@ public class KeepWrist extends Command {
         requires(intake);
 
         if (SmartDashboard.containsKey("Wrist Goal (rotations)")) {
-            SmartDashboard.putNumber("Wrist Goal (rotations)", 0);
+            //SmartDashboard.putNumber("Wrist Goal (rotations)", 0);
         }
     }
 
     @Override
     protected void execute() {
         position = intake.getWristGoal();
-        //intake.setWristGoal(position);
-        SmartDashboard.putNumber("Wrist Position", intake.getWristPosition());
-
-        intake.setWristGoal(SmartDashboard.getNumber("Wrist Goal (rotations)", 0));
+        intake.setWristGoal(position);
+        SmartDashboard.putNumber("Wrist Goal (rotations)", position);
+        //intake.setWristGoal(SmartDashboard.getNumber("Wrist Goal (rotations)", 0));
     }
 
     @Override
