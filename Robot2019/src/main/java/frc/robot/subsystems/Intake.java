@@ -187,9 +187,9 @@ public class Intake extends Subsystem {
     }
 
     public static class PIDF {
-        public static final double[] HATCH_SIDE = {0, 0, 0, 0};
+        public static final double[] HATCH_SIDE = {6, 0, 0, 0};
         public static final double[] HATCH_TOP = {0, 0, 0, 0};
-        public static final double[] CARGO_SIDE = {0, 0, 0, 0};
+        public static final double[] CARGO_SIDE = {1/(210/360), 0, 0, 0};
         public static final double[] CARGO_TOP = {0, 0, 0, 0};
         public static final double[] WRIST = {72, 0, 0, 0};
         public static final double WRIST_FF = 1.0; // volts
