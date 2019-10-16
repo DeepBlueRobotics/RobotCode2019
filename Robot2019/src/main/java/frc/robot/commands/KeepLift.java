@@ -82,6 +82,7 @@ public class KeepLift extends Command {
                 }
                 break;
         }
+        lastPOV = pov;
     }
 
     @Override

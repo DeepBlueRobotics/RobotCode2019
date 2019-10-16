@@ -35,7 +35,14 @@ public class Lift extends Subsystem {
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         motor.setSoftLimit(SoftLimitDirection.kReverse, (float) 13);
         controller = motor.getPIDController();
-        controller.setOutputRange(-0.03, 0.084);
+        double avg = (0.084-0.03)/2;
+        double hlfdiff = (0.084+0.03)/2;
+        boolean isTesting = false;
+        if(isTesting) {
+            controller.setOutputRange(-0.03, 0.084);
+        } else {
+            controller.setOutputRange(avg-(8+16.0/3.0)*hlfdiff, avg+(8+16.0/3.0)*hlfdiff); //-0.03, 0.084
+        }
         prepareSmartDashboard();
     }
 
@@ -79,7 +86,7 @@ public class Lift extends Subsystem {
         // only called when robot code starts up
     }
     public void resetPosition(){
-        enc.setPosition(13);
+        enc.setPosition(32.12);
     }
 
     @Override
@@ -93,8 +100,8 @@ public class Lift extends Subsystem {
     }
 
     public static class PIDF {
-        public static final double[] UP = {0, 0, 0, 0};
-        public static final double[] DOWN = {0, 0, 0, 0};
+        public static final double[] UP = {0.1, 0, 0, 0};
+        public static final double[] DOWN = {0.1, 0, 0, 0};
         public static final double[] KEEP = {0.1, 0, 0, 0};
         // TODO: Set all to reasonable/correct numbers
     }

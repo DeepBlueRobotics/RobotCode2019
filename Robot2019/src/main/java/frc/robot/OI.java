@@ -107,8 +107,8 @@ public class OI {
     cycleLightBtn = new JoystickButton(manipulator, Manip.START);
     cycleLightBtn.whenPressed(new ToggleLight(lights));
 
-    liftTestBtn = new JoystickButton(manipulator, Manip.BACK);
-    liftTestBtn.whenPressed(new LiftTest(lift, leftJoy));
+    //liftTestBtn = new JoystickButton(manipulator, Manip.BACK);
+    //liftTestBtn.whenPressed(new LiftTest(lift, leftJoy));
   }
 
   private class Manip {

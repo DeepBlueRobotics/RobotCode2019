@@ -17,6 +17,7 @@ import frc.robot.commands.IncreaseVoltageStepwise;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.KeepLift;
 import frc.robot.commands.KeepWrist;
+import frc.robot.commands.LeaveLiftStartingPos;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
@@ -138,6 +139,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     timey.reset();
     timey.start();
+    Scheduler.getInstance().add(new LeaveLiftStartingPos(lift, intake));
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

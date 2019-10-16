@@ -14,10 +14,9 @@ import frc.robot.subsystems.Drivetrain;
 public class WaitTime extends Command {
   Timer tim;
   double time;
-  public WaitTime(Drivetrain dt, double time) {
+  public WaitTime(double time) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(dt);
     this.time = time;
   }
 
