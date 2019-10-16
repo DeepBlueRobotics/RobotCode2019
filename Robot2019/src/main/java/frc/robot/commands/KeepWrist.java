@@ -23,6 +23,7 @@ public class KeepWrist extends Command {
         position = intake.getWristGoal();
         intake.setWristGoal(position);
         SmartDashboard.putNumber("Wrist Goal (rotations)", position);
+        //SmartDashboard.putNumber("Wrist Position", intake.getWristPosition());
         //intake.setWristGoal(SmartDashboard.getNumber("Wrist Goal (rotations)", 0));
     }
 

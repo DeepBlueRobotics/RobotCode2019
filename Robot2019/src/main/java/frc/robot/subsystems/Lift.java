@@ -59,6 +59,7 @@ public class Lift extends Subsystem {
         } else {
             controller.setReference(position, ControlType.kPosition, 0, ARB_FF_DOWN);
         }
+        System.out.println(position + " " + getPosition());
         currentGoal = position;
     }
 
@@ -91,7 +92,7 @@ public class Lift extends Subsystem {
         }
     }
     public void resetPosition(){
-        enc.setPosition(13);
+        enc.setPosition(32.12);
     }
 
     @Override
@@ -105,8 +106,8 @@ public class Lift extends Subsystem {
     }
 
     public static class PIDF {
-        public static final double[] UP = {0, 0, 0, 0};
-        public static final double[] DOWN = {0, 0, 0, 0};
+        public static final double[] UP = {0.1, 0, 0, 0};
+        public static final double[] DOWN = {0.1, 0, 0, 0};
         public static final double[] KEEP = {0.1, 0, 0, 0};
         // TODO: Set all to reasonable/correct numbers
     }

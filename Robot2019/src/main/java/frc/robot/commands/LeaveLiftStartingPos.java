@@ -8,9 +8,11 @@ import frc.robot.subsystems.Intake;
 
 public class LeaveLiftStartingPos extends CommandGroup {
     public LeaveLiftStartingPos(Lift lift, Intake intake) {
-        addSequential(new MoveIntakeAtStart(lift, intake));
+        System.out.println("Leaving starting pos");
+        addSequential(new MoveLift(lift, 37));
+        addSequential(new MoveIntakeAtStart(intake));
         addSequential(new MoveWrist(intake, Intake.WristPosition.DEFAULT));
-        addSequential(new WaitTime(3));
+        addSequential(new WaitTime(1));
         addSequential(new MoveLift(lift, Lift.Position.HATCH_1));
     }
 }

@@ -7,18 +7,16 @@ import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj.Timer;
 
 public class MoveIntakeAtStart extends Command {
-    Lift lift;
     Intake intake;
     Timer timer;
 
-    public MoveIntakeAtStart(Lift lift, Intake intake) {
+    public MoveIntakeAtStart(Intake intake) {
         this.intake = intake;
         requires(intake);
         timer = new Timer();
     }
 
     protected void initialize() {
-        Scheduler.getInstance().add(new MoveLift(lift, lift.getPosition() + 4));
         timer.start();
     }
 
