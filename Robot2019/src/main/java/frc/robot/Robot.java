@@ -112,7 +112,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     // cargo.stopIntake();
     SmartDashboard.putNumber("Lift Test Speed", 0.0);
-    lift.setGoalPosition(32);
+    lift.setGoalPosition(Lift.BOTTOM_HEIGHT);
     RobotMap.liftMotor.set(0);
   }
 

@@ -59,7 +59,6 @@ public class Lift extends Subsystem {
         } else {
             controller.setReference(position, ControlType.kPosition, 0, ARB_FF_DOWN);
         }
-        System.out.println(position + " " + getPosition());
         currentGoal = position;
     }
 
