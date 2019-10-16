@@ -18,7 +18,7 @@ public class MoveIntakeAtStart extends Command {
     }
 
     protected void initialize() {
-        Scheduler.addSequential(new MoveLift(lift.getPosition() + 4));
+        Scheduler.getInstance().add(new MoveLift(lift, lift.getPosition() + 4));
         timer.start();
     }
 
