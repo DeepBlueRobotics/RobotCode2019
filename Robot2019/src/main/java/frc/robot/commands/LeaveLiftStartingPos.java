@@ -9,7 +9,8 @@ import frc.robot.subsystem.Intake;
 public class LeaveLiftStartingPos extends CommandGroup {
     public LeaveLiftStartingPos(Lift lift, Intake intake) {
         addSequential(new MoveIntakeAtStart(lift, intake));
-        addSequential(new MoveWrist(intake, Intake.WristPosition.DEFAULT)); // TODO: add wait time before MoveLift 
+        addSequential(new MoveWrist(intake, Intake.WristPosition.DEFAULT));
+        addSequential(new WaitTime(3));
         addSequential(new MoveLift(Lift.Position.HATCH_1));
     }
 }
