@@ -89,6 +89,10 @@ public class Lift extends Subsystem {
         enc.setPosition(32.12);
     }
 
+    public void resetDownPosition() {
+        enc.setPosition(BOTTOM_HEIGHT);
+    }
+
     @Override
     public void initDefaultCommand() {
     } // default command set to KeepLift in Robot.java

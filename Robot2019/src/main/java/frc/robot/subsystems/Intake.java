@@ -1,9 +1,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
+import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -155,6 +154,14 @@ public class Intake extends Subsystem {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public void resetPosition() {
+        wrist.getEncoder().setPosition(WristPosition.START);
+    }
+
+    public void resetDownPosition() {
+        wrist.getEncoder().setPosition(WristPosition.GROUND);
     }
 
     public void prepareSmartDashboard() {

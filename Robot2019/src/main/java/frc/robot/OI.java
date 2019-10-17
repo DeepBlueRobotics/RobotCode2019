@@ -17,6 +17,7 @@ import frc.robot.commands.EjectHatch;
 import frc.robot.commands.GradualDrive;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.IntakeHatch;
+import frc.robot.commands.LeaveLiftStartingPos;
 import frc.robot.commands.ManualClimb;
 import frc.robot.commands.NormalDrive;
 import frc.robot.commands.SlowClimb;
@@ -56,6 +57,7 @@ public class OI {
   JoystickButton wobbleDriveBtn;
   JoystickButton cycleLightBtn;
   JoystickButton liftTestBtn;
+  JoystickButton startingPosButton;
 
   OI(Drivetrain dt, HatchPanel hp, Intake intake, Lift lift, Climber climber, Lights lights, UsbCamera driveCamera,
       UsbCamera hatchCamera, VideoSink cameraServer) {
@@ -109,6 +111,9 @@ public class OI {
 
     //liftTestBtn = new JoystickButton(manipulator, Manip.BACK);
     //liftTestBtn.whenPressed(new LiftTest(lift, leftJoy));
+
+    startingPosButton = new JoystickButton(manipulator, Manip.BACK);
+    startingPosButton.whenPressed(new LeaveLiftStartingPos(lift, intake));
   }
 
   private class Manip {

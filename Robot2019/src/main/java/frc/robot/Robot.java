@@ -8,24 +8,23 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DrivetrainAnalysis;
 import frc.robot.commands.IncreaseVoltageLinear;
 import frc.robot.commands.IncreaseVoltageStepwise;
-import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.KeepLift;
 import frc.robot.commands.KeepWrist;
 import frc.robot.commands.LeaveLiftStartingPos;
+import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Cargo;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchPanel;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Lights;
-import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends TimedRobot {
   private static Drivetrain dt;
@@ -38,6 +37,7 @@ public class Robot extends TimedRobot {
   private static Lights lights;
   private static String fname1, fname2, fname3, fname4;
   private static Timer timey;
+  private static boolean ranAuto = false;
 
   @Override
   public void robotInit() {
@@ -123,6 +123,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    Scheduler.getInstance().add(new LeaveLiftStartingPos(lift, intake)); // comment this line out if it doesn't work
+    ranAuto = true;
     timey.reset();
     timey.start();
     // hp.grab();
@@ -139,7 +141,11 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     timey.reset();
     timey.start();
-    Scheduler.getInstance().add(new LeaveLiftStartingPos(lift, intake));
+    
+    if (!ranAuto) {
+      lift.resetDownPosition();
+      intake.resetDownPosition();
+    }
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
