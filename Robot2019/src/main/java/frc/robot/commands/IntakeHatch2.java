@@ -2,28 +2,23 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Lift;
 
 public class IntakeHatch2 extends Command {
     Timer timer;
     Intake intake;
-    Lift lift;
     boolean overdraw;
 
-    public IntakeHatch2(Intake intake, Lift lift) {
+    public IntakeHatch2(Intake intake) {
         requires(intake);
         this.intake = intake;
-        this.lift = lift;
         timer = new Timer();
     }
 
     @Override
     protected void initialize() {
         timer.reset();
-        Scheduler.getInstance().add(new MoveLift(lift, Lift.Position.HATCH_1));
         intake.setSidePIDF(SmartDashboard.getNumberArray("Hatch Side Roller PIDF", Intake.PIDF.HATCH_SIDE));
         intake.setTopPIDF(SmartDashboard.getNumberArray("Hatch Top Roller PIDF", Intake.PIDF.HATCH_TOP));
         intake.prepareHatch();
