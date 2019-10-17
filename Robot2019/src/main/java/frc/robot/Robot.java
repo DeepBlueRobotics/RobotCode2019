@@ -123,6 +123,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    Scheduler.getInstance().add(new LeaveLiftStartingPos(lift, intake));
     timey.reset();
     timey.start();
     // hp.grab();
@@ -139,7 +140,6 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     timey.reset();
     timey.start();
-    Scheduler.getInstance().add(new LeaveLiftStartingPos(lift, intake));
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

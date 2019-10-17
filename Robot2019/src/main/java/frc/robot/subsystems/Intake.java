@@ -14,7 +14,7 @@ public class Intake extends Subsystem {
     private CANSparkMax topRoller;
     private CANSparkMax sideRollers;
     private DoubleSolenoid piston;
-    private final double TOP_IN_SPEED = 0.5; // TODO: set all to correct values 
+    private final double TOP_IN_SPEED = 0.5; // TODO: set all to correct values
     private final double SIDE_IN_SPEED = 0.5;
     private final double HATCH_IN_SPEED = -0.5;
     private final double HATCH_OUT_SPEED = 1;
@@ -187,9 +187,9 @@ public class Intake extends Subsystem {
     }
 
     public static class PIDF {
-        public static final double[] HATCH_SIDE = {0, 0, 0, 0};
+        public static final double[] HATCH_SIDE = {6, 0, 0, 0};
         public static final double[] HATCH_TOP = {0, 0, 0, 0};
-        public static final double[] CARGO_SIDE = {0, 0, 0, 0};
+        public static final double[] CARGO_SIDE = {1/(210.0/360), 0, 0, 0};
         public static final double[] CARGO_TOP = {0, 0, 0, 0};
         public static final double[] WRIST = {72, 0, 0, 0};
         public static final double WRIST_FF = 1.0; // volts
@@ -197,8 +197,6 @@ public class Intake extends Subsystem {
     }
 
     public enum State {
-        CARGO, 
-        HATCH, 
-        NONE
+        CARGO, HATCH, NONE
     }
 }
