@@ -38,7 +38,7 @@ public class IntakeHatch extends CommandGroup {
     addSequential(new IntakeHatch2(intake));
     addSequential(new MoveLift(lift, Lift.Position.HATCH_1 + 2));
     addSequential(new WaitTime(0.5));
-    addSequential(new MoveBack(dt, 0.25));
+    addSequential(new QueueMoveBack(dt, 0.25));
     addSequential(new WaitTime(0.5));
     addSequential(new MoveLift(lift, Lift.Position.HATCH_1));
   }
