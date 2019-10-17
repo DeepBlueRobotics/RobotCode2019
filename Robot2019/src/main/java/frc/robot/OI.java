@@ -12,6 +12,7 @@ import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.Climb;
+import frc.robot.commands.ConfigureWrist;
 import frc.robot.commands.EjectCargo;
 import frc.robot.commands.EjectHatch;
 import frc.robot.commands.GradualDrive;
@@ -56,6 +57,7 @@ public class OI {
   JoystickButton wobbleDriveBtn;
   JoystickButton cycleLightBtn;
   JoystickButton liftTestBtn;
+  JoystickButton wristDownBtn, wristUpBtn;
 
   OI(Drivetrain dt, HatchPanel hp, Intake intake, Lift lift, Climber climber, Lights lights, UsbCamera driveCamera,
       UsbCamera hatchCamera, VideoSink cameraServer) {
@@ -104,8 +106,13 @@ public class OI {
     toggleCameraBtn = new JoystickButton(leftJoy, 2);
     toggleCameraBtn.whenPressed(new ToggleCamera(driveCamera, hatchCamera, cameraServer));
 
-    cycleLightBtn = new JoystickButton(manipulator, Manip.START);
-    cycleLightBtn.whenPressed(new ToggleLight(lights));
+    wristDownBtn = new JoystickButton(manipulator, Manip.BACK);
+    wristDownBtn.whenPressed(new ConfigureWrist(intake, -5));
+    wristUpBtn = new JoystickButton(manipulator, Manip.START);
+    wristUpBtn.whenPressed(new ConfigureWrist(intake, 5));
+
+    /*cycleLightBtn = new JoystickButton(manipulator, Manip.START);
+    cycleLightBtn.whenPressed(new ToggleLight(lights));*/
 
     //liftTestBtn = new JoystickButton(manipulator, Manip.BACK);
     //liftTestBtn.whenPressed(new LiftTest(lift, leftJoy));

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -50,6 +51,11 @@ public class Intake extends Subsystem {
         wrist.getEncoder().setPosition(WristPosition.START);
         state = State.NONE;
         prepareSmartDashboard();
+    }
+
+    public void configure(double configRot) {
+        CANEncoder wEnc = wrist.getEncoder();
+        wEnc.setPosition(wEnc.getPosition()-configRot);
     }
 
     public void setTopPIDF(double[] pidf) {
