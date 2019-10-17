@@ -141,7 +141,6 @@ public class Intake extends Subsystem {
 
     public void prepareHatch() {
         piston.set(DoubleSolenoid.Value.kReverse);
-        setWristGoal(WristPosition.DEFAULT);
         state = State.HATCH;
     }
 
@@ -183,7 +182,7 @@ public class Intake extends Subsystem {
     }
 
     public class WristPosition {
-        public static final double START = /*-0.11*/0.23, GROUND = -0.11+25.0/360.0 /*25.0*/, DEFAULT = 0, TOP = 0.17; // TODO: set to correct values (rotations)
+        public static final double START = /*-0.11*/0.23, GROUND = -0.11/*+120.0/360.0*/ /*25.0*/, DEFAULT = 0, TOP = 0.17; // TODO: set to correct values (rotations)
     }
 
     public static class PIDF {
@@ -191,7 +190,7 @@ public class Intake extends Subsystem {
         public static final double[] HATCH_TOP = {0, 0, 0, 0};
         public static final double[] CARGO_SIDE = {1/(210.0/360), 0, 0, 0};
         public static final double[] CARGO_TOP = {0, 0, 0, 0};
-        public static final double[] WRIST = {72, 0, 0, 0};
+        public static final double[] WRIST = {72*2, 0, 0, 0};
         public static final double WRIST_FF = 1.0; // volts
         // TODO: Set all to reasonable/correct numbers
     }

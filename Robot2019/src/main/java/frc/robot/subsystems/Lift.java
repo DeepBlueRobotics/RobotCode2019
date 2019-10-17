@@ -100,9 +100,9 @@ public class Lift extends Subsystem {
     }
 
     public static class PIDF {
-        public static final double[] UP = {0.1, 0, 0, 0};
-        public static final double[] DOWN = {0.1, 0, 0, 0};
         public static final double[] KEEP = {0.1, 0, 0, 0};
+        public static final double[] UP = KEEP;
+        public static final double[] DOWN = KEEP;
         // TODO: Set all to reasonable/correct numbers
     }
 }

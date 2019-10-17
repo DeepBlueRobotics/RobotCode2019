@@ -34,6 +34,7 @@ public class IntakeHatch extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
     addSequential(new MoveLift(lift, Lift.Position.HATCH_1));
+    addSequential(new MoveWrist(intake, Intake.WristPosition.DEFAULT));
     addSequential(new IntakeHatch2(intake));
     addSequential(new MoveLift(lift, Lift.Position.HATCH_1 + 2));
     addSequential(new WaitTime(0.5));
