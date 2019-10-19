@@ -188,7 +188,7 @@ public class Intake extends Subsystem {
     }
 
     public class WristPosition {
-        public static final double START = /*-0.11*/0.23, GROUND = -0.11/*+120.0/360.0*/ /*25.0*/, DEFAULT = 0, TOP = 0.17; // TODO: set to correct values (rotations)
+        public static final double START = /*-0.11*/0.23, GROUND = -0.11/*+120.0/360.0*/ /*25.0*/, DEFAULT = 0, TOP = 0.17-5.0/360.0; // TODO: set to correct values (rotations)
     }
 
     public static class PIDF {
