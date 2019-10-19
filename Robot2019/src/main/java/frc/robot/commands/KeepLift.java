@@ -45,6 +45,7 @@ public class KeepLift extends Command {
                 SmartDashboard.putNumber("Lift Height (in)", lift.getPosition());
                 break;
             case 0: // top (2)
+                setWristDefault();
                 if (lastPOV == 0) {
                     break;
                 }
@@ -66,12 +67,14 @@ public class KeepLift extends Command {
                 }
                 break;
             case 180: // bottom (cargo ship)
+                setWristDefault();
                 if (lastPOV == 180) {
                     break;
                 }
                 Scheduler.getInstance().add(cargoShip);
                 break;
             case 270: // left (1)
+                setWristDefault();
                 if (lastPOV == 270) {
                     break;
                 }
@@ -83,6 +86,12 @@ public class KeepLift extends Command {
                 break;
         }
         lastPOV = pov;
+    }
+
+    private void setWristDefault() {
+        if(intake.getWristGoal() == Intake.WristPosition.TOP) {
+            intake.setWristGoal(Intake.WristPosition.DEFAULT);
+        }
     }
 
     @Override
