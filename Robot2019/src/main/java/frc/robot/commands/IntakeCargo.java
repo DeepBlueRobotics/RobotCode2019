@@ -70,6 +70,7 @@ public class IntakeCargo extends Command {
     } else {
       intake.stopRollers();
     }
+    intake.setWristGoal(Intake.WristPosition.DEFAULT);
   }
 
   @Override
