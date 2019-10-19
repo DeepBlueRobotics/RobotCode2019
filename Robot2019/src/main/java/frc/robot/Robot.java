@@ -38,9 +38,11 @@ public class Robot extends TimedRobot {
   private static Lights lights;
   private static String fname1, fname2, fname3, fname4;
   private static Timer timey;
+  private static boolean osp;
 
   @Override
   public void robotInit() {
+    osp = false;
     dt = new Drivetrain(RobotMap.leftMaster, RobotMap.leftSlave1, RobotMap.leftSlave2, RobotMap.rightMaster,
         RobotMap.rightSlave1, RobotMap.rightSlave2, RobotMap.leftEnc, RobotMap.rightEnc, RobotMap.ahrs);
     // hp = new HatchPanel(RobotMap.hatchGrabberPiston, RobotMap.hatchEjectPistons);
@@ -125,6 +127,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     timey.reset();
     timey.start();
+    Scheduler.getInstance().add(new LeaveLiftStartingPos(lift, intake));
+    osp = true;
     // hp.grab();
   }
 
@@ -139,7 +143,10 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     timey.reset();
     timey.start();
-    Scheduler.getInstance().add(new LeaveLiftStartingPos(lift, intake));
+    if(!osp) {
+      Scheduler.getInstance().add(new LeaveLiftStartingPos(lift, intake));
+      osp = true;
+    }
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
