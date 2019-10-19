@@ -18,7 +18,7 @@ public class Lift extends Subsystem {
     private CANPIDController controller;
     private final double ARB_FF_UP = 0.0305*12;
     private final double ARB_FF_DOWN = 0.0305*12;
-    public static final double BOTTOM_HEIGHT = 13; // TODO: set to correct value 
+    public static final double BOTTOM_HEIGHT = 14; // TODO: set to correct value 
     private double currentGoal;
     private final double ERROR = 1; // TODO: set to correct value
 
@@ -86,7 +86,7 @@ public class Lift extends Subsystem {
         // only called when robot code starts up
     }
     public void resetPosition(){
-        enc.setPosition(32.12);
+        enc.setPosition(33.5);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class Lift extends Subsystem {
     } // default command set to KeepLift in Robot.java
 
     public class Position {
-        public static final double HATCH_1 = 19+2, HATCH_2 = 47, HATCH_3 = 72.25, CARGO_GROUND = BOTTOM_HEIGHT, 
+        public static final double HATCH_1 = 19, HATCH_2 = 47, HATCH_3 = 72.25, CARGO_GROUND = BOTTOM_HEIGHT, 
                 CARGO_1 = 27.5, CARGO_2 = 55.5, CARGO_3 = 72.25, CARGO_SHIP = 39;
         // hatch 3 is actually 75; cargo 3 is actually 83.5 
     }
