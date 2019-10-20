@@ -108,7 +108,8 @@ public class Intake extends Subsystem {
     }
 
     public void keepHatch() {
-        sideRollers.getPIDController().setReference(sideRollers.getEncoder().getPosition(), ControlType.kPosition);
+        sideRollers.set(-0.05);
+        //sideRollers.getPIDController().setReference(sideRollers.getEncoder().getPosition(), ControlType.kPosition);
     }
 
     public void ejectHatch() {
@@ -196,7 +197,7 @@ public class Intake extends Subsystem {
         public static final double[] HATCH_TOP = {0, 0, 0, 0};
         public static final double[] CARGO_SIDE = {1/(210.0/360), 0, 0, 0};
         public static final double[] CARGO_TOP = {0, 0, 0, 0};
-        public static final double[] WRIST = {72*2, 0, 0, 0};
+        public static final double[] WRIST = {(72*2)/(12*3), 0, 0, 0};
         public static final double WRIST_FF = 1.0; // volts
         // TODO: Set all to reasonable/correct numbers
     }
