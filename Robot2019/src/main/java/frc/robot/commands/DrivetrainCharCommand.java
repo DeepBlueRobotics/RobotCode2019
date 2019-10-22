@@ -7,8 +7,6 @@ import java.io.IOException;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.Drivetrain;
 
-/* Command which supplies the motors with a desired voltage that increases linearly.
-*/
 public class DrivetrainCharCommand extends Command {
     public Drivetrain dt;
     public FileWriter fw;

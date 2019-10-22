@@ -3,7 +3,7 @@ package frc.robot.commands;
 import frc.robot.commands.DrivetrainCharCommand;
 import frc.robot.subsystems.Drivetrain;
 
-/* Command which supplies the motors with a desired voltage that increases linearly.
+/* Command which supplies the motors with a desired voltage that increases stepwise.
 */
 public class IncreaseVoltageStepwise extends DrivetrainCharCommand {
     String direction;

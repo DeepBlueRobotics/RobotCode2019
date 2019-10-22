@@ -170,35 +170,35 @@ public class Drivetrain extends Subsystem {
 
   public void updateDrivetrainParameters(String filename) {
     try {
-      Scanner filereader = new Scanner(new File(filename));
-      String line = filereader.next();
+      Scanner fileReader = new Scanner(new File(filename));
+      String line = fileReader.next();
       // Forward-Left
       flKV = Double.valueOf(line.split(",")[0]);
       flKA = Double.valueOf(line.split(",")[1]);
       flVI = Double.valueOf(line.split(",")[2]);
       System.out.println(flKV + "," + flKA + "," + flVI);
 
-      line = filereader.next();
+      line = fileReader.next();
       // Forward-right
       frKV = Double.valueOf(line.split(",")[0]);
       frKA = Double.valueOf(line.split(",")[1]);
       frVI = Double.valueOf(line.split(",")[2]);
       System.out.println(frKV + "," + frKA + "," + frVI);
 
-      line = filereader.next();
+      line = fileReader.next();
       // Backward-Left
       blKV = Double.valueOf(line.split(",")[0]);
       blKA = Double.valueOf(line.split(",")[1]);
       blVI = Double.valueOf(line.split(",")[2]);
       System.out.println(blKV + "," + blKA + "," + blVI);
 
-      line = filereader.next();
+      line = fileReader.next();
       // Backward-Right
       brKV = Double.valueOf(line.split(",")[0]);
       brKA = Double.valueOf(line.split(",")[1]);
       brVI = Double.valueOf(line.split(",")[2]);
       System.out.println(brKV + "," + brKA + "," + brVI);
-      filereader.close();
+      fileReader.close();
 
       // Averaging numbers because they vary so much
       double avg = (flKA + frKA + blKA + brKA) / 4;

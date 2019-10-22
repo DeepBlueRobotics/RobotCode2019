@@ -7,40 +7,26 @@
 
 package frc.robot.commands;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.lib.CharacterizationAnalysis;
 import frc.robot.subsystems.Drivetrain;
 
 public class DrivetrainAnalysis extends Command {
     Drivetrain dt;
-    String[] in_files;
-    String outfile;
-  /**
-   * Handles all the teleoperated driving functionality
-   * 
-   * @param dt the Drivetrain object to use, passing it in is useful for testing
-   *           purposes
-   */
-  public DrivetrainAnalysis(Drivetrain dt, String[] in_files, String outfile) {
+    String[] inFiles;
+    String outFile;
+
+  public DrivetrainAnalysis(Drivetrain dt, String[] inFiles, String outFile) {
     this.dt = dt;
-    this.in_files = in_files;
-    this.outfile = outfile;
+    this.inFiles = inFiles;
+    this.outFile = outFile;
   }
 
   @Override
   protected void execute() {
-    try {
-        PrintWriter pw = new PrintWriter(outfile);
-        pw.close();
-    } catch (FileNotFoundException f) {
-        f.printStackTrace();
-    }
-    CharacterizationAnalysis.characterize(in_files, outfile);
-    System.out.println("Drivetrain Characterization Analysis Successful. All data has been dumped into " + outfile);
-    dt.updateDrivetrainParameters(outfile);
+    CharacterizationAnalysis.characterize(inFiles, outFile);
+    System.out.println("Drivetrain Characterization Analysis Successful. All data has been dumped into " + outFile);
+    dt.updateDrivetrainParameters(outFile);
   }
 
   @Override

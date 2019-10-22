@@ -16,18 +16,18 @@ import org.apache.commons.csv.CSVParser;
 
 public class CharacterizationAnalysis {
     // Should gather values and perform analysis
-    public static void characterize(String[] in_files, String outfile) {
+    public static void characterize(String[] inFiles, String outFile) {
         // Gather values and run analysis
         double[][] data1, data2;
         double[] voltages, firstVelocities, secondVelocities, firstAccelerations, secondAccelerations;
         double[] params;
         FileWriter f;
         try {
-            f = new FileWriter(new File(outfile), true);
+            f = new FileWriter(new File(outFile), true);
 
             // Forward Characterization
-            data1 = parseCSV(in_files[0]);
-            data2 = parseCSV(in_files[1]);
+            data1 = parseCSV(inFiles[0]);
+            data2 = parseCSV(inFiles[1]);
             voltages = mergeArray(data1[0], data2[0]);
             firstVelocities = mergeArray(data1[1], data2[1]);
             firstAccelerations = mergeArray(data1[2], data2[2]);
@@ -41,8 +41,8 @@ public class CharacterizationAnalysis {
             }
 
             // Backward Characterization
-            data1 = parseCSV(in_files[3]);
-            data2 = parseCSV(in_files[4]);
+            data1 = parseCSV(inFiles[3]);
+            data2 = parseCSV(inFiles[4]);
             voltages = mergeArray(data1[0], data2[0]);
             firstVelocities = mergeArray(data1[1], data2[1]);
             firstAccelerations = mergeArray(data1[2], data2[2]);
@@ -72,7 +72,7 @@ public class CharacterizationAnalysis {
         double[] params = new double[6];
         double[] returns;
 
-        // Gather parameters fof the motors.
+        // Gather parameters for the motors.
         double[][] xs = new double[voltages.length][2];
         double[] ys = new double[voltages.length];
         for (int i = 0; i < voltages.length; i++) {
@@ -97,20 +97,20 @@ public class CharacterizationAnalysis {
             CSVParser csvParser = new CSVParser(in, CSVFormat.DEFAULT);
 
             List<CSVRecord> records = csvParser.getRecords();
-            int num_values = records.size();
-            int num_entries = records.get(0).size();
-            int arr_len;
-            if (num_entries == 4) {
-                arr_len = 5;
+            int numValues = records.size();
+            int numEntries = records.get(0).size();
+            int arrLen;
+            if (numEntries == 4) {
+                arrLen = 5;
             } else {
-                arr_len = 3;
+                arrLen = 3;
             }
     
-            double[][] returns = new double[num_values][arr_len];
+            double[][] returns = new double[numValues][arrLen];
             double vel1, vel2, a1, a2, volt;
             int i = 0;
             int j = 0;
-            for (int n = 0; n < num_values; n++) {
+            for (int n = 0; n < numValues; n++) {
                 CSVRecord record = records.get(n);
                 if (!record.get(0).equals("Timestamp (s)")) {
                     volt = Double.valueOf(record.get(1));
@@ -119,18 +119,18 @@ public class CharacterizationAnalysis {
                         a1 = (vel1 - returns[i - spread][1]) / (spread * 0.02);
                         returns[n][2] = a1;
                     }
-                    if (i < num_values - spread) {
+                    if (i < numValues - spread) {
                         returns[n][0] = volt;
                         returns[n][1] = vel1;
                         i += 1;
                     }
-                    if (num_entries == 4) {
+                    if (numEntries == 4) {
                         vel2 = Math.abs(Double.valueOf(record.get(3)));
                         if (j >= spread) {
                             a2 = (vel2 - returns[i - spread][3]) / (spread * 0.02);
                             returns[n][4] = a2;
                         }
-                        if (j < num_values - spread) {
+                        if (j < numValues - spread) {
                             returns[n][3] = vel2;
                             j += 1;
                         }
@@ -152,10 +152,10 @@ public class CharacterizationAnalysis {
         int m = arr2.length;
         double[] merged = new double[n + m];
         for (int i = 0; i < n; i++) {
-            merged[i] =  arr1[i];
+            merged[i] = arr1[i];
         }
         for (int i = 0; i < m; i++) {
-            merged[n + i] =  arr2[i];
+            merged[n + i] = arr2[i];
         }
         return merged;
     }
