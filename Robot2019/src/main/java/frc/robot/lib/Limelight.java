@@ -12,6 +12,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Limelight {
+  public enum Mode {
+    DIST, STEER, TARGET
+  }
+
   private NetworkTableInstance inst;
   private NetworkTable table;
   private double tv, tx, ty, ta;

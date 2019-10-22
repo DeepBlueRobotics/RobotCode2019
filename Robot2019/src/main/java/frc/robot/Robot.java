@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);
 
     SmartDashboard.putBoolean("Outreach Mode", false);
+    SmartDashboard.putBoolean("Using Limelight", false);
     timey = new Timer();
   }
 
