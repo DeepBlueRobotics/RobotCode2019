@@ -53,7 +53,7 @@ public class Drive extends Command {
   @Override
   protected void execute() {
     if (SmartDashboard.getBoolean("Using Limelight", false)) {
-        autoAllign();
+        autoAlign();
     } else {
         if (SmartDashboard.getBoolean("Arcade Drive", true)) {
             arcadeDrive();
@@ -239,26 +239,26 @@ public class Drive extends Command {
     dt.disableVoltageCompensation();
   }
 
-  private void autoAllign() {
+  private void autoAlign() {
     if (limelightMode == Limelight.Mode.DIST) {
         adjustment = lime.distanceAssist();
         dt.drive(adjustment, adjustment);
         if (Math.abs(adjustment) < minError)  {
-          SmartDashboard.putBoolean("Finished Alligning", true);
+          SmartDashboard.putBoolean("Finished Aligning", true);
         }
       }
       else if (limelightMode == Limelight.Mode.STEER) {
         adjustment = lime.distanceAssist();
         dt.drive(adjustment, -adjustment);
         if (Math.abs(adjustment) < minError)  {
-          SmartDashboard.putBoolean("Finished Alligning", true);
+          SmartDashboard.putBoolean("Finished Aligning", true);
         }
       } else {
         double[] params = lime.autoTarget();
         dt.drive(params[0], params[1]);
         double maxInput = Math.max(Math.abs(params[0]), Math.abs(params[1]));
         if (maxInput < minError)  {
-          SmartDashboard.putBoolean("Finished Alligning", true);
+          SmartDashboard.putBoolean("Finished Aligning", true);
         }
       }
   }
@@ -266,9 +266,9 @@ public class Drive extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-      if (!SmartDashboard.getBoolean("Use Limelight", false) || SmartDashboard.getBoolean("Finished Alligning", false)) {
+      if (!SmartDashboard.getBoolean("Use Limelight", false) || SmartDashboard.getBoolean("Finished Aligning", false)) {
         SmartDashboard.putBoolean("Use Limelight", false);
-        SmartDashboard.putBoolean("Finished Alligning", false);
+        SmartDashboard.putBoolean("Finished Aligning", false);
         return true;
       } else {
         return false;
