@@ -1,6 +1,7 @@
 package frc.robot.logging;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -57,7 +58,11 @@ public class LoggerInterface {
             }
         }
         otherLogs.sort(Integer::compare);
-        id = otherLogs.get(otherLogs.size()-1)+1;
+        if(!otherLogs.isEmpty()) {
+            id = otherLogs.get(otherLogs.size()-1)+1;
+        } else {
+            id = 0;
+        }
         file = new File(dirPath + "/Log" + id + ".log");
     }
 
@@ -72,7 +77,7 @@ public class LoggerInterface {
 
     public static PrintStream getStream() {
         try {
-            return new PrintStream(file);
+            return new PrintStream(new FileOutputStream(file, true));
         } catch(IOException e) {
             reportIOError("Getting Stream", e);
             return new PrintStream(new OutputStream(){ @Override
