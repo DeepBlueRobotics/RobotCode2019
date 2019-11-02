@@ -23,17 +23,12 @@ public class Var<T> {
         return IntegerVar.create(id, data);
     }
 
-    public static LongVar create(String id, long data) {
-        return LongVar.create(id, data);
-    }
-
     public static DoubleVar create(String id, double data) {
         return DoubleVar.create(id, data);
     }
 
     public enum Type {
-        BOOLEAN("boo", Boolean.class), INTEGER("int", Integer.class),
-        LONG("lng", Long.class), DOUBLE("dec", Double.class);
+        BOOLEAN("boo", Boolean.class), INTEGER("int", Integer.class), DOUBLE("dec", Double.class);
         
         public final String tag;
         public final Class<?> type;
