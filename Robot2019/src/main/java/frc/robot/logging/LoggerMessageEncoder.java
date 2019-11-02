@@ -84,4 +84,6 @@ public class LoggerMessageEncoder {
         return hour + c + minute + c + second + "." + milisecond;
     }
     
+    private LoggerMessageEncoder() {}
+
 }

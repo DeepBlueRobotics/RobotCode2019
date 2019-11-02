@@ -85,4 +85,6 @@ public class LoggerInterface {
         cause.printStackTrace(System.err);
     }
 
+    private LoggerInterface() {}
+
 }
