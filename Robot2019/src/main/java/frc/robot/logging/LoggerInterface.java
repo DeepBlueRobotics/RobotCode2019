@@ -38,6 +38,7 @@ public class LoggerInterface {
             getFile();
             file.createNewFile();
             clearOldLogs();
+            loadLogList();
         } catch(IOException e) {
             System.err.println("Error Occured Initializing Logger!"+
                 " Logger will be disabled for the deration of this run.");
@@ -71,6 +72,17 @@ public class LoggerInterface {
         for(Integer logId: otherLogs) {
             if(logId < threshold) {
                 new File(dir + "/Log" + logId + ".log").delete();
+            }
+        }
+    }
+
+    private static void loadLogList() throws IOException {
+        File listFile = new File(dirPath + "/list.txt");
+        listFile.createNewFile();
+        try(PrintStream ps = new PrintStream(listFile);) {
+            for(File file: dir.listFiles()) {
+                String name = file.getName();
+                ps.println(name.substring(3, name.length()-4));
             }
         }
     }
