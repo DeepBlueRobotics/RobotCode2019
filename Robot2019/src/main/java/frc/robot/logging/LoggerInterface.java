@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class LoggerInterface {
 
     public static final int backlog;
+    public static final boolean useSingleStream;
     private static boolean init = false;
     private static String dirPath;
     private static File dir;
@@ -17,9 +18,11 @@ public class LoggerInterface {
     private static ArrayList<Integer> otherLogs = new ArrayList<>();
     private static int id;
     private static boolean disabled = false;
+    private static PrintStream stream;
 
     static {
         backlog = 100;
+        useSingleStream = true;
     }
 
     public static boolean isDisabled() {
@@ -38,6 +41,9 @@ public class LoggerInterface {
             getFile();
             file.createNewFile();
             clearOldLogs();
+            if(useSingleStream) {
+                stream = getStreamN();
+            }
             loadLogList();
         } catch(IOException e) {
             System.err.println("Error Occured Initializing Logger!"+
@@ -88,6 +94,13 @@ public class LoggerInterface {
     }
 
     public static PrintStream getStream() {
+        if(useSingleStream) {
+            return stream;
+        }
+        return getStreamN();
+    }
+
+    private static PrintStream getStreamN() {
         try {
             return new PrintStream(new FileOutputStream(file, true));
         } catch(IOException e) {
