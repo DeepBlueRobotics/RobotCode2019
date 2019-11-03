@@ -6,10 +6,12 @@ import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static frc.robot.logging.LoggerInterface.closeStream;
 import frc.robot.logging.vars.Var;
 
 public class LoggerMessageEncoder {
     
+    public static final boolean allowMultiThreading;
     public static final String perR = "%0";
     public static final String mStr = "%1";
     public static final String mEnd = "%2";
@@ -18,12 +20,17 @@ public class LoggerMessageEncoder {
     public static final String mMrk = "%5";
     public static final String tMrk = "%6";
 
+    static {
+        allowMultiThreading = true;
+    }
+
     public static void logMessage(String message) {
         logMessage(message, true);
     }
 
     public static void logMessage(String message, boolean includeTime) {
-        try(PrintStream ps = LoggerInterface.getStream()) {
+        thread(() -> {
+            PrintStream ps = LoggerInterface.getStream();
             ps.print(mStr);
             if(includeTime) {
                 String time = getTimestamp();
@@ -32,7 +39,8 @@ public class LoggerMessageEncoder {
             ps.print(format(message));
             ps.print(mEnd);
             ps.flush();
-        }
+            closeStream(ps);
+        });
     }
 
     public static void logVars(Var<?>... vars) {
@@ -40,7 +48,8 @@ public class LoggerMessageEncoder {
     }
 
     public static void logVars(Collection<Var<?>> vars) {
-        try(PrintStream ps = LoggerInterface.getStream()) {
+        thread(() -> {
+            PrintStream ps = LoggerInterface.getStream();
             ps.print(mStr);
             ps.print(getTimestamp());
             ps.print(pSep);
@@ -55,11 +64,13 @@ public class LoggerMessageEncoder {
             }
             ps.print(mEnd);
             ps.flush();
-        }
+            closeStream(ps);
+        });
     }
 
     public static void mapId(String id, String name) {
-        try(PrintStream ps = LoggerInterface.getStream()) {
+        thread(() -> {
+            PrintStream ps = LoggerInterface.getStream();
             ps.print(mStr);
             ps.print(mMrk);
             ps.print(format(id));
@@ -67,7 +78,8 @@ public class LoggerMessageEncoder {
             ps.print(format(name));
             ps.print(mEnd);
             ps.flush();
-        }
+            closeStream(ps);
+        });
     }
 
     public static String format(String message) {
@@ -85,6 +97,14 @@ public class LoggerMessageEncoder {
         return hour + c + minute + c + second + "." + milisecond;
     }
     
+    private static void thread(Runnable newThread) {
+        if(allowMultiThreading) {
+            new Thread(newThread).start();
+        } else {
+            newThread.run();
+        }
+    }
+
     private LoggerMessageEncoder() {}
 
 }

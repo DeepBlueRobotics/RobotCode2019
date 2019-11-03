@@ -115,6 +115,12 @@ public class LoggerInterface {
         cause.printStackTrace(System.err);
     }
 
+    public static void closeStream(PrintStream stream) {
+        if(useSingleStream) {
+            stream.close();
+        }
+    }
+
     private LoggerInterface() {}
 
 }
