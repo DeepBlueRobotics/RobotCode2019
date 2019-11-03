@@ -16,6 +16,7 @@ public class LoggerMessageEncoder {
     public static final String pSep = "%3";
     public static final String vMrk = "%4";
     public static final String mMrk = "%5";
+    public static final String tMrk = "%6";
 
     public static void logMessage(String message) {
         logMessage(message, true);
@@ -26,7 +27,7 @@ public class LoggerMessageEncoder {
             ps.print(mStr);
             if(includeTime) {
                 String time = getTimestamp();
-                ps.print(time + pSep);
+                ps.print(tMrk + time + pSep);
             }
             ps.print(format(message));
             ps.print(mEnd);
