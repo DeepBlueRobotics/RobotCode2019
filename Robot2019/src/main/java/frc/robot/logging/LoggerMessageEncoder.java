@@ -55,6 +55,7 @@ public class LoggerMessageEncoder {
             ps.print(getTimestamp());
             ps.print(pSep);
             ps.print(vMrk);
+            ps.print(pSep);
             for(Var<?> var: vars) {
                 ps.print(format(var.type.tag));
                 ps.print(pSep);
