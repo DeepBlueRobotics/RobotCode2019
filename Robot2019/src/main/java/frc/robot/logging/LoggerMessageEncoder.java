@@ -51,6 +51,7 @@ public class LoggerMessageEncoder {
         thread(() -> {
             PrintStream ps = LoggerInterface.getStream();
             ps.print(mStr);
+            ps.print(tMrk);
             ps.print(getTimestamp());
             ps.print(pSep);
             ps.print(vMrk);
@@ -72,6 +73,9 @@ public class LoggerMessageEncoder {
         thread(() -> {
             PrintStream ps = LoggerInterface.getStream();
             ps.print(mStr);
+            ps.print(tMrk);
+            ps.print(getTimestamp());
+            ps.print(pSep);
             ps.print(mMrk);
             ps.print(format(id));
             ps.print(pSep);
