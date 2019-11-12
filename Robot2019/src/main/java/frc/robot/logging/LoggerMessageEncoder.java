@@ -21,7 +21,7 @@ public class LoggerMessageEncoder {
     public static final String tMrk = "%6";
 
     static {
-        allowMultiThreading = true;
+        allowMultiThreading = false;
     }
 
     public static void logMessage(String message) {
