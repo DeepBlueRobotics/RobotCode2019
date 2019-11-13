@@ -76,7 +76,7 @@ public class LoggerInterface {
         int threshold = id-backlog;
         for(Integer logId: otherLogs) {
             if(logId < threshold) {
-                new File(dir + "/Log" + logId + ".log").delete();
+                new File(dir + "/Log" + logId + ".riolog").delete();
             }
         }
     }
