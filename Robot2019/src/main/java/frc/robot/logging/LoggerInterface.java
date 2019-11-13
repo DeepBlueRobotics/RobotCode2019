@@ -58,7 +58,7 @@ public class LoggerInterface {
         for(File log: existingLogs) {
             try {
                 String name = log.getName();
-                otherLogs.add(Integer.parseInt(name.substring(3, name.length()-4)));
+                otherLogs.add(Integer.parseInt(name.substring(3, name.length()-7)));
             } catch(Exception e) {
 
             }
@@ -69,7 +69,7 @@ public class LoggerInterface {
         } else {
             id = 0;
         }
-        file = new File(dirPath + "/Log" + id + ".log");
+        file = new File(dirPath + "/Log" + id + ".riolog");
     }
 
     private static void clearOldLogs() {
