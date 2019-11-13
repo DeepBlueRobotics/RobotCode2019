@@ -1,5 +1,7 @@
 package frc.robot.logging;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +20,10 @@ public class RobotLogger {
         booleanFunctions = new HashMap<>();
         integerFunctions = new HashMap<>();
         doubleFunctions = new HashMap<>();
+    }
+
+    public static void init() {
+        LoggerInterface.init();
     }
 
     public static void logMessage(String message) {
@@ -78,6 +84,14 @@ public class RobotLogger {
             out.add(creationFunction.apply(id, map.get(id).get()));
         }
         return out;
+    }
+
+    public static void writeHeaders() {
+        LocalDateTime time = LocalDateTime.now();
+        int m = time.get(ChronoField.MONTH_OF_YEAR);
+        int d = time.get(ChronoField.DAY_OF_MONTH);
+        int y = time.get(ChronoField.YEAR);
+        logMessage("Current Date is: " + m + "/" + d + "/" + y);
     }
 
 }
