@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -83,6 +85,21 @@ public class Robot extends TimedRobot {
     timey = new Timer();
   }
 
+  public static void checkSparkFaults(CANSparkMax spark) {
+    //System.out.println("Checking Faults for Spark: " + spark.getDeviceId());
+    for(CANSparkMax.FaultID fault: CANSparkMax.FaultID.values()) {
+      boolean fo = spark.getFault(fault);
+      if(fo)
+        System.err.println("Spark Fault: " + spark.getDeviceId() + " Fault: " + fault.name() + " Value: " + fo);
+    }
+    for(CANSparkMax.FaultID fault: CANSparkMax.FaultID.values()) {
+      boolean fo = spark.getFault(fault);
+      if(fo)
+        System.err.println("Spark Sticky Fault: " + spark.getDeviceId() + " Fault: " + fault.name() + " Value: " + fo);
+    }
+    spark.clearFaults();
+  }
+
   public void putNumberArray(String keyBase, double[] value) {
     for(int i = 0; i < value.length; i++) {
       SmartDashboard.putNumber(keyBase + "[" + i + "]", value[i]);
@@ -108,6 +125,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("TestingEncoder1",RobotMap.liftMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("TestingEncoder2",RobotMap.liftMotor2.getEncoder().getPosition());
+    
   }
 
   @Override
@@ -135,7 +155,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
-
+    checkSparkFaults(RobotMap.liftMotor);
+    checkSparkFaults(RobotMap.liftMotor2);
     SmartDashboard.putNumber("Time left", (int) (15 - timey.get() + 1));
   }
 
