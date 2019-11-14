@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
         System.err.println("Spark Fault: " + spark.getDeviceId() + " Fault: " + fault.name() + " Value: " + fo);
     }
     for(CANSparkMax.FaultID fault: CANSparkMax.FaultID.values()) {
-      boolean fo = spark.getFault(fault);
+      boolean fo = spark.getStickyFault(fault);
       if(fo)
         System.err.println("Spark Sticky Fault: " + spark.getDeviceId() + " Fault: " + fault.name() + " Value: " + fo);
     }
@@ -127,6 +127,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     SmartDashboard.putNumber("TestingEncoder1",RobotMap.liftMotor.getEncoder().getPosition());
     SmartDashboard.putNumber("TestingEncoder2",RobotMap.liftMotor2.getEncoder().getPosition());
+    checkSparkFaults(RobotMap.liftMotor);
+    checkSparkFaults(RobotMap.liftMotor2);
     
   }
 
@@ -155,9 +157,16 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
-    checkSparkFaults(RobotMap.liftMotor);
-    checkSparkFaults(RobotMap.liftMotor2);
+    debug(RobotMap.liftMotor);
+    debug(RobotMap.liftMotor2);
     SmartDashboard.putNumber("Time left", (int) (15 - timey.get() + 1));
+  }
+
+  public void debug(CANSparkMax spark) {
+    int id = spark.getDeviceId();
+    SmartDashboard.putNumber("Spark: " + id + " Applied Output", spark.getAppliedOutput());
+    SmartDashboard.putNumber("Spark: " + id + " Output Current", spark.getOutputCurrent());
+    SmartDashboard.putNumber("Spark: " + id + " Bus Voltage", spark.getBusVoltage());
   }
 
   @Override
