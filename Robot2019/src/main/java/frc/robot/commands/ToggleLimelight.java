@@ -17,9 +17,9 @@ public class ToggleLimelight extends InstantCommand {
   @Override
   protected void initialize() {
     if (SmartDashboard.getBoolean("Using Limelight", false)) {
-        SmartDashboard.putBoolean("Using Limelight", true);
-    } else {
         SmartDashboard.putBoolean("Using Limelight", false);
+    } else {
+        SmartDashboard.putBoolean("Using Limelight", true);
     }
   }
 }

@@ -18,6 +18,13 @@ public class Limelight {
 
   private NetworkTableInstance inst;
   private NetworkTable table;
+  /* http://docs.limelightvision.io/en/latest/networktables_api.html
+  tv = Whether the limelight has any valid targets (0 or 1)
+  tx = Horizontal Offset From Crosshair To Target (-27 degrees to 27 degrees)
+  ty = Vertical Offset From Crosshair To Target (-20.5 degrees to 20.5 degrees)
+  ta = Target Area (0% of image to 100% of image)
+  There are more values we could be using. Check the documentation.
+  */
   private double tv, tx, ty, ta;
 
   public Limelight() {
