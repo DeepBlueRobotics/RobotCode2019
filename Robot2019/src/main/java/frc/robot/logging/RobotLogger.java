@@ -15,11 +15,34 @@ public class RobotLogger {
     private static HashMap<String, Supplier<Boolean>> booleanFunctions;
     private static HashMap<String, Supplier<Integer>> integerFunctions;
     private static HashMap<String, Supplier<Double>> doubleFunctions;
+    private static int currentState, waitStates;
 
     static {
         booleanFunctions = new HashMap<>();
         integerFunctions = new HashMap<>();
         doubleFunctions = new HashMap<>();
+        currentState = 0;
+        waitStates = 0;
+    }
+
+    public static int getWaitStates() {
+        return waitStates;
+    }
+
+    public static void setWaitStates(int waitStates) {
+        RobotLogger.waitStates = waitStates < 0 ? 0 : waitStates;
+    }
+
+    public static int getCurrentState() {
+        return currentState;
+    }
+
+    public static void nextState() {
+        if(currentState == waitStates) {
+            currentState = 0;
+        } else {
+            currentState++;
+        }
     }
 
     public static void init() {
@@ -71,11 +94,14 @@ public class RobotLogger {
     }
 
     public static void logVars() {
-        ArrayList<Var<?>> vars = new ArrayList<>();
-        vars.addAll(getVars(booleanFunctions, Var::create));
-        vars.addAll(getVars(integerFunctions, Var::create));
-        vars.addAll(getVars(doubleFunctions, Var::create));
-        LoggerMessageEncoder.logVars(vars);
+        if(currentState == 0) {
+            ArrayList<Var<?>> vars = new ArrayList<>();
+            vars.addAll(getVars(booleanFunctions, Var::create));
+            vars.addAll(getVars(integerFunctions, Var::create));
+            vars.addAll(getVars(doubleFunctions, Var::create));
+            LoggerMessageEncoder.logVars(vars);
+        }
+        nextState();
     }
 
     private static <T> ArrayList<Var<T>> getVars(HashMap<String, Supplier<T>> map, BiFunction<String, T, Var<T>> creationFunction) {
