@@ -104,7 +104,7 @@ public class LoggerInterface {
     }
 
     public static void closeStream(PrintStream stream) {
-        if(useSingleStream) {
+        if(!useSingleStream) {
             stream.close();
         }
     }
