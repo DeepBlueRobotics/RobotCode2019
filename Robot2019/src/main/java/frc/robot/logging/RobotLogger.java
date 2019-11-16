@@ -99,6 +99,10 @@ public class RobotLogger {
             vars.addAll(getVars(booleanFunctions, Var::create));
             vars.addAll(getVars(integerFunctions, Var::create));
             vars.addAll(getVars(doubleFunctions, Var::create));
+            if(vars.size() == 0) {
+                nextState();
+                return;
+            }
             LoggerMessageEncoder.logVars(vars);
         }
         nextState();
