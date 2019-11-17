@@ -19,9 +19,19 @@ public class LoggerMessageEncoder {
     public static final String vMrk = "%4";
     public static final String mMrk = "%5";
     public static final String tMrk = "%6";
+    public static final String eMrk = "%7";
+    public static final String sMrk = "%8";
 
     static {
         allowMultiThreading = false;
+    }
+
+    public static void logErrorMessage(String message) {
+        logErrorMessage(message, true);
+    }
+
+    public static void logErrorMessage(String message, boolean includeTime) {
+        logMessage(message, includeTime, true);
     }
 
     public static void logMessage(String message) {
@@ -29,12 +39,19 @@ public class LoggerMessageEncoder {
     }
 
     public static void logMessage(String message, boolean includeTime) {
+        logMessage(message, includeTime, false);
+    }
+
+    public static void logMessage(String message, boolean includeTime, boolean isError) {
         thread(() -> {
             PrintStream ps = LoggerInterface.getStream();
             ps.print(mStr);
             if(includeTime) {
                 String time = getTimestamp();
                 ps.print(tMrk + time + pSep);
+            }
+            if(isError) {
+                ps.print(eMrk);
             }
             ps.print(format(message));
             ps.print(mEnd);
@@ -86,6 +103,21 @@ public class LoggerMessageEncoder {
             closeStream(ps);
         });
     }
+
+	public static void logMode(Mode mode) {
+        thread(() -> {
+            PrintStream ps = LoggerInterface.getStream();
+            ps.print(mStr);
+            ps.print(tMrk);
+            ps.print(getTimestamp());
+            ps.print(pSep);
+            ps.print(sMrk);
+            ps.print(mode.id);
+            ps.print(mEnd);
+            ps.flush();
+            closeStream(ps);
+        });
+	}
 
     public static String format(String message) {
         message = message.replaceAll("%", "%0");

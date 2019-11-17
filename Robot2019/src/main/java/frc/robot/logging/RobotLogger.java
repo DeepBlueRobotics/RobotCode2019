@@ -53,6 +53,10 @@ public class RobotLogger {
         LoggerMessageEncoder.logMessage(message);;
     }
 
+    public static void logErrorMessage(String message) {
+        LoggerMessageEncoder.logErrorMessage(message);;
+    }
+
     public static void registerVariableMapping(String id, String name) {
         LoggerMessageEncoder.mapId(id, name);
     }
@@ -114,6 +118,10 @@ public class RobotLogger {
             out.add(creationFunction.apply(id, map.get(id).get()));
         }
         return out;
+    }
+
+    public static void logMode(Mode mode) {
+        LoggerMessageEncoder.logMode(mode);
     }
 
     public static void writeHeaders() {
