@@ -16,7 +16,6 @@ public class Limelight {
     DIST, STEER, TARGET
   }
 
-  private NetworkTable table;
   /* http://docs.limelightvision.io/en/latest/networktables_api.html
   tv = Whether the limelight has any valid targets (0 or 1)
   tx = Horizontal Offset From Crosshair To Target (-27 degrees to 27 degrees)
@@ -29,13 +28,12 @@ public class Limelight {
   // Adjusts the distance between a vision target and the robot. Uses basic PID with the ty value from the network table.
   public double distanceAssist() {
     tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0);
-    ta = table.getEntry("ta").getDouble(0.0);
+    ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0.0);
     SmartDashboard.putNumber("Crosshair Vertical Offset", ty);
     double adjustment = 0.0;
     double area_threshold = 10;  // TODO: Set the desired area ratio. 0 to 100.
     double Kp = 0.2;   // TODO: Set PID K value.
 
-    // using area to calculate adjustment since camera does not have a fixed angle > 0.
     if (tv == 1.0) {
       adjustment = (area_threshold-ta)*Kp;
     }
