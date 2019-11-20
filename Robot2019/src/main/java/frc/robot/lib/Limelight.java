@@ -16,7 +16,6 @@ public class Limelight {
     DIST, STEER, TARGET
   }
 
-  private NetworkTableInstance inst;
   private NetworkTable table;
   /* http://docs.limelightvision.io/en/latest/networktables_api.html
   tv = Whether the limelight has any valid targets (0 or 1)
@@ -27,33 +26,26 @@ public class Limelight {
   */
   private double tv, tx, ty, ta;
 
-  public Limelight() {
-    inst = NetworkTableInstance.getDefault();
-    table = inst.getTable("limelight");
-  }
-
   // Adjusts the distance between a vision target and the robot. Uses basic PID with the ty value from the network table.
   public double distanceAssist() {
-    tv = table.getEntry("tv").getDouble(0.0);
-    ty = table.getEntry("ty").getDouble(0.0);
-    SmartDashboard.putNumber("Crosshair Vertical Offset", ty);
+    tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0);
     ta = table.getEntry("ta").getDouble(0.0);
+    SmartDashboard.putNumber("Crosshair Vertical Offset", ty);
     double adjustment = 0.0;
-    double area_threshold = 0.5;  // TODO: Set the desired area.
+    double area_threshold = 10;  // TODO: Set the desired area ratio. 0 to 100.
     double Kp = 0.2;   // TODO: Set PID K value.
 
+    // using area to calculate adjustment since camera does not have a fixed angle > 0.
     if (tv == 1.0) {
-      if (ta < area_threshold) {
-        adjustment += Kp * ty;
-      }
+      adjustment = (area_threshold-ta)*Kp;
     }
     return adjustment;
   }
 
   // Adjusts the angle facing a vision target. Uses basic PID with the tx value from the network table.
   public double steeringAssist() {
-    tv = table.getEntry("tv").getDouble(0.0);
-    tx = -table.getEntry("tx").getDouble(0.0);
+    tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0);
+    tx = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0);
     SmartDashboard.putBoolean("Found Vision Target", tv == 1.0);
     SmartDashboard.putNumber("Crosshair Horizontal Offset", tx);
     double adjustment = 0.0;
