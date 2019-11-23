@@ -24,6 +24,7 @@ public class Limelight {
   There are more values we could be using. Check the documentation.
   */
   private double tv, tx, ty, ta;
+  private double prev_tx = 1.0;
 
   // Adjusts the distance between a vision target and the robot. Uses basic PID with the ty value from the network table.
   public double distanceAssist() {
@@ -31,30 +32,38 @@ public class Limelight {
     ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0.0);
     SmartDashboard.putNumber("Crosshair Vertical Offset", ty);
     double adjustment = 0.0;
-    double area_threshold = 10;  // TODO: Set the desired area ratio. 0 to 100.
-    double Kp = 0.2;   // TODO: Set PID K value.
+    double area_threshold = 1.75;  // TODO: Set the desired area ratio. 0 to 100.
+    double Kp = 0.225;   // TODO: Set PID K value.
 
     if (tv == 1.0) {
-      adjustment = (area_threshold-ta)*Kp;
+      adjustment = (area_threshold - ta) * Kp;
     }
+    adjustment = Math.signum(adjustment) * Math.min(Math.abs(adjustment), 0.5);
     return adjustment;
   }
 
   // Adjusts the angle facing a vision target. Uses basic PID with the tx value from the network table.
   public double steeringAssist() {
     tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0);
-    tx = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0);
-    SmartDashboard.putBoolean("Found Vision Target", tv == 1.0);
+    tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0);
+    ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0.0);
     SmartDashboard.putNumber("Crosshair Horizontal Offset", tx);
+    SmartDashboard.putNumber("Found Vision Target", tv);
+    SmartDashboard.putNumber("Prev_tx", prev_tx);
     double adjustment = 0.0;
     double steering_factor = 0.25;
-    double Kp = 0.2;   // TODO: Set PID K value.
+    double Kp = 0.025;   // TODO: Set PID K value.
 
     if (tv == 1.0) {
-      adjustment += Kp * tx;
+      if (ta > 0.02) {
+        adjustment += Kp * tx;
+        prev_tx = tx;
+      }
     } else {
-      adjustment += steering_factor;
+      adjustment += Math.signum(prev_tx) * steering_factor;
     }
+    adjustment = Math.signum(adjustment) * Math.min(Math.abs(adjustment), 0.5);
+    SmartDashboard.putNumber("Adjustment", adjustment);
     return adjustment;
   }
 
