@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.logging.vars.Var;
 
 /**
@@ -245,6 +246,23 @@ public class RobotLogger {
                 return;
             }
             LoggerMessageEncoder.logVars(vars);
+            for(Var<?> var: vars) {
+                try {
+                    switch(var.type) {
+                        case BOOLEAN:
+                            SmartDashboard.putBoolean(var.id, (Boolean)var.data);
+                            break;
+                        case INTEGER:
+                            SmartDashboard.putNumber(var.id, (Integer)var.data);
+                            break;
+                        case DOUBLE:
+                            SmartDashboard.putNumber(var.id, (Double)var.data);
+                            break;
+                    }
+                } catch(ClassCastException e) {
+                    System.err.println("Error Putting Var: " + var.id + " to SmartDashboard. Invalid type.");
+                }
+            }
         }
         nextState();
     }
