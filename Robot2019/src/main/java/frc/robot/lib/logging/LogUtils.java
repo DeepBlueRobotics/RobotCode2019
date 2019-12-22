@@ -12,7 +12,7 @@ final class LogUtils {
 
     static void handleLoggingError(boolean sector, String task, Exception error) {
         if(sector) {
-            System.err.println("Error occured while " + task + " logging will continue to run with event logging disabled.");
+            System.err.println("Error occured while " + task + ". Logging will continue to run with event logging disabled.");
             if(error != null) {
                 error.printStackTrace(System.err);
             }
