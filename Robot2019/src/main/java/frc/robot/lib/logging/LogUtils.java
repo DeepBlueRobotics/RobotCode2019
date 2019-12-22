@@ -27,6 +27,15 @@ final class LogUtils {
         }
     }
 
+    static void handleLoggingApiDisableError(String task, Exception error) {
+        System.err.println("Error occured while " + task + ". Logging will be disabled.");
+        if(error != null) {
+            error.printStackTrace(System.err);
+        }
+        disableEvents();
+        disableData();
+    }
+
     private LogUtils() {};
 
 }
