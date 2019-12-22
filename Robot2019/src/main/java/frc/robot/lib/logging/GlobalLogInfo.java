@@ -41,4 +41,6 @@ public final class GlobalLogInfo {
         isInit = true;
     }
 
+    private GlobalLogInfo() {}
+
 }
