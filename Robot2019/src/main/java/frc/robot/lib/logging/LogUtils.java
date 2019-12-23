@@ -10,6 +10,12 @@ final class LogUtils {
         }
     }
 
+    static void checkNotInit() throws IllegalStateException {
+        if(GlobalLogInfo.isInit()) {
+            throw new IllegalStateException("Logging code already initialized");
+        }
+    }
+
     static void handleLoggingError(boolean sector, String task, Exception error) {
         if(sector) {
             System.err.println("Error occured while " + task + ". Logging will continue to run with event logging disabled.");

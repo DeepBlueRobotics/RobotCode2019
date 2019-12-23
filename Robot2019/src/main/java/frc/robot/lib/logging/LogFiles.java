@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+
 import edu.wpi.first.wpilibj.DriverStation;
 
 final class LogFiles {
@@ -19,7 +22,7 @@ final class LogFiles {
     private static String dirString = System.getProperty("user.home") + "/logs";
     private static File dirFile, infoFile;
 
-    static void init() {
+    static void init(CSVFormat dataFormat) {
         dirFile = new File(dirString);
         try {
             dirFile.createNewFile();
@@ -39,7 +42,7 @@ final class LogFiles {
             findExistingLogIds();
             clearOldLogs();
             findLogId();
-            createLogFiles();
+            createLogFiles(dataFormat);
         } catch(AbortException e) {
             LogUtils.handleLoggingApiDisableError(e.getMessage(), (Exception)e.getCause());
             return;
@@ -116,7 +119,7 @@ final class LogFiles {
         throw new IllegalStateException("No avaliable log id. If this error occures please verify your instalation as this should not be possible.");
     }
 
-    private static void createLogFiles() throws AbortException {
+    private static void createLogFiles(CSVFormat dataFormat) throws AbortException {
         try {
             File txtFile = new File(dirString + "/" + logId + ".txt");
             File csvFile = new File(dirString + "/" + logId + ".csv");
@@ -127,7 +130,7 @@ final class LogFiles {
                 bw.append(getLogTitle());
                 bw.newLine();
             }
-            GlobalLogInfo.init(txtFile, csvFile);
+            GlobalLogInfo.init(txtFile, csvFile, new CSVPrinter(new FileWriter(csvFile), dataFormat));
         } catch(IOException e) {
             throw new AbortException("creating log files", e);
         }
