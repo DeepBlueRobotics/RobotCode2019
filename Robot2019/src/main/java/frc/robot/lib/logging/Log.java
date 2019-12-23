@@ -4,6 +4,17 @@ import java.util.logging.Level;
 
 public final class Log {
 
+    public static void logException(Throwable cause) {
+        logException(null, cause);
+    }
+
+    public static void logException(String message, Throwable cause) {
+        if(GlobalLogInfo.areEventsDisabled()) {
+            return;
+        }
+        EventLog.logException(message, cause);
+    }
+
     public static void logErrorMessage(String message) throws IllegalStateException {
         if(GlobalLogInfo.areEventsDisabled()) {
             return;

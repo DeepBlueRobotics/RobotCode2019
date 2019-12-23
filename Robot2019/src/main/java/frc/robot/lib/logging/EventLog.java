@@ -50,6 +50,12 @@ final class EventLog {
         logger.log(level, message);
     }
 
+    static void logException(String message, Throwable error) throws IllegalArgumentException {
+        LogUtils.checkInit();
+        message = message == null || message.isEmpty() ? error.getMessage() : message;
+        logger.log(Level.SEVERE, message, error);
+    }
+
     private static synchronized void error(String msg, Exception ex, int code) {
         String task;
         switch(code) {
