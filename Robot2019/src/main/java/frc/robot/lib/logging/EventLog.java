@@ -50,7 +50,7 @@ final class EventLog {
         logger.log(level, message);
     }
 
-    static void logException(String message, Throwable error) throws IllegalArgumentException {
+    static void logException(String message, Throwable error) throws IllegalStateException {
         LogUtils.checkInit();
         message = message == null || message.isEmpty() ? error.getMessage() : message;
         logger.log(Level.SEVERE, message, error);

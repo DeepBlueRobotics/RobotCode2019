@@ -35,7 +35,8 @@ final class DataLog {
         }
     }
 
-    static void registerVar(VarType type, String id, Supplier<Object> supplier) throws IllegalArgumentException {
+    static void registerVar(VarType type, String id, Supplier<Object> supplier) throws IllegalArgumentException, IllegalStateException {
+        LogUtils.checkNotInit();
         if(varIds.contains(id)) {
             throw new IllegalArgumentException("Variable is already registered");
         }
@@ -44,7 +45,8 @@ final class DataLog {
         dataSuppliers.put(id, supplier);
     }
 
-    static void logData() {
+    static void logData() throws IllegalStateException {
+        LogUtils.checkInit();
         fetchData();
         try {
             CSVPrinter printer = GlobalLogInfo.getDataPriter();
@@ -56,7 +58,8 @@ final class DataLog {
         putSmartDashboardData();
     }
 
-    static void fetchData() {
+    static void fetchData() throws IllegalStateException {
+        LogUtils.checkInit();
         for(String id: varIds) {
             data.put(id, dataSuppliers.get(id).get());
         }
@@ -70,7 +73,10 @@ final class DataLog {
         return out;
     }
 
-    static void putSmartDashboardData() {
+    static void putSmartDashboardData() throws IllegalStateException {
+        if(data.size() != varIds.size()) {
+            fetchData();
+        }
         for(String id: varIds) {
             try {
                 switch(types.get(id)) {

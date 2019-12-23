@@ -23,6 +23,9 @@ final class LogFiles {
     private static File dirFile, infoFile;
 
     static void init(CSVFormat dataFormat) {
+        if(!GlobalLogInfo.isInit()) {
+            return;
+        }
         dirFile = new File(dirString);
         try {
             dirFile.createNewFile();
