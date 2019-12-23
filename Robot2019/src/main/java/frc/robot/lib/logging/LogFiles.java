@@ -15,6 +15,9 @@ import org.apache.commons.csv.CSVPrinter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
+/**
+ * Creates the required log files and initializes logging code
+ */
 final class LogFiles {
     
     private static int logId;
@@ -22,8 +25,12 @@ final class LogFiles {
     private static String dirString = System.getProperty("user.home") + "/logs";
     private static File dirFile, infoFile;
 
+    /**
+     * Initializes the logging code or returns if it is already initialized
+     * @param dataFormat The {@link CSVFormat} to use when logging data
+     */
     static void init(CSVFormat dataFormat) {
-        if(!GlobalLogInfo.isInit()) {
+        if(GlobalLogInfo.isInit()) {
             return;
         }
         dirFile = new File(dirString);

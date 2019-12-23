@@ -8,6 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * Handles event logging code
+ */
 final class EventLog {
 
     private static Logger logger;
@@ -26,6 +29,9 @@ final class EventLog {
         };
     }
 
+    /**
+     * Initializes the event logging code or returns if it has already been initialized
+     */
     static void init() {
         if(!GlobalLogInfo.isInit()) {
             return;
@@ -41,15 +47,31 @@ final class EventLog {
         }
     }
 
+    /**
+     * Sets the lowest {@link Level} of message to log
+     * @param level The {@link Level} to set as the minumum
+     */
     static void setLoggingLevel(Level level) {
         logger.setLevel(level);
     }
 
+    /**
+     * Logs a message to the log file
+     * @param message The message to log
+     * @param level The level at which to log the message
+     * @throws IllegalStateException If the event logging code is not yet initialized
+     */
     static void log(String message, Level level) throws IllegalStateException {
         LogUtils.checkInit();
         logger.log(level, message);
     }
 
+    /**
+     * Logs an {@link Throwable} to the log file
+     * @param message The message to log with the {@link Throwable}. This will be replaced with {@link Throwable#getMessage()} if <code>null</code> or <code>""</code>
+     * @param error The {@link Throwable} to log
+     * @throws IllegalStateException If the event logging code is not yet initialized
+     */
     static void logException(String message, Throwable error) throws IllegalStateException {
         LogUtils.checkInit();
         message = message == null || message.isEmpty() ? error.getMessage() : message;
