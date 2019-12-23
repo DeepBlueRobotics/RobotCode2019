@@ -36,9 +36,13 @@ public final class GlobalLogInfo {
     }
 
     static void init(File eventFile, File dataFile) {
+        if(isInit()) {
+            return;
+        }
         GlobalLogInfo.eventFile = eventFile;
         GlobalLogInfo.dataFile = dataFile;
         isInit = true;
+        EventLog.init();
     }
 
     private GlobalLogInfo() {}

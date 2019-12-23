@@ -4,6 +4,13 @@ import java.util.logging.Level;
 
 public final class Log {
 
+    public static void init() throws IllegalStateException {
+        if(GlobalLogInfo.isInit()) {
+            throw new IllegalStateException("Logging api already initialized");
+        }
+        LogFiles.init();
+    }
+
     public static void logException(Throwable cause) {
         logException(null, cause);
     }
