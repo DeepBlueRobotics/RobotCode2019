@@ -51,6 +51,7 @@ public final class GlobalLogInfo {
         GlobalLogInfo.dataPrinter = dataPrinter;
         isInit = true;
         EventLog.init();
+        DataLog.init();
     }
 
     private GlobalLogInfo() {}

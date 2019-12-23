@@ -22,6 +22,19 @@ final class DataLog {
         registerVar(VarType.STRING, "Timestamp", () -> LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS")));
     }
 
+    static void init() {
+        if(!GlobalLogInfo.isInit()) {
+            return;
+        }
+        try {
+            CSVPrinter printer = GlobalLogInfo.getDataPriter();
+            printer.printRecord(varIds.toArray());
+            printer.flush();
+        } catch(IOException e) {
+            LogUtils.handleLoggingError(false, "printing csv headers", e);
+        }
+    }
+
     static void registerVar(VarType type, String id, Supplier<Object> supplier) throws IllegalArgumentException {
         if(varIds.contains(id)) {
             throw new IllegalArgumentException("Variable is already registered");
