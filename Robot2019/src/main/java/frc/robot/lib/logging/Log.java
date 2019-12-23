@@ -22,6 +22,9 @@ public final class Log {
 
     //Event Logging Code
     public static void logException(Throwable cause) {
+        if(GlobalLogInfo.areEventsDisabled()) {
+            return;
+        }
         logException(null, cause);
     }
 
@@ -61,10 +64,16 @@ public final class Log {
     }
 
     public static void setLoggingLevel(Level level) {
+        if(GlobalLogInfo.areEventsDisabled()) {
+            return;
+        }
         EventLog.setLoggingLevel(level);
     }
 
     public static void disableEventLogging() {
+        if(GlobalLogInfo.areEventsDisabled()) {
+            return;
+        }
         setLoggingLevel(Level.OFF);
     }
 
@@ -74,26 +83,41 @@ public final class Log {
     }
 
     public static void registerBooleanVar(String id, Supplier<Boolean> supplier) throws IllegalArgumentException, IllegalStateException {
+        if(GlobalLogInfo.isDataDisabled()) {
+            return;
+        }
         LogUtils.checkNotInit();
         DataLog.registerVar(VarType.BOOLEAN, id, createSupplier(supplier));
     }
 
     public static void registerIntegerVar(String id, Supplier<Integer> supplier) throws IllegalArgumentException, IllegalStateException {
+        if(GlobalLogInfo.isDataDisabled()) {
+            return;
+        }
         LogUtils.checkNotInit();
         DataLog.registerVar(VarType.INTEGER, id, createSupplier(supplier));
     }
 
     public static void registerDoubleVar(String id, Supplier<Double> supplier) throws IllegalArgumentException, IllegalStateException {
+        if(GlobalLogInfo.isDataDisabled()) {
+            return;
+        }
         LogUtils.checkNotInit();
         DataLog.registerVar(VarType.DOUBLE, id, createSupplier(supplier));
     }
 
     public static void registerStringVar(String id, Supplier<String> supplier) throws IllegalArgumentException, IllegalStateException {
+        if(GlobalLogInfo.isDataDisabled()) {
+            return;
+        }
         LogUtils.checkNotInit();
         DataLog.registerVar(VarType.STRING, id, createSupplier(supplier));
     }
 
     public static void fetchData() throws IllegalStateException {
+        if(GlobalLogInfo.isDataDisabled()) {
+            return;
+        }
         LogUtils.checkInit();
         DataLog.fetchData();
     }
@@ -114,6 +138,9 @@ public final class Log {
     }
 
     public static void putDataToSmartDashboard() throws IllegalStateException {
+        if(GlobalLogInfo.isDataDisabled()) {
+            return;
+        }
         LogUtils.checkInit();
         DataLog.putSmartDashboardData();
     }
@@ -127,6 +154,9 @@ public final class Log {
     }
 
     public static void logData() throws IllegalStateException {
+        if(GlobalLogInfo.isDataDisabled()) {
+            return;
+        }
         LogUtils.checkInit();
         if(step == 0) {
             DataLog.logData();
