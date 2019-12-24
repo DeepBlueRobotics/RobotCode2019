@@ -66,6 +66,7 @@ final class DataLog {
     static void logData() throws IllegalStateException {
         LogUtils.checkInit();
         fetchData();
+        TimeLog.startDataLogCycle();
         try {
             CSVPrinter printer = GlobalLogInfo.getDataPriter();
             printer.printRecord((Object[])exportData());
@@ -73,6 +74,7 @@ final class DataLog {
         } catch(IOException e) {
             LogUtils.handleLoggingError(false, "writing data", e);
         }
+        TimeLog.endDataLogCycle();
         putSmartDashboardData();
     }
 
@@ -82,9 +84,11 @@ final class DataLog {
      */
     static void fetchData() throws IllegalStateException {
         LogUtils.checkInit();
+        TimeLog.startDataFetchCycle();
         for(String id: varIds) {
             data.put(id, dataSuppliers.get(id).get());
         }
+        TimeLog.endDataFetchCycle();
     }
 
     private static Object[] exportData() {

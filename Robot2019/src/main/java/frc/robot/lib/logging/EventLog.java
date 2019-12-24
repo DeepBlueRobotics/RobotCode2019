@@ -63,7 +63,9 @@ final class EventLog {
      */
     static void log(String message, Level level) throws IllegalStateException {
         LogUtils.checkInit();
+        TimeLog.startEventLogCycle();
         logger.log(level, message);
+        TimeLog.endEventLogCycle();
     }
 
     /**
@@ -75,7 +77,9 @@ final class EventLog {
     static void logException(String message, Throwable error) throws IllegalStateException {
         LogUtils.checkInit();
         message = message == null || message.isEmpty() ? error.getMessage() : message;
+        TimeLog.startEventLogCycle();
         logger.log(Level.SEVERE, message, error);
+        TimeLog.endEventLogCycle();
     }
 
     private static synchronized void error(String msg, Exception ex, int code) {
