@@ -64,10 +64,10 @@ final class LogFiles {
         File[] files = dirFile.listFiles();
         for(File file: files) {
             String name = file.getName();
-            if(name.indexOf(" ") == -1) {
+            if(name.indexOf(".") == -1) {
                 continue;
             }
-            String idString = file.getName().substring(0, name.indexOf(" "));
+            String idString = file.getName().substring(0, name.indexOf("."));
             try {
                 int id = Integer.parseInt(idString);
                 if(!existingLogIds.contains(id)) {
@@ -81,17 +81,36 @@ final class LogFiles {
 
     private static void clearOldLogs() throws AbortException {
         int lines = 0;
+        ArrayList<String> linesD = new ArrayList<>();
         try(BufferedReader br = new BufferedReader(new FileReader(infoFile))) {
-            while(br.readLine() != null) {
+            String line;
+            while((line = br.readLine()) != null) {
+                linesD.add(line);
                 lines++;
             }
         } catch(IOException e) {
             throw new AbortException("reading info file", e);
         }
-        if(lines < 100) {
-            return;
+        int endIdx = lines - 100;
+        if(lines > 100) {
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(infoFile))) {
+                for(int i = endIdx+1; i < lines; i++) {
+                    bw.append(linesD.get(i));
+                    bw.newLine();
+                }
+            } catch(IOException e) {
+                throw new AbortException("writing info file", e);
+            }
+            for(int i = 0; i < endIdx+1; i++) {
+                try {
+                    int id = Integer.parseInt(linesD.get(i).substring(0, linesD.get(i).indexOf(" ")));
+                    new File(dirString + "/" + id + ".txt").delete();
+                    new File(dirString + "/" + id + ".csv").delete();
+                    existingLogIds.remove(id);
+                } catch(Exception e) {}
+            }
         }
-        ArrayList<String> linesD = new ArrayList<>();
+        linesD.clear();
         try(BufferedReader br = new BufferedReader(new FileReader(infoFile))) {
             String line;
             while((line = br.readLine()) != null) {
@@ -100,22 +119,19 @@ final class LogFiles {
         } catch(IOException e) {
             throw new AbortException("reading info file", e);
         }
-        int endIdx = lines - 100;
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(infoFile))) {
-            for(int i = endIdx+1; i < lines; i++) {
+            for(int i = 0; i < lines; i++) {
+                String line = linesD.get(i);
+                try {
+                    if(!existingLogIds.contains(Integer.parseInt(line.substring(0, line.indexOf(" "))))) {
+                        continue;
+                    }
+                } catch(Exception e) {e.printStackTrace();}
                 bw.append(linesD.get(i));
                 bw.newLine();
             }
         } catch(IOException e) {
             throw new AbortException("writing info file", e);
-        }
-        for(int i = 0; i < endIdx+1; i++) {
-            try {
-                int id = Integer.parseInt(linesD.get(i).substring(0, linesD.get(i).indexOf(" ")));
-                new File(dirString + "/" + id + ".txt").delete();
-                new File(dirString + "/" + id + ".csv").delete();
-                existingLogIds.remove(id);
-            } catch(Exception e) {}
         }
     }
 
@@ -136,7 +152,7 @@ final class LogFiles {
             txtFile.createNewFile();
             csvFile.createNewFile();
             try(BufferedWriter bw = new BufferedWriter(new FileWriter(infoFile, true))) {
-                bw.append(logId + "");
+                bw.append(logId + " ");
                 bw.append(getLogTitle());
                 bw.newLine();
             }

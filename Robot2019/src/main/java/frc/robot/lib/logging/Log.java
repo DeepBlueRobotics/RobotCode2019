@@ -242,7 +242,6 @@ public final class Log {
      * @return An {@link ArrayList} containing the ids of all registered variabless
      */
     public static ArrayList<String> getVarIds() {
-        LogUtils.checkInit();
         return DataLog.getVarIds();
     }
 
@@ -250,7 +249,6 @@ public final class Log {
      * @return A {@link HashMap} mapping all registered variable ids to their respective {@link VarType}
      */
     public static HashMap<String, VarType> getVarTypes() {
-        LogUtils.checkInit();
         return DataLog.getTypes();
     }
 
@@ -258,7 +256,6 @@ public final class Log {
      * @return A {@link HashMap} mapping all registered variable ids to their last fetched value or an empty map if data has not yet been fetched
      */
     public static HashMap<String, Object> getData() {
-        LogUtils.checkInit();
         return DataLog.getData();
     }
 
