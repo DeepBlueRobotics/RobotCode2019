@@ -1,10 +1,15 @@
 package frc.robot.lib.logging;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.logging.ErrorManager;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
@@ -39,8 +44,7 @@ final class EventLog {
         try {
             handler = new FileHandler(GlobalLogInfo.getEventFile().getAbsolutePath(), false);
             handler.setErrorManager(errorManager);
-            System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tH:%1$tM:%1$tS.%1$tL %4$s: %5$s%6$s%n");
-            handler.setFormatter(new SimpleFormatter());
+            handler.setFormatter(new LogFormatter());
             logger.addHandler(handler);
         } catch(IOException e) {
             LogUtils.handleLoggingError(true, "setting up event log handler", e);
@@ -107,5 +111,43 @@ final class EventLog {
     }
 
     private EventLog() {}
+
+    private static final class LogFormatter extends SimpleFormatter {
+
+        private final String format = "%1$tH:%1$tM:%1$tS.%1$tL %4$s: %5$s%6$s%n";
+
+        @Override
+        public String format(LogRecord record) {
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(
+                    record.getInstant(), ZoneId.systemDefault());
+            String source;
+            if (record.getSourceClassName() != null) {
+                source = record.getSourceClassName();
+                if (record.getSourceMethodName() != null) {
+                   source += " " + record.getSourceMethodName();
+                }
+            } else {
+                source = record.getLoggerName();
+            }
+            String message = formatMessage(record);
+            String throwable = "";
+            if (record.getThrown() != null) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                pw.println();
+                record.getThrown().printStackTrace(pw);
+                pw.close();
+                throwable = sw.toString();
+            }
+            return String.format(format,
+                                 zdt,
+                                 source,
+                                 record.getLoggerName(),
+                                 record.getLevel().getLocalizedName(),
+                                 message,
+                                 throwable);
+        }
+
+    }
 
 }
