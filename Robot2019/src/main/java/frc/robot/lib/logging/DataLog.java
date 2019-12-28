@@ -157,6 +157,14 @@ final class DataLog {
         return new HashMap<>(data);
     }
 
+    static void handleIllegalArgumentException(IllegalArgumentException e) {
+        if(e == null) {
+            System.err.println("IllegalArgumentException occured in logging code.");
+        }
+        StackTraceElement error = e.getStackTrace()[0];
+        System.err.println(e.getMessage() + "! Caused by: " + error.getClassName() + "." + error.getMethodName() + ":" + error.getLineNumber());
+    }
+
     private DataLog() {}
 
 }

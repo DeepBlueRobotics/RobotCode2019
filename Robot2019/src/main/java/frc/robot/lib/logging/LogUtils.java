@@ -68,6 +68,18 @@ final class LogUtils {
         disableData();
     }
 
-    private LogUtils() {};
+    /**
+     * Handles an {@link IllegalStateException} caused by an illegal state of the logging code by notifying the user
+     * @param e The {@link IllegalStateException} to handle
+     */
+	static void handleIllegalState(IllegalStateException e) {
+        if(e == null) {
+            System.err.println("IllegalStateException occurred in logging code. IsInit=" + GlobalLogInfo.isInit());
+        }
+        StackTraceElement error = e.getStackTrace()[0];
+        System.err.println(e.getMessage() + "! Caused by: " + error.getClassName() + "." + error.getMethodName() + ":" + error.getLineNumber());
+	}
+
+    private LogUtils() {}
 
 }
