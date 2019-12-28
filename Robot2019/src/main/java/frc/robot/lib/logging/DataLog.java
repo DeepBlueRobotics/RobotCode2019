@@ -71,7 +71,6 @@ final class DataLog {
         try {
             CSVPrinter printer = GlobalLogInfo.getDataPrinter();
             printer.printRecord((Object[])exportData());
-            printer.flush();
         } catch(IOException e) {
             LogUtils.handleLoggingError(false, "writing data", e);
         }
