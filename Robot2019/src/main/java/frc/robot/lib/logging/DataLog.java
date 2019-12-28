@@ -33,7 +33,7 @@ final class DataLog {
             return;
         }
         try {
-            CSVPrinter printer = GlobalLogInfo.getDataPriter();
+            CSVPrinter printer = GlobalLogInfo.getDataPrinter();
             printer.printRecord(varIds.toArray());
             printer.flush();
         } catch(IOException e) {
@@ -68,7 +68,7 @@ final class DataLog {
         fetchData();
         TimeLog.startDataLogCycle();
         try {
-            CSVPrinter printer = GlobalLogInfo.getDataPriter();
+            CSVPrinter printer = GlobalLogInfo.getDataPrinter();
             printer.printRecord((Object[])exportData());
             printer.flush();
         } catch(IOException e) {

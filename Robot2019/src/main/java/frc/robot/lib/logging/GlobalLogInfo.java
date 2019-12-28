@@ -51,7 +51,7 @@ public final class GlobalLogInfo {
     /**
      * @return The {@link CSVPrinter} being used to log data
      */
-    static CSVPrinter getDataPriter() {
+    static CSVPrinter getDataPrinter() {
         return dataPrinter;
     }
 
