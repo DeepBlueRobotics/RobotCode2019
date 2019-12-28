@@ -2,6 +2,8 @@ package frc.robot.lib.logging;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.RobotController;
+
 /**
  * Keeps track of the time spent on different sections of the logging code
  */
@@ -23,7 +25,7 @@ public final class TimeLog {
     }
 
     private static long getMillis() {
-        return System.nanoTime() / 1000000;
+        return RobotController.getFPGATime()/1000;
     }
 
     private static double calculateAvg(double original, long newData) {
