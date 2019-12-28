@@ -60,9 +60,9 @@ public final class TimeLog {
      * Takes the current value of the data fetch timer and uses it to update the max and avg cycle times
      */
     static void endDataFetchCycle() {
-        long elapsedTime = getMillis() - eventStart;
-        dataFetchMax = Math.max(eventMax, elapsedTime);
-        dataFetchAvg = calculateAvg(eventAvg, elapsedTime);
+        long elapsedTime = getMillis() - dataFetchStart;
+        dataFetchMax = Math.max(dataFetchMax, elapsedTime);
+        dataFetchAvg = calculateAvg(dataFetchAvg, elapsedTime);
     }
 
     /**
@@ -76,9 +76,9 @@ public final class TimeLog {
      * Takes the current value of the data log timer and uses it to update the max and avg cycle times
      */
     static void endDataLogCycle() {
-        long elapsedTime = getMillis() - eventStart;
-        dataLogMax = Math.max(eventMax, elapsedTime);
-        dataLogAvg = calculateAvg(eventAvg, elapsedTime);
+        long elapsedTime = getMillis() - dataLogStart;
+        dataLogMax = Math.max(dataLogMax, elapsedTime);
+        dataLogAvg = calculateAvg(dataLogAvg, elapsedTime);
     }
 
     /**
