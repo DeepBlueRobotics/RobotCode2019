@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 final class DataLog {
 
+    private static Object[] dataExportBuffer = null;
     private static ArrayList<String> varIds = new ArrayList<>();
     private static HashMap<String, VarType> types = new HashMap<>();
     private static HashMap<String, Object> data = new HashMap<>();
@@ -92,11 +93,13 @@ final class DataLog {
     }
 
     private static Object[] exportData() {
-        Object[] out = new Object[varIds.size()];
-        for(int i = 0; i < varIds.size(); i++) {
-            out[i] = data.get(varIds.get(i));
+        if(dataExportBuffer == null) {
+            dataExportBuffer = new Object[varIds.size()];
         }
-        return out;
+        for(int i = 0; i < varIds.size(); i++) {
+            dataExportBuffer[i] = data.get(varIds.get(i));
+        }
+        return dataExportBuffer;
     }
 
     /**
