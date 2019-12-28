@@ -1,6 +1,7 @@
 package frc.robot.lib.logging;
 
 import java.io.File;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.csv.CSVPrinter;
 
@@ -12,6 +13,7 @@ public final class GlobalLogInfo {
     private static boolean isInit, areEventsDisabled, isDataDisabled;
     private static File eventFile, dataFile;
     private static CSVPrinter dataPrinter;
+    public static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
     /**
      * @return Whether the logging code has been initialized
