@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import org.apache.commons.csv.CSVFormat;
@@ -165,10 +164,11 @@ final class LogFiles {
     private static String getLogTitle() {
         DriverStation ds = DriverStation.getInstance();
         DriverStation.MatchType type = ds.getMatchType();
+        String time = LocalDateTime.now().format(GlobalLogInfo.dateTimeFormat);
         if(type == DriverStation.MatchType.None) {
-            return LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss.SSS"));
+            return time;
         }
-        return type.toString() + " " + ds.getMatchNumber() + "-" + ds.getReplayNumber();
+        return time + " " + type.toString() + " " + ds.getMatchNumber() + "-" + ds.getReplayNumber();
     }
 
     private LogFiles() {}
