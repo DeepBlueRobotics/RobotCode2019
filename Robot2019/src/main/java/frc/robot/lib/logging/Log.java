@@ -32,6 +32,8 @@ public final class Log {
         try {
             LogUtils.checkNotInit();
             LogFiles.init(dataFormat);
+            EventLog.init();
+            DataLog.init();
         } catch(IllegalStateException e) {
             LogUtils.handleIllegalState(e);
         }
