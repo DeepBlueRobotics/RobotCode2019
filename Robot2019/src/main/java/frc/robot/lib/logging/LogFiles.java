@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -22,7 +23,7 @@ final class LogFiles {
     private static int logId;
     private static ArrayList<Integer> existingLogIds;
     private static String dirString = System.getProperty("user.home") + "/logs";
-    private static File dirFile, infoFile;
+    private static File dirFile, infoFile, infoBackupFile;
 
     /**
      * Initializes the logging code or returns if it is already initialized
@@ -40,14 +41,17 @@ final class LogFiles {
             return;
         }
         infoFile = new File(dirString + "/info.txt");
+        infoBackupFile = new File(dirString + "/infobkup.txt");
         try {
             infoFile.createNewFile();
+            infoBackupFile.createNewFile();
         } catch(IOException e) {
-            LogUtils.handleLoggingApiDisableError("creating log directory", e);
+            LogUtils.handleLoggingApiDisableError("creating info file", e);
             return;
         }
         existingLogIds = new ArrayList<>();
         try {
+            backupInfoFile();
             findExistingLogIds();
             clearOldLogs();
             findLogId();
@@ -55,6 +59,29 @@ final class LogFiles {
         } catch(AbortException e) {
             LogUtils.handleLoggingApiDisableError(e.getMessage(), (Exception)e.getCause());
             return;
+        }
+    }
+
+    private static void backupInfoFile() throws AbortException {
+        ArrayList<String> data = new ArrayList<>();
+        try(BufferedReader reader = new BufferedReader(new FileReader(infoFile))) {
+            String line;
+            while((line = reader.readLine()) != null) {
+                data.add(line);
+            }
+        } catch(IOException e) {
+            throw new AbortException("reading info file", e);
+        }
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(infoBackupFile))) {
+            Iterator<String> itr = data.iterator();
+            while(itr.hasNext()) {
+                writer.append(itr.next());
+                if(itr.hasNext()) {
+                    writer.newLine();
+                }
+            }
+        } catch(IOException e) {
+            throw new AbortException("writing info backup file", e);
         }
     }
 
