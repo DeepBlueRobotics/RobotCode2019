@@ -318,7 +318,7 @@ public final class Log {
     }
 
     /**
-     * @return How often data is logged where each interval unit represents a data logging interval of ~20ms
+     * @return The data logging interval
      * @see #setDataLogInterval(int)
      * @see #logData()
      */
@@ -328,7 +328,7 @@ public final class Log {
 
     /**
      * Sets how often data should be logged
-     * @param interval The interval with which data should be logged where each interval unit represents a data logging interval of ~20ms
+     * @param interval The interval with which data should be logged
      * @see #getDataLogInterval()
      * @see #logData()
      */
@@ -337,7 +337,7 @@ public final class Log {
     }
 
     /**
-     * Logs data to the data file or pauses if determined by the data logging interval where each interval unit represents a data logging interval of ~20ms
+     * Logs data to the data file or returns if determined by the data logging interval where each interval unit represents one logData call
      * @see #getDataLoginterval()
      * @see #setDataLoginterval(int)
      */
