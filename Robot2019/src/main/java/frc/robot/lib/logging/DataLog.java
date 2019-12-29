@@ -1,10 +1,7 @@
 package frc.robot.lib.logging;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -24,13 +21,13 @@ final class DataLog {
     private static HashMap<String, VarType> types = new HashMap<>();
     private static HashMap<String, Object> data = new HashMap<>();
     private static HashMap<String, Supplier<Object>> dataSuppliers = new HashMap<>();
-    private static Duration timeDiff;
+    private static LocalDateTime refLocalDateTime;
+    private static long refFGATime;
 
     static {
-        LocalDateTime systemClock = Instant.ofEpochMilli(RobotController.getFPGATime()/1000).atZone(ZoneId.systemDefault()).toLocalDateTime();
-        LocalDateTime now = LocalDateTime.now();
-        timeDiff = Duration.between(systemClock, now);
-        registerVar(VarType.STRING, "Timestamp", () -> Instant.ofEpochMilli(RobotController.getFPGATime()/1000).atZone(ZoneId.systemDefault()).toLocalDateTime().plus(timeDiff).format(GlobalLogInfo.dateTimeFormat));
+        refLocalDateTime = LocalDateTime.now();
+        refFGATime = RobotController.getFPGATime();
+        registerVar(VarType.STRING, "Timestamp", () -> refLocalDateTime.plusNanos(1000*(RobotController.getFPGATime()-refFGATime)).format(GlobalLogInfo.dateTimeFormat));
     }
 
     /**
