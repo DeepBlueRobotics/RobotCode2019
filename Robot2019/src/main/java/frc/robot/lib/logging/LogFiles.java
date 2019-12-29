@@ -111,8 +111,14 @@ final class LogFiles {
         try(BufferedReader br = new BufferedReader(new FileReader(infoFile))) {
             String line;
             while((line = br.readLine()) != null) {
-                linesD.add(line);
-                lines++;
+                try {
+                    int id = Integer.parseInt(line.substring(0, line.indexOf(" ")));
+                    if(!existingLogIds.contains(id)) {
+                        continue;
+                    }
+                    linesD.add(line);
+                    lines++;
+                } catch(Exception e) {}
             }
         } catch(IOException e) {
             throw new AbortException("reading info file", e);
@@ -135,29 +141,6 @@ final class LogFiles {
                     existingLogIds.remove(id);
                 } catch(Exception e) {}
             }
-        }
-        linesD.clear();
-        try(BufferedReader br = new BufferedReader(new FileReader(infoFile))) {
-            String line;
-            while((line = br.readLine()) != null) {
-                linesD.add(line);
-            }
-        } catch(IOException e) {
-            throw new AbortException("reading info file", e);
-        }
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(infoFile))) {
-            for(int i = 0; i < lines; i++) {
-                String line = linesD.get(i);
-                try {
-                    if(!existingLogIds.contains(Integer.parseInt(line.substring(0, line.indexOf(" "))))) {
-                        continue;
-                    }
-                } catch(Exception e) {e.printStackTrace();}
-                bw.append(linesD.get(i));
-                bw.newLine();
-            }
-        } catch(IOException e) {
-            throw new AbortException("writing info file", e);
         }
     }
 
