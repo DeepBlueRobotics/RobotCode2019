@@ -12,7 +12,7 @@ import org.apache.commons.csv.CSVFormat;
  */
 public final class Log {
 
-    private static int step = 0, frequency = 1;
+    private static int step = 0, interval = 1;
 
     /**
      * Initializes the logging code to log data with {@link CSVFormat#DEFAULT}. This is the same as calling <code>Log.init(CSVFormat.DEFAULT)</code>
@@ -319,27 +319,27 @@ public final class Log {
 
     /**
      * @return How often data is logged
-     * @see #setDataLogFrequency(int)
+     * @see #setDataLogInterval(int)
      * @see #logData()
      */
-    public static int getDataLogFrequency() {
-        return frequency;
+    public static int getDataLogInterval() {
+        return interval;
     }
 
     /**
      * Sets how often data should be logged
-     * @param frequency The frequency with which data should be logged
-     * @see #getDataLogFrequency()
+     * @param interval The interval with which data should be logged
+     * @see #getDataLogInterval()
      * @see #logData()
      */
-    public static void setDataLogFrequency(int frequency) {
-        Log.frequency = (frequency < 1 ? 1 : frequency);
+    public static void setDataLogInterval(int interval) {
+        Log.interval = (interval < 1 ? 1 : interval);
     }
 
     /**
-     * Logs data to the data file or pauses if determined by the data logging frequency
-     * @see #getDataLogFrequency()
-     * @see #setDataLogFrequency(int)
+     * Logs data to the data file or pauses if determined by the data logging interval
+     * @see #getDataLoginterval()
+     * @see #setDataLoginterval(int)
      */
     public static void logData() {
         if(GlobalLogInfo.isDataDisabled()) {
@@ -351,7 +351,7 @@ public final class Log {
                 DataLog.logData();
             }
             step++;
-            step = step >= frequency ? 0 : step;
+            step = step >= interval ? 0 : step;
         } catch(IllegalStateException e) {
             LogUtils.handleIllegalState(e);
         }
