@@ -3,9 +3,12 @@ package frc.robot.lib.logging;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -63,25 +66,10 @@ final class LogFiles {
     }
 
     private static void backupInfoFile() throws AbortException {
-        ArrayList<String> data = new ArrayList<>();
-        try(BufferedReader reader = new BufferedReader(new FileReader(infoFile))) {
-            String line;
-            while((line = reader.readLine()) != null) {
-                data.add(line);
-            }
+        try {
+            Files.copy(infoFile.toPath(), infoBackupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch(IOException e) {
-            throw new AbortException("reading info file", e);
-        }
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(infoBackupFile))) {
-            Iterator<String> itr = data.iterator();
-            while(itr.hasNext()) {
-                writer.append(itr.next());
-                if(itr.hasNext()) {
-                    writer.newLine();
-                }
-            }
-        } catch(IOException e) {
-            throw new AbortException("writing info backup file", e);
+            throw new AbortException("copying info file", e);
         }
     }
 
