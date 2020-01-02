@@ -11,7 +11,6 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DrivetrainAnalysis;
 import frc.robot.commands.IncreaseVoltageLinear;
@@ -33,6 +32,7 @@ public class Robot extends TimedRobot {
   private static Drivetrain dt;
   private static HatchPanel hp;
   private static OI oi;
+  @SuppressWarnings("unused")
   private static Cargo cargo;
   private static Intake intake;
   private static Lift lift;

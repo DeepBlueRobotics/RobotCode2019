@@ -4,15 +4,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.KeepLift;
 
 public class Lift extends Subsystem {
     private CANSparkMax motor;
+    @SuppressWarnings("unused")
     private CANSparkMax motor2;
     private CANEncoder enc;
     private CANPIDController controller;

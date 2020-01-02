@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -160,9 +159,7 @@ public class DrivetrainCharAnalysis {
     }
 
     public static double[][] parseCSV(String filename, int spread) {
-        try {
-            Reader in = new FileReader(filename);
-            CSVParser csvParser = new CSVParser(in, CSVFormat.DEFAULT);
+        try(CSVParser csvParser = new CSVParser(new FileReader(filename), CSVFormat.DEFAULT)) {
 
             List<CSVRecord> records = csvParser.getRecords();
             int num_values = records.size();

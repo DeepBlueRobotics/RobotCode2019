@@ -128,7 +128,6 @@ public class RobotMap {
 
   private static WPI_TalonSRX createConfiguredTalon(int port) {
     WPI_TalonSRX tsrx = new WPI_TalonSRX(port);
-    ErrorCode ecDeadband;
 
     // Put all configurations for the talon motor controllers in here.
     // All values are from last year's code.
@@ -149,7 +148,6 @@ public class RobotMap {
 
   private static WPI_VictorSPX createConfiguredVictor(int port) {
     WPI_VictorSPX vspx = new WPI_VictorSPX(port);
-    ErrorCode ecDeadband;
 
     // Put all configurations for the victor motor controllers in here.
     catchError(vspx.configNominalOutputForward(0, 10));
