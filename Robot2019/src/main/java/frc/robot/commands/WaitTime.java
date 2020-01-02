@@ -9,7 +9,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.Drivetrain;
 
 public class WaitTime extends Command {
   Timer tim;

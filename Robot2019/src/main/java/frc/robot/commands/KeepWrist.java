@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class KeepWrist extends Command {
     private Intake intake;
     private double position;
-    private double prevFF;
 
     public KeepWrist(Intake intake) {
         this.intake = intake;

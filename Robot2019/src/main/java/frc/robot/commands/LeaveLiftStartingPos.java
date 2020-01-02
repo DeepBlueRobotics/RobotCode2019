@@ -1,9 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.subsystems.Lift;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Intake;
 
 public class LeaveLiftStartingPos extends CommandGroup {

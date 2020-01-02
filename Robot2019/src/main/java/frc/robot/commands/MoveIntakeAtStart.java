@@ -1,8 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj.Timer;
 

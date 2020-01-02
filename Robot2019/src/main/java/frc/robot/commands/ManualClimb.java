@@ -18,7 +18,9 @@ public class ManualClimb extends Command {
   private Lights lights;
   private Joystick manip;
   
+  @SuppressWarnings("unused")
   final private double retractDist = 0;
+  @SuppressWarnings("unused")
   final private double climbDist = 24.46; // In inches
 
   final private int climbJoyAxis = 3;
