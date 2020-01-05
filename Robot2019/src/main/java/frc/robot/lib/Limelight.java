@@ -23,12 +23,33 @@ public class Limelight {
   There are more values we could be using. Check the documentation.
   */
   private double tv, tx, ty, ta;
+  private double mounting_angle;
   private double prev_tx = 1.0;
   
   // Parameters for vision using linear algebra. 
   private double[][] rotMat = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
   private double[] translateVec = {0, 0, 0};
   private double[] defaultValue = {0, 0, 0, 0};
+
+  // For the shooter. Given what the limelight sees and the shooter angle, compute the desired initial speed for the shooter.
+  public double computeSpeed(double angle, double cameraHeight, double objectHeight) {
+    double distance = determineObjectDist(cameraHeight, objectHeight);
+    return Math.sqrt((16.1 * Math.pow(distance, 2)) / (distance * Math.tan(angle) - cameraHeight - objectHeight)) / Math.cos(angle);
+  }
+
+  /* Determine the mounting angle of the camera given a vision target and its known distance, height off of the ground,
+   and the height of the camera off of the ground. */
+  public void determineMountingAngle(double distance, double cameraHeight, double objectHeight) {
+    // NOTE: ty may be negative.
+    ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0.0);
+    mounting_angle = Math.atan((cameraHeight - objectHeight) / distance) - ty;
+  }
+
+  // Determine the distance an object is from the limelight given the camera's height off of the ground and the object's height off of the ground.
+  public double determineObjectDist(double cameraHeight, double objectHeight) {
+    ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0.0);
+    return (objectHeight - cameraHeight) / (Math.tan(mounting_angle + ty));
+  }
 
   /* Given what is currently seen, determine the entries rotMat and translateVec parameters
     by solving a system of equations using Gaussian-elimination */
