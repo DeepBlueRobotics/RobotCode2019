@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import frc.robot.lib.Limelight;
 import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -51,7 +52,7 @@ public class Drive extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {SmartDashboard.putNumber("Crosshair Horizontal Offset", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0));
+  protected void execute() {
     if (SmartDashboard.getBoolean("Using Limelight", false)) {
         autoAlign();
     } else {
