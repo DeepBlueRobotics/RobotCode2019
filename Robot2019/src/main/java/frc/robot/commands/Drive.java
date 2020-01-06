@@ -17,7 +17,7 @@ public class Drive extends Command {
   private Drivetrain dt;
   private Joystick leftJoy, rightJoy;
   private Limelight lime;
-  private Limelight.Mode limelightMode = Limelight.Mode.TARGET;
+  private Limelight.Mode limelightMode = Limelight.Mode.STEER;
   private double adjustment = 0;
   private double minError = 0.05;   // TODO: Test minimum values
   private double prevSpeed = 0, prevLeft = 0, prevRight = 0;
@@ -51,7 +51,7 @@ public class Drive extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  protected void execute() {SmartDashboard.putNumber("Crosshair Horizontal Offset", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0));
     if (SmartDashboard.getBoolean("Using Limelight", false)) {
         autoAlign();
     } else {

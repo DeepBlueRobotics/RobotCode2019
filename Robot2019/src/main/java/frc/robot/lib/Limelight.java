@@ -23,6 +23,7 @@ public class Limelight {
   There are more values we could be using. Check the documentation.
   */
   private double tv, tx, ty, ta;
+  private boolean stopSteer = false;
   private double mounting_angle;
   private double prev_tx = 1.0;
   
@@ -30,6 +31,10 @@ public class Limelight {
   private double[][] rotMat = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
   private double[] translateVec = {0, 0, 0};
   private double[] defaultValue = {0, 0, 0, 0};
+
+  public Limelight() {
+    SmartDashboard.putNumber("Area Threshold", 0.02);
+  }
 
   // For the shooter. Given what the limelight sees and the shooter angle, compute the desired initial speed for the shooter.
   public double computeSpeed(double angle, double cameraHeight, double objectHeight) {
@@ -105,16 +110,24 @@ public class Limelight {
     SmartDashboard.putNumber("Prev_tx", prev_tx);
     double adjustment = 0.0;
     double steering_factor = 0.25;
-    double Kp = 0.025;
+    double Kp = 0.015;
 
-    if (tv == 1.0) {
-      if (ta > 0.02) {
+    if (tv == 1.0 && !stopSteer) {
+      if (ta > SmartDashboard.getNumber("Area Threshold", 0.02)) {
         adjustment += Kp * tx;
         prev_tx = tx;
       }
     } else {
       adjustment += Math.signum(prev_tx) * steering_factor;
     }
+
+    if (Math.abs(tx) < 1.0) {
+      stopSteer = true;
+    } else {
+      stopSteer = false;
+    }
+    SmartDashboard.putBoolean("Stop Auto Steering", stopSteer);
+
     adjustment = Math.signum(adjustment) * Math.min(Math.abs(adjustment), 0.5);
     SmartDashboard.putNumber("Adjustment", adjustment);
     return adjustment;
