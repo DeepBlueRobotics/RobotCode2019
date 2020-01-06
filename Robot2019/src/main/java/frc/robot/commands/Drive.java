@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
+/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -7,27 +7,27 @@
 
 package frc.robot.commands;
 
+import frc.robot.lib.Limelight;
+import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.Drivetrain;
 
-public class TeleopDrive extends Command {
-  Drivetrain dt;
-  Joystick leftJoy, rightJoy;
+public class Drive extends Command {
+  private Drivetrain dt;
+  private Joystick leftJoy, rightJoy;
+  private Limelight lime;
+  private Limelight.Mode limelightMode = Limelight.Mode.STEER;
+  private double adjustment = 0;
+  private double minError = 0.05;   // TODO: Test minimum values
+  private double prevSpeed = 0, prevLeft = 0, prevRight = 0;
+  private double outreachSpeed = 0.3;
 
-  double prevSpeed = 0, prevLeft = 0, prevRight = 0;
-
-  double outreachSpeed = 0.3;
-
-  /**
-   * Handles all the teleoperated driving functionality
-   * 
-   * @param dt the Drivetrain object to use, passing it in is useful for testing
-   *           purposes
-   */
-  public TeleopDrive(Drivetrain dt, Joystick leftJoy, Joystick rightJoy) {
+  public Drive(Drivetrain dt, Limelight lime, Joystick leftJoy, Joystick rightJoy) {
     requires(dt);
+    this.dt = dt;
+    this.lime = lime;
     this.dt = dt;
     this.leftJoy = leftJoy;
     this.rightJoy = rightJoy;
@@ -45,12 +45,22 @@ public class TeleopDrive extends Command {
     }
   }
 
+  // Called just before this Command runs the first time
+  @Override
+  protected void initialize() {
+  }
+
+  // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (SmartDashboard.getBoolean("Arcade Drive", true)) {
-      arcadeDrive();
+    if (SmartDashboard.getBoolean("Using Limelight", false)) {
+        autoAlign();
     } else {
-      tankDrive();
+        if (SmartDashboard.getBoolean("Arcade Drive", true)) {
+            arcadeDrive();
+        } else {
+            tankDrive();
+        }
     }
   }
 
@@ -230,16 +240,43 @@ public class TeleopDrive extends Command {
     dt.disableVoltageCompensation();
   }
 
+  private void autoAlign() {
+    if (limelightMode == Limelight.Mode.DIST) {
+        adjustment = lime.distanceAssist();
+        dt.drive(adjustment, adjustment);
+        if (Math.abs(adjustment) < minError)  {
+          SmartDashboard.putBoolean("Finished Aligning", true);
+        }
+      }
+      else if (limelightMode == Limelight.Mode.STEER) {
+        adjustment = lime.steeringAssist();
+        dt.drive(adjustment, -adjustment);
+        if (Math.abs(adjustment) < minError)  {
+          SmartDashboard.putBoolean("Finished Aligning", true);
+        }
+      } else {
+        double[] params = lime.autoTarget();
+        dt.drive(params[0], params[1]);
+        double maxInput = Math.max(Math.abs(params[0]), Math.abs(params[1]));
+        if (maxInput < minError)  {
+          SmartDashboard.putBoolean("Finished Aligning", true);
+        }
+      }
+  }
+
+  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
     return false;
   }
 
+  // Called once after isFinished returns true
   @Override
   protected void end() {
-    dt.stop();
   }
 
+  // Called when another command which requires one or more of the same
+  // subsystems is scheduled to run
   @Override
   protected void interrupted() {
     end();

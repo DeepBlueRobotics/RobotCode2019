@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DrivetrainAnalysis;
 import frc.robot.commands.IncreaseVoltageLinear;
 import frc.robot.commands.IncreaseVoltageStepwise;
-import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.Drive;
+import frc.robot.lib.Limelight;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
@@ -25,6 +26,7 @@ public class Robot extends TimedRobot {
   private static Drivetrain dt;
   private static HatchPanel hp;
   private static OI oi;
+  private static Limelight lime;
   private static Cargo cargo;
   private static Climber climber;
   private static Lights lights;
@@ -40,6 +42,7 @@ public class Robot extends TimedRobot {
     climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
     lights = new Lights(RobotMap.lights);
     oi = new OI(dt, hp, cargo, climber, lights, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
+    lime = new Limelight();
 
     fname1 = "/home/lvuser/drive_char_linear_for.csv";
     fname2 = "/home/lvuser/drive_char_stepwise_for.csv";
@@ -56,10 +59,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Increase Voltage Stepwise Backward", ivsb);
     SmartDashboard.putData("Drivetrain Characterization Analysis", dca);
 
-    dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
+    dt.setDefaultCommand(new Drive(dt, lime, oi.leftJoy, oi.rightJoy));
     SmartDashboard.putNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);
 
     SmartDashboard.putBoolean("Outreach Mode", false);
+    SmartDashboard.putBoolean("Using Limelight", false);
     timey = new Timer();
   }
 

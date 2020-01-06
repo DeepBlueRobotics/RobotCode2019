@@ -26,6 +26,7 @@ import frc.robot.commands.ToggleCamera;
 import frc.robot.commands.ToggleClimberRails;
 import frc.robot.commands.ToggleHatchEject;
 import frc.robot.commands.ToggleLight;
+import frc.robot.commands.ToggleLimelight;
 import frc.robot.commands.WobbleDrive;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
@@ -44,6 +45,7 @@ public class OI {
   JoystickButton arcadeOrTankBtn;
   JoystickButton normDriveBtn;
   JoystickButton gradDriveBtn;
+  JoystickButton limelightBtn;
   JoystickButton hatchIntakeBtn, hatchEjectBtn;
   JoystickButton cargoIntakeBtn, cargoEjectBtn;
   JoystickButton climberRailBtn;
@@ -74,6 +76,8 @@ public class OI {
     normDriveBtn.whenPressed(new NormalDrive());
     gradDriveBtn = new JoystickButton(leftJoy, 5);
     gradDriveBtn.whenPressed(new GradualDrive());
+    limelightBtn = new JoystickButton(rightJoy, 2);   // Figure out the correct button
+    limelightBtn.whenPressed(new ToggleLimelight());
 
     hatchIntakeBtn = new JoystickButton(manipulator, Manip.X);
     hatchIntakeBtn.whenPressed(new IntakeHatch(hp, dt));
@@ -93,7 +97,6 @@ public class OI {
 
     manualClimbBtn = new JoystickButton(manipulator, Manip.RT_rTrigger);
     manualClimbBtn.toggleWhenPressed(new ManualClimb(climber, manipulator, lights));
-
 
     slowClimbBtn = new JoystickButton(manipulator, Manip.LB_lShoulder);
     slowClimbBtn.whileHeld(new SlowClimb());

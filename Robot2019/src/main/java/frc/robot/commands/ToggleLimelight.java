@@ -8,24 +8,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import frc.robot.subsystems.Lights;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class SetLight extends InstantCommand {
-  private Lights lights;
-  private Lights.LightState state;
-
-  public SetLight(Lights lights, Lights.LightState state) {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    this.lights = lights;
-    requires(lights);
-    this.state = state;
+public class ToggleLimelight extends InstantCommand {
+  public ToggleLimelight() {
   }
 
-  // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    lights.setLights(state);
+    if (SmartDashboard.getBoolean("Using Limelight", false)) {
+        SmartDashboard.putBoolean("Using Limelight", false);
+    } else {
+        SmartDashboard.putBoolean("Using Limelight", true);
+    }
   }
-
 }
