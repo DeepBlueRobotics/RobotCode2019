@@ -10,9 +10,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.DrivetrainAnalysis;
-import frc.robot.commands.IncreaseVoltageLinear;
-import frc.robot.commands.IncreaseVoltageStepwise;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Cargo;
 import frc.robot.subsystems.Climber;
@@ -28,7 +25,6 @@ public class Robot extends TimedRobot {
   private static Cargo cargo;
   private static Climber climber;
   private static Lights lights;
-  private static String fname1, fname2, fname3, fname4;
   private static Timer timey;
 
   @Override
@@ -40,21 +36,6 @@ public class Robot extends TimedRobot {
     climber = new Climber(RobotMap.climberMotor, RobotMap.climberEncoder, RobotMap.ahrs, RobotMap.climberPistons);
     lights = new Lights(RobotMap.lights);
     oi = new OI(dt, hp, cargo, climber, lights, RobotMap.driveCamera, RobotMap.hatchCamera, RobotMap.cameraServer);
-
-    fname1 = "/home/lvuser/drive_char_linear_for.csv";
-    fname2 = "/home/lvuser/drive_char_stepwise_for.csv";
-    fname3 = "/home/lvuser/drive_char_linear_back.csv";
-    fname4 = "/home/lvuser/drive_char_stepwise_back.csv";
-    IncreaseVoltageLinear ivlf = new IncreaseVoltageLinear(dt, 0.25 / 50, 6.0, fname1, "forward");
-    IncreaseVoltageStepwise ivsf = new IncreaseVoltageStepwise(dt, 0.25 / 50, 6.0, fname2, "forward");
-    IncreaseVoltageLinear ivlb = new IncreaseVoltageLinear(dt, 0.25 / 50, 6.0, fname3, "backward");
-    IncreaseVoltageStepwise ivsb = new IncreaseVoltageStepwise(dt, 0.25 / 50, 6.0, fname4, "backward");
-    DrivetrainAnalysis dca = new DrivetrainAnalysis(dt);
-    SmartDashboard.putData("Increase Voltage Linearly Forward", ivlf);
-    SmartDashboard.putData("Increase Voltage Stepwise Forward", ivsf);
-    SmartDashboard.putData("Increase Voltage Linearly Backward", ivlb);
-    SmartDashboard.putData("Increase Voltage Stepwise Backward", ivsb);
-    SmartDashboard.putData("Drivetrain Characterization Analysis", dca);
 
     dt.setDefaultCommand(new TeleopDrive(dt, oi.leftJoy, oi.rightJoy));
     SmartDashboard.putNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);

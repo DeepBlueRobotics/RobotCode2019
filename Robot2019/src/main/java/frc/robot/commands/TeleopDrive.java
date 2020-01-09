@@ -36,10 +36,6 @@ public class TeleopDrive extends Command {
       SmartDashboard.putNumber("Gradual Drive Max dV", 0.04); // between zero (no movement) to 2 (any movement)
     }
 
-    if (!SmartDashboard.containsKey("Characterized Drive")) {
-      SmartDashboard.putBoolean("Characterized Drive", false);
-    }
-
     if (!SmartDashboard.containsKey("Gradual Drive")) {
       SmartDashboard.putBoolean("Gradual Drive", true);
     }
@@ -110,16 +106,10 @@ public class TeleopDrive extends Command {
       }
     }
 
-    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
-      SmartDashboard.putBoolean("is in char drive", true);
-      charDrive(left, right);
+    if (SmartDashboard.getBoolean("Outreach Mode", false)) {
+      dt.drive(left * outreachSpeed, right * outreachSpeed);
     } else {
-      SmartDashboard.putBoolean("is in char drive", false);
-      if (SmartDashboard.getBoolean("Outreach Mode", false)) {
-        dt.drive(left * outreachSpeed, right * outreachSpeed);
-      } else {
-        dt.drive(left, right);
-      }
+      dt.drive(left, right);
     }
   }
 
@@ -150,84 +140,11 @@ public class TeleopDrive extends Command {
     }
     prevLeft = left;
     prevRight = right;
-
-    if (SmartDashboard.getBoolean("Characterized Drive", false)) {
-      charDrive(left, right);
-    } else {
-      if (SmartDashboard.getBoolean("Outreach Mode", false)) {
-        dt.drive(left * outreachSpeed, right * outreachSpeed);
-      } else {
-        dt.drive(left, right);
-      }
-    }
-  }
-
-  private void charDrive(double left, double right) {
-    double leftV, rightV;
-    dt.setVoltageCompensation(12.0);
-    double maxV = dt.getMaxVoltage();
-
-    double DT = 1 / 4.0;
-    double actualLeftVel = dt.getEncRate(Drivetrain.Side.LEFT);
-    double actualRightVel = dt.getEncRate(Drivetrain.Side.RIGHT);
-    double actualAvgVel = 0.5 * (actualLeftVel + actualRightVel);
-
-    double desiredLeftVel = left * dt.getMaxSpeed();
-    double desiredRightVel = right * dt.getMaxSpeed();
-    double desiredAvgVel = 0.5 * (desiredLeftVel + desiredRightVel);
-
-    double leftDV = desiredLeftVel - actualLeftVel;
-    double rightDV = desiredRightVel - actualRightVel;
-    double avgDV = 0.5 * (desiredAvgVel - actualAvgVel);
-
-    double leftA = leftDV / DT;
-    double rightA = rightDV / DT;
-    double avgA = avgDV / DT;
-
-    SmartDashboard.putNumber("Left Speed", actualLeftVel);
-    SmartDashboard.putNumber("Right Speed", actualRightVel);
-    //System.out.println("Left Speed: " + actualLeftVel + ", Right Speed: " + actualRightVel);
-    double maxAccel = SmartDashboard.getNumber("Max Acceleration", dt.getMaxSpeed() / 1.0);
-
-    if (Math.abs(avgA) >= maxAccel) { // dt.getMaxSpeed() is a temporary value. The actual value will be determined
-                                     // through experimentation
-      leftA = Math.signum(leftA) * Math.abs(leftA / avgA) * maxAccel;
-    }
-    if (Math.abs(avgA) >= maxAccel) {
-      rightA = Math.signum(rightA) * Math.abs(rightA / avgA) * maxAccel;
-    }
-
-    //System.out.println("Left Accel: " + leftA + ", Right Accel: " + rightA);
-
-    if (left >= 0.0) {
-      leftV = dt.calculateVoltage(Drivetrain.Direction.FL, actualLeftVel, leftA);
-    } else {
-      leftV = dt.calculateVoltage(Drivetrain.Direction.BL, actualLeftVel, leftA);
-    }
-
-    if (right >= 0.0) {
-      rightV = dt.calculateVoltage(Drivetrain.Direction.FR, actualRightVel, rightA);
-    } else {
-      rightV = dt.calculateVoltage(Drivetrain.Direction.BR, actualRightVel, rightA);
-    }
-
-    if (Math.abs(leftV) >= maxV) {
-      leftV = maxV * Math.signum(leftV);
-    }
-    if (Math.abs(rightV) >= maxV) {
-      rightV = maxV * Math.signum(rightV);
-    }
-
-    SmartDashboard.putNumber("Left Volts", leftV);
-    SmartDashboard.putNumber("Right Volts", rightV);
-    //System.out.println("LeftV: " + leftV + ", RightV: " + rightV);
-
     if (SmartDashboard.getBoolean("Outreach Mode", false)) {
-      dt.drive(leftV / maxV * outreachSpeed, rightV / maxV * outreachSpeed);
+      dt.drive(left * outreachSpeed, right * outreachSpeed);
     } else {
-      dt.drive(leftV / maxV, rightV / maxV);
+      dt.drive(left, right);
     }
-    dt.disableVoltageCompensation();
   }
 
   @Override
