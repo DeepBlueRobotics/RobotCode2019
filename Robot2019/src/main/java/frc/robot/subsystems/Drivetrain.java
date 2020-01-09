@@ -179,6 +179,8 @@ public class Drivetrain extends Subsystem {
 
     double leftAccel = (desiredLeftVel - actualLeftVel) / dt;
     double rightAccel = (desiredRightVel - actualRightVel) / dt;
+    leftAccel = Math.copySign(1.0, leftAccel) * Math.min(Math.abs(leftAccel), maxAccel);
+    rightAccel = Math.copySign(1.0, rightAccel) * Math.min(Math.abs(rightAccel), maxAccel);
 
     double newLeft = kVolt + kVel * actualLeftVel + kAccel * leftAccel;
     double newRight = kVolt + kVel * actualRightVel + kAccel * rightAccel;
